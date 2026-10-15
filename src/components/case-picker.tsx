@@ -78,7 +78,7 @@ export function CasePicker({ cards }: { cards: MysteryCard[] }) {
                 <StoryArt slug={card.slug} variant="card" className="border-b border-blue/30" />
                 <span className="flex flex-1 flex-col gap-3 p-5">
                   <span className={`min-h-[2lh] font-pixel text-ui ${active ? "text-orange" : "text-white"}`}>{card.title}</span>
-                  <span className="text-body text-white">{fill(words.hook, { victim: card.victim })}</span>
+                  <span className="min-h-[2lh] text-body text-white">{fill(words.hook, { victim: card.victim })}</span>
                   <span className="text-body">
                     <span className={DIFFICULTY_INK[card.difficulty] ?? "text-white"}>{capitalize(card.difficulty)}</span>
                     <span className="text-white"> · {capitalize(inWords(card.playerCount))} players</span>
