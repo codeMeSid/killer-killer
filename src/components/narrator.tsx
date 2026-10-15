@@ -1,12 +1,13 @@
 "use client";
 
 import { useCallback, useEffect, useState, type ReactNode } from "react";
+import { sfx } from "@/lib/sfx";
 
 export type Beat = {
   text: string;
   ink: "white" | "red";
-  /** Deaths stutter in once. */
-  flicker?: boolean;
+  /** Deaths and exposed sabotage hit: a glitch and a sting. */
+  hit?: "death" | "sabotage";
   /** The clock, set inline before the sentence as a word-slot (first beat of a round). */
   slot?: string;
 };
@@ -54,12 +55,25 @@ export function Narrator({ beats, voice, onEnd, end }: { beats: Beat[]; voice: b
     setSpoken(false);
   }, []);
 
-  // Typewriter.
+  // Typewriter, with a faint key clack every few letters (the voice replaces it when on).
   useEffect(() => {
     if (typed) return;
-    const t = setInterval(() => setChars((c) => c + 1), TYPE_MS);
+    const t = setInterval(
+      () =>
+        setChars((c) => {
+          if (!voice && c % 3 === 0) sfx.clack(0.025);
+          return c + 1;
+        }),
+      TYPE_MS,
+    );
     return () => clearInterval(t);
-  }, [typed, i]);
+  }, [typed, i, voice]);
+
+  // The hit lands as the beat appears.
+  useEffect(() => {
+    if (beat?.hit === "death") sfx.sting();
+    if (beat?.hit === "sabotage") sfx.static(0.25);
+  }, [beat]);
 
   // Voice: speak the whole beat as it starts typing.
   useEffect(() => {
@@ -107,7 +121,7 @@ export function Narrator({ beats, voice, onEnd, end }: { beats: Beat[]; voice: b
         <p
           key={i}
           aria-live="polite"
-          className={`seam-ink max-w-4xl text-statement font-bold ${SEAM_TOP[beat.ink]} ${beat.flicker ? "motion-safe:animate-flicker-in" : ""}`}
+          className={`seam-ink max-w-4xl font-pixel text-statement ${SEAM_TOP[beat.ink]} ${beat.hit ? "motion-safe:animate-glitch" : ""}`}
         >
           {beat.slot && (
             <span className="mr-[0.4em] inline-block border border-blue/40 px-[0.3em] text-blue [-webkit-text-fill-color:var(--blue)]">

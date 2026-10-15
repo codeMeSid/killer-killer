@@ -11,6 +11,7 @@ export type DevScene =
   | "lobby-player"
   | "mystery-narrate"
   | "mystery-choose"
+  | "mystery-resolving"
   | "story-narrate"
   | "story-choose"
   | "story-killer"

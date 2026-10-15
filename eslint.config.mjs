@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Vendored Hairline kernel and generated story figures: verbatim from the hairline-create skill.
+    "src/lib/hairline/kernel.ts",
+    "src/mysteries/*/art.ts",
   ]),
 ]);
 

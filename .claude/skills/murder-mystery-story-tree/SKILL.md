@@ -7,6 +7,7 @@ description: Generate a branching murder-mystery story tree as validated JSON fo
 
 Turns four inputs into one JSON file that the user's app plays: 10 rounds, 4 options per player per round,
 a hidden dice-and-luck engine, a locked ending track at round 8, and three endings (1 solved, 2 unsolved).
+Each story also gets its own words (`lexicon.json`) and a Hairline figure (`art.ts`), shipped together as one folder.
 
 The rules are fixed and enforced by a validator. Players are not asked to design anything; you write the story
 and the validator proves it obeys the engine.
@@ -18,6 +19,8 @@ and the validator proves it obeys the engine.
 2. **Victim**: who was murdered (name and a line of description).
 3. **Player count**: 2 to 6.
 4. **Difficulty**: easy, medium or hard (scales clues needed, red herrings, suspects, traps, clue clarity).
+
+Later, for the art, the user also picks one of two or three figure concepts (Workflow step 7).
 
 ## First step: ask for the setting
 Every time this skill triggers, ask which setting to play before generating anything. Read `assets/catalogue.json` and
@@ -40,9 +43,18 @@ missing (tappable options suit difficulty), then generate. Never invent a catalo
 4. Fill every `TODO` and adapt the structure where the story needs it (more scenes per round, different clue placement,
    more variants), keeping every rule in the schema. Rewrite the JSON file directly or with a small script.
 5. Validate: `python scripts/validate_tree.py tree.json`. Fix every error and read every warning until it is clean.
-6. Deliver: save as `<victim>-<setting>-tree.json`. In claude.ai put it in `/mnt/user-data/outputs/` and call `present_files`;
-   in Claude Code or any other environment save it in the current working directory and give the path. Then reply in a few lines:
-   setting, role, difficulty, the three endings in one phrase each, and any assumption you made.
+6. Words: write `lexicon.json` per `references/lexicon.md` (the setting's own vocabulary for statements, statuses and
+   loaders; no digits). Validate: `python scripts/validate_tree.py tree.json --lexicon lexicon.json`.
+7. Art: make the story's Hairline figure per `references/art.md`. Offer two or three concepts and wait for the user's
+   pick, then build until `look.mjs` exits 0 and wrap it with `python scripts/art.py wrap <name>.js art.ts --slug <slug>`.
+8. Install (only inside the killer-killer repo): slug `<victim-kebab>-<setting>-<n>p` (e.g. `theo-marsh-skyfall-2p`).
+   Create `src/mysteries/<slug>/` holding `tree.json`, `lexicon.json` and `art.ts`. Register the slug in both
+   `src/mysteries/index.ts` (server-only tree import + `MYSTERIES` entry) and `src/mysteries/catalog.ts` (`LEXICON`
+   import + `ART` dynamic import). Run `npm test`: the fuzz test finds story folders by itself.
+9. Deliver: in the repo, the installed folder is the deliverable; give its path. Elsewhere save `<slug>/` with the
+   three files (in claude.ai under `/mnt/user-data/outputs/` and call `present_files`; otherwise in the current working
+   directory) and give the path. Then reply in a few lines: setting, role, difficulty, the three endings in one phrase
+   each, the figure's name and tour, `npm test` result if run, and any assumption you made.
 
 ## Writing the story
 - **Four distinct options per scene.** At least one group (cooperative) and one solo (selfish) option, each with a clear
@@ -70,7 +82,10 @@ missing (tappable options suit difficulty), then generate. Never invent a catalo
 ## Files
 - `scripts/constants.py`: every number and enum in one place.
 - `scripts/skeleton.py`: valid scaffold generator.
-- `scripts/validate_tree.py`: tree and catalogue validator (run it every time).
+- `scripts/validate_tree.py`: tree, lexicon (`--lexicon`) and catalogue validator (run it every time).
+- `scripts/art.py`: wraps a Hairline figure file into `art.ts` and unwraps it back, byte-for-byte.
 - `references/engine-rules.md`: the engine contract; hand this to the app developer too.
 - `references/schema.md`: field-by-field schema.
+- `references/lexicon.md`: the `mm-lexicon/1` contract, where each word shows, three example lexicons.
+- `references/art.md`: how story art is made with `hairline-create`.
 - `assets/catalogue.json`: the setting catalogue (currently one sample entry).

@@ -2,11 +2,17 @@
 
 import { useEffect, useRef, useState } from "react";
 import { FillButton } from "@/components/fill-button";
+import { LoaderLine } from "@/components/loader-line";
+import { Machine } from "@/components/machine";
 import { PhaseBar, type Ink } from "@/components/phase-bar";
 import { RoomLoading } from "@/components/room-loading";
+import { SoundToggle } from "@/components/sound-toggle";
+import { StoryArt } from "@/components/story-art";
 import { WaitingDots } from "@/components/waiting-dots";
 import type { PlayerView, ViewOption } from "@/lib/engine/view";
+import { sfx } from "@/lib/sfx";
 import { postJson, useRoom, useWakeLock } from "@/lib/use-room";
+import { lexiconFor } from "@/mysteries/catalog";
 
 const HOLD_MS = 1200;
 
@@ -35,6 +41,7 @@ function Pips({ label, value, max }: { label: string; value: number; max: number
 
 export function Controller({ view }: { view: PlayerView }) {
   const me = view.me!;
+  const words = lexiconFor(view.mystery.slug);
   const choosing = view.status === "playing" && view.phase === "choosing";
   const ink: Ink = !me.alive ? "red" : choosing && !view.myPick ? "orange" : view.myPick && choosing ? "green" : "white";
 
@@ -43,12 +50,15 @@ export function Controller({ view }: { view: PlayerView }) {
   useEffect(() => {
     const buzz = (p: number | number[]) => "vibrate" in navigator && navigator.vibrate(p);
     if (view.options && !seen.current.options) buzz(120);
-    if (!me.alive && seen.current.alive) buzz([300, 120, 300]);
+    if (!me.alive && seen.current.alive) {
+      buzz([300, 120, 300]);
+      sfx.sting();
+    }
     seen.current = { options: !!view.options, alive: me.alive };
   }, [view.options, me.alive]);
 
   return (
-    <>
+    <Machine kind="terminal">
       <PhaseBar ink={ink}>
         <Pips label="luck" value={me.luck} max={me.luckMax} />
         <Pips label="truth" value={me.stat} max={me.statMax} />
@@ -56,27 +66,32 @@ export function Controller({ view }: { view: PlayerView }) {
       <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-10 px-4 pt-8 pb-10 sm:px-8">
         {!me.alive ? (
           <section className="flex flex-col gap-4">
-            <h1 className="text-display font-bold text-red motion-safe:animate-flicker-in">You fell.</h1>
+            <h1 className="font-pixel text-display text-red motion-safe:animate-glitch">{words.play.dead}</h1>
             <p className="text-body text-white">You can still watch. The story goes on without you.</p>
           </section>
         ) : view.options ? (
           <Choose key={`${view.clock.step}`} view={view} options={view.options} />
         ) : view.myPick && choosing ? (
-          <Locked view={view} />
+          <Locked view={view} loaders={words.play.loaders} />
         ) : (
           <section className="flex flex-col gap-4 motion-safe:animate-rise">
-            <h1 className="text-statement font-bold text-white">Eyes on the screen.</h1>
-            <p className="text-body text-blue">
-              Your choices will appear here when the narrator is done
+            <h1 className="font-pixel text-statement text-white motion-safe:animate-print">Eyes on the screen.</h1>
+            <p className="text-body text-white">
+              {view.clock.step === 0 && view.players.some((p) => p.id === me.id && p.character)
+                ? "Press and hold the box below to see who you are. Nobody else can."
+                : "Your choices will appear here when the narrator is done"}
               <WaitingDots />
             </p>
+            <StoryArt slug={view.mystery.slug} variant="loader" />
+            <LoaderLine lines={words.play.loaders} className="text-ui" />
           </section>
         )}
 
         <Identity view={view} />
         <Knowledge view={view} />
+        <SoundToggle className="self-start" />
       </div>
-    </>
+    </Machine>
   );
 }
 
@@ -98,7 +113,8 @@ function Choose({ view, options }: { view: PlayerView; options: ViewOption[] }) 
     setSending(true);
     setError(null);
     const res = await postJson(`/api/rooms/${view.code}/picks`, { slot: chosen.slot, pushed, targetId: needsTarget ? target : null });
-    if (!res.success) {
+    if (res.success) sfx.clack(0.18);
+    else {
       setError(res.errorMessage);
       setSending(false);
     }
@@ -106,7 +122,7 @@ function Choose({ view, options }: { view: PlayerView; options: ViewOption[] }) 
 
   return (
     <section className="flex flex-col gap-8 motion-safe:animate-rise" aria-label="Your choice">
-      <h1 className="text-statement font-bold text-white">
+      <h1 className="font-pixel text-statement text-white">
         You will{" "}
         {chosen ? (
           <span className="text-orange">{chosen.text}</span>
@@ -125,9 +141,9 @@ function Choose({ view, options }: { view: PlayerView; options: ViewOption[] }) 
           return (
             <label
               key={o.slot}
-              className={`flex min-h-14 cursor-pointer flex-col justify-center gap-1 border px-4 py-3 transition-colors has-checked:border-orange has-focus-visible:ring-2 has-focus-visible:ring-orange/30 ${
+              className={`pixel-border flex min-h-14 cursor-pointer flex-col justify-center gap-1 px-4 py-3 transition-[box-shadow,transform] has-focus-visible:pb-white active:translate-y-px ${
                 blocked ? "cursor-not-allowed opacity-40" : ""
-              } ${o.slot === slot ? "border-orange" : "border-blue/40"}`}
+              } ${o.slot === slot ? "pb-orange" : "pb-dim"}`}
             >
               <input
                 type="radio"
@@ -136,6 +152,7 @@ function Choose({ view, options }: { view: PlayerView; options: ViewOption[] }) 
                 checked={o.slot === slot}
                 disabled={blocked}
                 onChange={() => {
+                  sfx.blip();
                   setSlot(o.slot);
                   setTarget(null);
                 }}
@@ -184,7 +201,7 @@ function Choose({ view, options }: { view: PlayerView; options: ViewOption[] }) 
 
       <div className="flex flex-col gap-3">
         <FillButton type="button" disabled={!ready} onClick={lock}>
-          {sending ? "Locking…" : "Lock it in."}
+          {sending ? "Locking…" : !chosen ? "Pick what you will do" : needsTarget && !target ? "Pick who you turn on" : "Lock it in."}
         </FillButton>
         {error && (
           <p role="alert" className="text-meta text-red">
@@ -196,12 +213,12 @@ function Choose({ view, options }: { view: PlayerView; options: ViewOption[] }) 
   );
 }
 
-function Locked({ view }: { view: PlayerView }) {
+function Locked({ view, loaders }: { view: PlayerView; loaders: string[] }) {
   const waiting = view.players.filter((p) => p.alive && !p.locked).map((p) => p.name);
   const names = waiting.length <= 1 ? waiting.join("") : `${waiting.slice(0, -1).join(", ")} and ${waiting.at(-1)}`;
   return (
     <section className="flex flex-col gap-4 motion-safe:animate-rise">
-      <h1 className="text-statement font-bold text-green">Locked in.</h1>
+      <h1 className="font-pixel text-statement text-green motion-safe:animate-flicker-in">Locked in.</h1>
       <p className="text-body text-white">You will {view.myPick!.text}.</p>
       {waiting.length > 0 && (
         <p className="text-body text-blue">
@@ -209,6 +226,8 @@ function Locked({ view }: { view: PlayerView }) {
           <WaitingDots />
         </p>
       )}
+      <StoryArt slug={view.mystery.slug} variant="loader" />
+      <LoaderLine lines={loaders} className="text-ui" />
     </section>
   );
 }
@@ -247,7 +266,7 @@ function Identity({ view }: { view: PlayerView }) {
         onKeyDown={(e) => (e.key === " " || e.key === "Enter") && !holding && press()}
         onKeyUp={release}
         onContextMenu={(e) => e.preventDefault()}
-        className="group relative w-full touch-none overflow-hidden border border-blue/40 px-4 py-4 text-left text-body text-white select-none focus-visible:border-white focus-visible:outline-none"
+        className="group pixel-border pb-dim relative min-h-14 w-[calc(100%-6px)] touch-none overflow-hidden px-4 py-4 text-left font-pixel text-ui text-white select-none focus-visible:pb-white focus-visible:outline-none"
       >
         <span
           aria-hidden
@@ -259,14 +278,14 @@ function Identity({ view }: { view: PlayerView }) {
         <div className="flex flex-col gap-2 motion-safe:animate-fade-in">
           {character && (
             <>
-              <p className="text-ui font-bold text-white">{character.name}</p>
+              <p className="font-pixel text-ui text-white">{character.name}</p>
               <p className="text-body text-white">{character.description}</p>
               <p className="text-meta text-blue">Alibi: {character.alibi}</p>
               <p className="text-meta text-blue">Motive: {character.motive}</p>
             </>
           )}
           {me.killer && (
-            <p className="text-ui font-bold text-red">
+            <p className="font-pixel text-ui text-red motion-safe:animate-glitch">
               You did it. Nobody knows. Steer them wrong without being seen.
             </p>
           )}
@@ -287,7 +306,9 @@ function Knowledge({ view }: { view: PlayerView }) {
   if (rows.length === 0 && items.length === 0) return null;
   return (
     <details className="group flex flex-col gap-4 pt-4">
-      <summary className="cursor-pointer list-none text-body text-white focus-visible:underline focus-visible:outline-none">
+      <summary className="min-h-11 cursor-pointer list-none font-pixel text-ui text-white focus-visible:underline focus-visible:outline-none">
+        <span aria-hidden className="text-orange group-open:hidden">&gt; </span>
+        <span aria-hidden className="hidden text-orange group-open:inline">v </span>
         What you know <span className="text-blue">· {rows.length + items.length}</span>
       </summary>
       <ul className="mt-6 flex flex-col gap-6">

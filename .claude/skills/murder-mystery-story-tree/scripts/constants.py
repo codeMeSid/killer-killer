@@ -46,3 +46,26 @@ RULES_BLOCK = {
     "pivot_round": PIVOT_ROUND,
     "rounds": ROUNDS,
 }
+
+# ------------------------------------------------------------ lexicon (references/lexicon.md)
+LEXICON_SCHEMA_ID = "mm-lexicon/1"
+
+# Exactly the keys of the TS `Lexicon` type (killer-killer src/mysteries/types.ts); each leaf names its kind.
+LEXICON_SHAPE = {
+    "schema": "schema",
+    "hook": "statement",
+    "glyphs": "glyphs",
+    "lobby": {"phase": "statement", "seats": "statement", "nobody": "statement", "some": "statement",
+              "full": "pair", "joined": "pair", "present": "status", "empty": "status", "waiting": "statement"},
+    "join": {"started": "statement", "full": "statement", "left": "statement", "joining": "statement",
+             "nameTaken": "statement"},
+    "play": {"resolving": "statement", "finale": "statement", "fallen": "status", "dead": "statement",
+             "loaders": "loaders"},
+    "end": {"cast": "statement", "alive": "status", "dead": "status", "truth": "statement"},
+}
+# Max characters per string of each kind, counted as written (a placeholder counts as its own text).
+LEXICON_MAX = {"statement": 32, "pair": 20, "status": 14, "loaders": 40}
+LEXICON_LOADERS = (3, 6)          # min, max loader lines
+LEXICON_GLYPHS = (2, 4)           # min, max ground glyphs
+LEXICON_PLACEHOLDERS = {"n", "N", "victim"}
+LEXICON_REQUIRES = {"lobby.seats": "N", "lobby.some": "N", "lobby.waiting": "n", "join.left": "n", "hook": "victim"}

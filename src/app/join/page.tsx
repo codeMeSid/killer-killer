@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { JoinForm } from "@/components/join-form";
 import { KillerTitle } from "@/components/killer-title";
+import { Machine } from "@/components/machine";
 
 export const metadata: Metadata = { title: "Join — killer-killer" };
 
@@ -14,13 +15,15 @@ async function Form({ searchParams }: PageProps<"/join">) {
 
 export default function JoinPage(props: PageProps<"/join">) {
   return (
-    <main className="flex flex-1 flex-col items-center px-4 pt-8 pb-8 sm:pt-12">
-      <KillerTitle />
-      <div className="flex w-full flex-1 items-center justify-center py-8 motion-safe:animate-fade-in">
-        <Suspense>
-          <Form {...props} />
-        </Suspense>
-      </div>
-    </main>
+    <Machine kind="terminal">
+      <main className="flex flex-1 flex-col items-center px-4 pt-8 pb-8 sm:pt-12">
+        <KillerTitle />
+        <div className="flex w-full flex-1 items-center justify-center py-8 motion-safe:animate-fade-in">
+          <Suspense>
+            <Form {...props} />
+          </Suspense>
+        </div>
+      </main>
+    </Machine>
   );
 }

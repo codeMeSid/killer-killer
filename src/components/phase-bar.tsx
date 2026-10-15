@@ -18,7 +18,7 @@ const INK: Record<Ink, string> = {
 export function PhaseBar({ ink = "white", children }: { ink?: Ink; children?: ReactNode }) {
   return (
     <header className={`flex items-baseline justify-between gap-4 px-4 pt-4 text-meta transition-colors sm:px-8 sm:pt-6 sm:text-body ${INK[ink]}`}>
-      <Link href="/" className="shrink-0 font-bold whitespace-nowrap transition-opacity hover:opacity-70 focus-visible:underline focus-visible:outline-none">
+      <Link href="/" className="shrink-0 font-arcade text-[0.6875rem] whitespace-nowrap transition-opacity hover:opacity-70 focus-visible:underline focus-visible:outline-none sm:text-meta">
         killer-killer
       </Link>
       <div className="flex flex-wrap items-baseline justify-end gap-x-4 gap-y-1 text-right">{children}</div>

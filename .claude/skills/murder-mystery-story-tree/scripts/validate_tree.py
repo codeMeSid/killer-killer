@@ -5,6 +5,7 @@ Usage:
   python validate_tree.py tree.json [--allow-todo]
   python validate_tree.py --catalogue assets/catalogue.json
   python validate_tree.py --catalogue-entry entry.json
+  python validate_tree.py [tree.json] --lexicon lexicon.json
 
 Exit code 0 = no errors (warnings allowed), 1 = errors.
 """
@@ -514,25 +515,109 @@ def check_tree(t, allow_todo, rep):
         rep.err("endings.culprit_escapes needs epilogue_if_downgraded (used when the Solved track fails in round 10)")
 
 
+# ------------------------------------------------------------------ lexicon
+def check_lexicon(lx, rep):
+    def walk(shape, node, path):
+        if not isinstance(node, dict):
+            rep.err(f"lexicon {path or 'root'}: must be an object")
+            return
+        for k in sorted(set(shape) - set(node)):
+            rep.err(f"lexicon: missing key {path + k}")
+        for k in sorted(set(node) - set(shape)):
+            rep.err(f"lexicon: unknown key {path + k}")
+        for k in (k for k in shape if k in node):
+            if isinstance(shape[k], dict):
+                walk(shape[k], node[k], path + k + ".")
+            else:
+                leaf(shape[k], node[k], path + k)
+
+    def text(s, kind, where):
+        if not nonempty(s):
+            rep.err(f"lexicon {where}: must be a non-empty string")
+        elif kind in C.LEXICON_MAX and len(s) > C.LEXICON_MAX[kind]:
+            rep.err(f"lexicon {where}: {len(s)} chars, {kind} max is {C.LEXICON_MAX[kind]} ({s!r})")
+
+    def leaf(kind, v, where):
+        if kind == "schema":
+            if v != C.LEXICON_SCHEMA_ID:
+                rep.err(f"lexicon schema must be {C.LEXICON_SCHEMA_ID!r}")
+        elif kind == "pair":
+            if not (isinstance(v, list) and len(v) == 2):
+                rep.err(f"lexicon {where}: must be an array of exactly 2 lines")
+                return
+            for i, s in enumerate(v):
+                text(s, "pair", f"{where}[{i}]")
+        elif kind == "loaders":
+            lo, hi = C.LEXICON_LOADERS
+            if not (isinstance(v, list) and lo <= len(v) <= hi):
+                rep.err(f"lexicon {where}: must be an array of {lo}-{hi} lines")
+                return
+            for i, s in enumerate(v):
+                text(s, "loaders", f"{where}[{i}]")
+        elif kind == "glyphs":
+            text(v, kind, where)
+            if not nonempty(v):
+                return
+            parts, (lo, hi) = v.split(" "), C.LEXICON_GLYPHS
+            if not (lo <= len(parts) <= hi and all(len(p) == 1 and not p.isalnum() for p in parts)):
+                rep.err(f"lexicon {where}: must be {lo}-{hi} single non-alphanumeric characters, one space apart ({v!r})")
+        else:
+            text(v, kind, where)
+
+    walk(C.LEXICON_SHAPE, lx, "")
+    if not isinstance(lx, dict):
+        return
+
+    def flat(node, path=""):
+        for k, v in node.items():
+            if isinstance(v, dict):
+                yield from flat(v, path + k + ".")
+            elif isinstance(v, list):
+                for i, s in enumerate(v):
+                    yield f"{path}{k}[{i}]", s
+            else:
+                yield path + k, v
+
+    strs = {p: s for p, s in flat(lx) if isinstance(s, str) and p != "schema"}
+    for p, s in strs.items():
+        if re.search(r"[0-9]", s):
+            rep.err(f"lexicon {p}: no digits allowed, write counts as {{n}}/{{N}} ({s!r})")
+        for ph in PLACEHOLDER.findall(s):
+            if ph not in C.LEXICON_PLACEHOLDERS:
+                rep.err(f"lexicon {p}: unknown placeholder {{{ph}}} (allowed: {sorted(C.LEXICON_PLACEHOLDERS)})")
+    for p, ph in C.LEXICON_REQUIRES.items():
+        if p in strs and "{" + ph + "}" not in strs[p]:
+            rep.err(f"lexicon {p}: must contain {{{ph}}}")
+
+
+def load(path):
+    return json.loads(Path(path).read_text())
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("path", nargs="?")
     ap.add_argument("--allow-todo", action="store_true")
     ap.add_argument("--catalogue")
     ap.add_argument("--catalogue-entry")
+    ap.add_argument("--lexicon")
     a = ap.parse_args()
     rep = Report()
-    try:
-        if a.catalogue:
-            check_catalogue(json.loads(Path(a.catalogue).read_text()), rep)
-        elif a.catalogue_entry:
-            check_entry(json.loads(Path(a.catalogue_entry).read_text()), rep, "entry")
-        elif a.path:
-            check_tree(json.loads(Path(a.path).read_text()), a.allow_todo, rep)
-        else:
-            ap.error("give a tree path, --catalogue, or --catalogue-entry")
-    except (OSError, json.JSONDecodeError) as exc:
-        rep.err(f"cannot read JSON: {exc}")
+    if not (a.catalogue or a.catalogue_entry or a.path or a.lexicon):
+        ap.error("give a tree path, --lexicon, --catalogue, or --catalogue-entry")
+    if a.catalogue:
+        jobs = [(a.catalogue, lambda d: check_catalogue(d, rep))]
+    elif a.catalogue_entry:
+        jobs = [(a.catalogue_entry, lambda d: check_entry(d, rep, "entry"))]
+    else:  # tree first: its solvability pass only runs while the report has no errors
+        jobs = [(a.path, lambda d: check_tree(d, a.allow_todo, rep)), (a.lexicon, lambda d: check_lexicon(d, rep))]
+    for path, check in jobs:
+        if not path:
+            continue
+        try:
+            check(load(path))
+        except (OSError, json.JSONDecodeError) as exc:
+            rep.err(f"cannot read JSON {path}: {exc}")
     for w in rep.warnings:
         print("WARN ", w)
     for e in rep.errors:

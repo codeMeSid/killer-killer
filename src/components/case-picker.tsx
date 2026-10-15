@@ -2,24 +2,16 @@
 
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import { StoryArt } from "@/components/story-art";
+import { sfx } from "@/lib/sfx";
 import type { MysteryCard } from "@/mysteries";
+import { fill, lexiconFor } from "@/mysteries/catalog";
 import { capitalize, DIFFICULTY_INK, inWords, postJson } from "@/lib/use-room";
 
-// Case prints dropped on the headline, each at its own angle. The selected one straightens and comes forward.
-const TILTS = ["-rotate-6", "rotate-[5deg]", "-rotate-3", "rotate-[4deg]", "-rotate-[5deg]", "rotate-2"];
-// Prints drop in one after another, after the headline has surfaced.
-const DELAYS = [
-  "motion-safe:[animation-delay:600ms]",
-  "motion-safe:[animation-delay:1000ms]",
-  "motion-safe:[animation-delay:1400ms]",
-  "motion-safe:[animation-delay:1800ms]",
-  "motion-safe:[animation-delay:2200ms]",
-  "motion-safe:[animation-delay:2600ms]",
-];
-
 /**
- * "Pick a case." with the mysteries lying on it as case prints. ←/→/↑/↓ anywhere moves the
- * selection, Enter opens it; clicking a print opens it directly (same grammar as the home menu).
+ * "Pick a case." over a row of cartridges, one per story, each carrying the story's own Hairline
+ * figure (it answers the pointer). ←/→/↑/↓ anywhere moves the selection, Enter opens it; clicking a
+ * cartridge opens it directly (same grammar as the home menu).
  */
 export function CasePicker({ cards }: { cards: MysteryCard[] }) {
   const router = useRouter();
@@ -32,6 +24,7 @@ export function CasePicker({ cards }: { cards: MysteryCard[] }) {
       if (opening) return;
       setOpening(slug);
       setError(null);
+      sfx.clack();
       const res = await postJson<{ code: string }>("/api/rooms", { mystery: slug });
       if (res.success && res.payload) router.push(`/lobby/${res.payload.code}`);
       else {
@@ -52,38 +45,23 @@ export function CasePicker({ cards }: { cards: MysteryCard[] }) {
       const step = e.key === "ArrowRight" || e.key === "ArrowDown" ? 1 : e.key === "ArrowLeft" || e.key === "ArrowUp" ? -1 : 0;
       if (!step) return;
       e.preventDefault();
+      sfx.blip();
       setSelected((i) => (i + step + cards.length) % cards.length);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [cards, selected, open]);
 
-  const scattered = cards.length <= 3;
-
   return (
-    <div className="relative flex flex-1 flex-col px-4 pb-8 sm:px-8">
-      <h1
-        className={`pt-8 text-display font-bold text-white motion-safe:animate-rise sm:pt-12 ${
-          scattered ? "lg:text-center" : ""
-        }`}
-      >
-        Pick a
-        <br />
-        case.
-      </h1>
+    <div className="relative flex flex-1 flex-col gap-10 px-4 pt-8 pb-8 sm:px-8 lg:pt-12">
+      <h1 className="font-pixel text-display text-white motion-safe:animate-print">Pick a case.</h1>
 
-      <ul
-        className={`relative mt-10 flex flex-col items-center gap-10 sm:flex-row sm:flex-wrap sm:justify-center ${
-          scattered ? "lg:-mt-12 lg:flex-nowrap lg:items-start lg:gap-0" : "lg:gap-12"
-        }`}
-      >
+      <ul className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {cards.map((card, i) => {
           const active = i === selected;
+          const words = lexiconFor(card.slug);
           return (
-            <li
-              key={card.slug}
-              className={`motion-safe:animate-rise ${DELAYS[i % DELAYS.length]} ${scattered ? "lg:-mx-6" : ""} ${active ? "z-10" : "z-0"}`}
-            >
+            <li key={card.slug} className={`motion-safe:animate-rise ${i ? "motion-safe:[animation-delay:300ms]" : ""}`}>
               <button
                 type="button"
                 onMouseEnter={() => setSelected(i)}
@@ -93,31 +71,29 @@ export function CasePicker({ cards }: { cards: MysteryCard[] }) {
                   void open(card.slug);
                 }}
                 aria-label={`${card.title}, ${card.difficulty}, ${card.playerCount} players`}
-                className={`flex w-[min(80vw,20rem)] flex-col gap-4 border bg-background p-5 text-left transition focus-visible:outline-none lg:w-[min(26vw,21rem)] ${
-                  active ? "rotate-0 border-orange lg:scale-105" : `${TILTS[i % TILTS.length]} border-blue/40`
+                className={`pixel-border flex w-[calc(100%-6px)] flex-col text-left transition-[box-shadow,transform] focus-visible:outline-none ${
+                  active ? "pb-orange -translate-y-1" : "pb-dim"
                 }`}
               >
-                <pre aria-hidden className="font-art text-[10px] font-normal leading-tight text-orange sm:text-[11px]">
-                  {card.art}
-                </pre>
-                <span className="text-ui font-bold text-white">{card.title}</span>
-                <span className="text-body text-white">{card.victim} never landed.</span>
-                <span className="text-meta">
-                  <span className={DIFFICULTY_INK[card.difficulty] ?? "text-white"}>{capitalize(card.difficulty)}</span>
-                  <span className="text-blue"> · {capitalize(inWords(card.playerCount))} players</span>
+                <StoryArt slug={card.slug} variant="card" className="border-b border-blue/30" />
+                <span className="flex flex-col gap-3 p-5">
+                  <span className={`font-pixel text-ui ${active ? "text-orange" : "text-white"}`}>{card.title}</span>
+                  <span className="text-body text-white">{fill(words.hook, { victim: card.victim })}</span>
+                  <span className="text-body">
+                    <span className={DIFFICULTY_INK[card.difficulty] ?? "text-white"}>{capitalize(card.difficulty)}</span>
+                    <span className="text-white"> · {capitalize(inWords(card.playerCount))} players</span>
+                  </span>
+                  {opening === card.slug && <span className="font-pixel text-body text-orange">Loading the cartridge…</span>}
                 </span>
-                {opening === card.slug && <span className="text-meta text-orange">Opening the file…</span>}
               </button>
             </li>
           );
         })}
       </ul>
 
-      <p className="mt-10 max-w-md text-body text-blue lg:absolute lg:bottom-8 lg:left-8 lg:mt-0">
-        Pick a case on this screen. Your friends join it from their phones.
-      </p>
+      <p className="mt-auto max-w-xl text-body text-blue">Pick a case on this screen. Your friends join it from their phones.</p>
       {error && (
-        <p role="alert" className="mt-4 text-body text-red lg:absolute lg:right-8 lg:bottom-8 lg:mt-0">
+        <p role="alert" className="text-body text-red motion-safe:animate-glitch">
           {error}
         </p>
       )}

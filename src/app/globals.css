@@ -24,10 +24,24 @@
   --font-mono: var(--font-plex-mono);
   /* ASCII art only: Plex Mono lacks box-drawing glyphs (╗║╝); Geist Mono has them. */
   --font-art: var(--font-geist-mono);
+  /* Pixel display face: resolves per machine (data-machine on <Machine>), CLAUDE.md §14. */
+  --font-pixel: var(--font-display);
+  /* Arcade labels: three words at most (menu items, the wordmark). */
+  --font-arcade: var(--font-press-start);
 }
 
-/* Motion tone: ominous — slow, heavy, deliberate. Nothing snaps or bounces.
-   Every transition/animation in the app uses --ease-ominous and these durations. */
+:root {
+  --font-display: var(--font-pixelify);
+}
+[data-machine="terminal"] {
+  --font-display: var(--font-vt323);
+}
+[data-machine="computer"] {
+  --font-display: var(--font-silkscreen);
+}
+
+/* Motion in layers (CLAUDE.md §10): slow ominous ambience and entrances, sharp glitch hits
+   (≤300ms) on events only, loud moments for start and reveal. Text being read never moves. */
 @theme {
   --ease-ominous: cubic-bezier(0.7, 0, 0.3, 1);
   --default-transition-duration: 700ms;
@@ -103,38 +117,6 @@
     }
   }
 
-  /* Title creeps down from above the viewport, out of a blur, then flickers once it lands. */
-  --animate-descend:
-    descend 4s var(--ease-ominous) 0.6s both, flicker 1.4s linear 4.6s;
-  @keyframes descend {
-    0% {
-      transform: translateY(-100vh);
-      opacity: 0;
-      filter: blur(10px);
-    }
-    60% {
-      opacity: 0.5;
-      filter: blur(3px);
-    }
-    100% {
-      transform: translateY(0);
-      opacity: 1;
-      filter: blur(0);
-    }
-  }
-  /* Options under the title: sink a short way into place out of the dark, after the title
-     has finished (6.0s), no gap. Second option overrides the delay to 6.4s. */
-  --animate-option: option-in 1.8s var(--ease-ominous) 6s both;
-  @keyframes option-in {
-    from {
-      opacity: 0;
-      transform: translateY(-1rem);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
   /* Waiting ellipsis: each dot rises out of the dark and sinks back, staggered 0.6s apart
      via [animation-delay:…] on the 2nd/3rd dot. Slow loop — a held breath, not a spinner. */
   --animate-dot: dot 2.4s var(--ease-ominous) infinite both;
@@ -146,21 +128,119 @@
       opacity: 1;
     }
   }
-  @keyframes flicker {
+
+  /* TV power-on: the picture opens from a bright line. Fill `backwards` only, so no transform
+     lingers afterwards (a transform would trap position: fixed children like the ground). */
+  --animate-power-on: power-on 700ms var(--ease-ominous) backwards;
+  @keyframes power-on {
+    0% {
+      transform: scale(1.04, 0.004);
+      filter: brightness(4);
+      opacity: 0.6;
+    }
+    45% {
+      transform: scale(1.02, 0.02);
+      filter: brightness(3);
+      opacity: 1;
+    }
+    100% {
+      transform: none;
+      filter: none;
+    }
+  }
+  /* Channel static: a burst of snow over the screen, once, on entering a TV screen. */
+  --animate-static-burst: static-burst 520ms steps(6, end) both;
+  @keyframes static-burst {
+    0% {
+      opacity: 0.85;
+      background-position: 0 0;
+    }
+    50% {
+      opacity: 0.5;
+      background-position: 37px -61px;
+    }
+    100% {
+      opacity: 0;
+      background-position: -73px 29px;
+      visibility: hidden;
+    }
+  }
+  /* VHS glitch hit: red/blue split, sliced and jittered. Events only (death, sabotage, reveal). */
+  --animate-glitch: glitch 320ms steps(1, end);
+  @keyframes glitch {
+    0% {
+      transform: translate(-3px, 1px);
+      text-shadow: 3px 0 var(--red), -3px 0 var(--blue);
+      clip-path: inset(8% 0 52% 0);
+    }
+    25% {
+      transform: translate(3px, -1px);
+      text-shadow: -4px 0 var(--red), 4px 0 var(--blue);
+      clip-path: inset(58% 0 6% 0);
+    }
+    50% {
+      transform: translate(-1px, 0);
+      text-shadow: 2px 0 var(--red), -2px 0 var(--blue);
+      clip-path: inset(28% 0 30% 0);
+    }
+    75% {
+      transform: translate(2px, 1px);
+      text-shadow: -1px 0 var(--red), 1px 0 var(--blue);
+      clip-path: inset(0);
+    }
+    100% {
+      transform: none;
+      clip-path: inset(0);
+    }
+  }
+  /* Terminal line print: a line types itself out left to right. */
+  --animate-print: print 600ms steps(18, end) both;
+  @keyframes print {
+    from {
+      clip-path: inset(0 100% 0 0);
+    }
+    to {
+      clip-path: inset(0);
+    }
+  }
+  /* Ambient: a faint bright band rolls down the TV glass. */
+  --animate-scan-roll: scan-roll 9s linear infinite;
+  @keyframes scan-roll {
+    from {
+      transform: translateY(-20vh);
+    }
+    to {
+      transform: translateY(120vh);
+    }
+  }
+  /* Ambient: the tube breathes, barely. */
+  --animate-hum: hum 5s steps(1, end) infinite;
+  @keyframes hum {
     0%, 100% {
       opacity: 1;
     }
-    8% {
-      opacity: 0.25;
+    41% {
+      opacity: 0.92;
     }
-    12% {
+    43% {
       opacity: 1;
     }
-    38% {
-      opacity: 0.55;
+    77% {
+      opacity: 0.96;
     }
-    42% {
-      opacity: 1;
+  }
+  /* Lobby ticker crawl: content is doubled, so -50% loops seamlessly. */
+  --animate-ticker: ticker 48s linear infinite;
+  @keyframes ticker {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  /* Block cursor. */
+  --animate-blink: blink 1s steps(1, end) infinite;
+  @keyframes blink {
+    50% {
+      opacity: 0;
     }
   }
 }
@@ -171,6 +251,81 @@ body {
   color: var(--white);
   font-family: var(--font-sans), ui-monospace, monospace;
   font-weight: 600;
+}
+
+::selection {
+  background: var(--orange);
+  color: var(--obsidian);
+}
+
+/* Pixel faces: no faux bold or smoothing (VT323 and Press Start ship one weight), matched
+   x-heights so swapping machines keeps the layout, and phosphor glow in the text's own hue. */
+.font-pixel,
+.font-arcade {
+  font-synthesis: none;
+  -webkit-font-smoothing: none;
+  text-shadow: 0 0 min(0.35em, 8px) color-mix(in srgb, currentColor 45%, transparent);
+}
+.font-pixel {
+  font-size-adjust: 0.53;
+}
+
+/* The machine's glass (components/machine.tsx). Scanlines and vignette are obsidian, so they only
+   darken what is lit; snow is white noise. Nothing here takes pointer events. */
+.machine-glass {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--obsidian) 55%, transparent) 0 1px,
+    transparent 1px 3px
+  );
+}
+[data-machine="tv"] > .machine-glass {
+  background-image:
+    radial-gradient(ellipse 120% 90% at 50% 50%, transparent 62%, color-mix(in srgb, var(--obsidian) 80%, transparent)),
+    repeating-linear-gradient(to bottom, color-mix(in srgb, var(--obsidian) 60%, transparent) 0 1px, transparent 1px 3px);
+}
+[data-machine="terminal"] > .machine-glass {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--obsidian) 35%, transparent) 0 1px,
+    transparent 1px 4px
+  );
+}
+.machine-band {
+  height: 18vh;
+  background: linear-gradient(to bottom, transparent, color-mix(in srgb, var(--white) 3%, transparent), transparent);
+}
+.snow {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.9 0 0 0 0 0.9 0 0 0 0 0.9 0 0 0 1.6 -0.45'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* Pixel-art frame: square, with the corner pixel knocked out. Ink via --pb (pb-* below). */
+@utility pixel-border {
+  border: 0;
+  margin: 3px;
+  box-shadow:
+    0 -3px 0 0 var(--pb, var(--blue)),
+    0 3px 0 0 var(--pb, var(--blue)),
+    -3px 0 0 0 var(--pb, var(--blue)),
+    3px 0 0 0 var(--pb, var(--blue));
+}
+@utility pb-dim {
+  --pb: color-mix(in srgb, var(--blue) 45%, transparent);
+}
+@utility pb-blue {
+  --pb: var(--blue);
+}
+@utility pb-orange {
+  --pb: var(--orange);
+}
+@utility pb-green {
+  --pb: var(--green);
+}
+@utility pb-red {
+  --pb: var(--red);
+}
+@utility pb-white {
+  --pb: var(--white);
 }
 
 /* The ground line on the narrator screen (CLAUDE.md §13). --ground is the height of the glyph
@@ -193,4 +348,37 @@ body {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+/* Story art ink (components/story-art.tsx): Hairline's four stroke tiers mapped onto the palette.
+   Plates are obsidian so nearer solids hide farther ones; the orange tier is the one highlight. */
+.story-art {
+  --hairline-plate: var(--obsidian);
+  --hairline-hi: var(--orange);
+  --hairline-edge: var(--white);
+  --hairline-mid: var(--blue);
+  --hairline-lo: color-mix(in srgb, var(--blue) 45%, transparent);
+  --hairline-stroke: 1.1;
+  filter: drop-shadow(0 0 3px color-mix(in srgb, var(--blue) 55%, transparent));
+}
+
+/* Tape-loader stripes on the home computer's boot: palette bands scrolling inside one thin bar. */
+.raster {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--red) 0 3px,
+    var(--orange) 3px 6px,
+    var(--white) 6px 9px,
+    var(--green) 9px 12px,
+    var(--blue) 12px 15px
+  );
+  background-size: 100% 30px;
+}
+@theme {
+  --animate-raster: raster 0.5s linear infinite;
+  @keyframes raster {
+    to {
+      background-position: 0 30px;
+    }
+  }
 }

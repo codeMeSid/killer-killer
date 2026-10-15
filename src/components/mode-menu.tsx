@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { sfx } from "@/lib/sfx";
 
 const OPTIONS = [
   { value: "start", label: "Start Mystery", href: "/start" },
@@ -19,6 +20,7 @@ export function ModeMenu() {
   useEffect(() => {
     const open = (i: number) => {
       const href = OPTIONS[i].href;
+      sfx.clack();
       if (href) router.push(href);
     };
     const onKey = (e: KeyboardEvent) => {
@@ -33,6 +35,7 @@ export function ModeMenu() {
         e.key === "ArrowDown" || e.key === "ArrowRight" ? 1 : e.key === "ArrowUp" || e.key === "ArrowLeft" ? -1 : 0;
       if (!step) return;
       e.preventDefault();
+      sfx.blip();
       setSelected((i) => (i + step + OPTIONS.length) % OPTIONS.length);
     };
     window.addEventListener("keydown", onKey);
@@ -40,7 +43,7 @@ export function ModeMenu() {
   }, [router, selected]);
 
   return (
-    <fieldset className="flex flex-col gap-3 text-base sm:text-lg">
+    <fieldset className="flex flex-col gap-5 font-arcade text-meta sm:text-body">
       <legend className="sr-only">Choose mode</legend>
       {OPTIONS.map((o, i) => (
         <label
@@ -49,10 +52,11 @@ export function ModeMenu() {
             // Label clicks are re-dispatched to the radio, and arrow keys fire synthetic radio
             // clicks too — act only on the real click on the label itself.
             if (e.target instanceof HTMLInputElement) return;
+            sfx.clack();
             if (o.href) router.push(o.href);
           }}
-          className={`flex cursor-pointer items-center gap-3 text-red transition-colors has-checked:text-orange has-focus-visible:underline motion-safe:animate-option ${
-            i === 1 ? "motion-safe:[animation-delay:6.4s]" : ""
+          className={`flex min-h-11 cursor-pointer items-center gap-3 text-red uppercase transition-colors has-checked:text-orange has-focus-visible:underline motion-safe:animate-rise ${
+            i === 1 ? "motion-safe:[animation-delay:500ms]" : "motion-safe:[animation-delay:250ms]"
           }`}
         >
           <input
@@ -63,8 +67,8 @@ export function ModeMenu() {
             onChange={() => setSelected(i)}
             className="peer sr-only"
           />
-          <span aria-hidden className="invisible before:content-['●'] peer-checked:visible" />
           {o.label}
+          <span aria-hidden className="invisible inline-block h-[1.1em] w-[0.7em] bg-orange peer-checked:visible motion-safe:animate-blink" />
         </label>
       ))}
     </fieldset>

@@ -7,7 +7,7 @@ import { hostView, playerView, type ViewInput } from "@/lib/engine/view";
 import { MYSTERIES } from "@/mysteries";
 
 // Dev-only gallery of every game screen in a believable mid-game state, built by the real
-// engine from a shipped mystery. No database or Ably needed. 404s in production builds.
+// engine from a shipped mystery. No database or Realtime needed. 404s in production builds.
 
 const seeded = (seed: number): Rng => () => {
   seed = (seed * 1664525 + 1013904223) % 4294967296;
@@ -17,7 +17,7 @@ const seeded = (seed: number): Rng => () => {
 const NAMES = ["Mira", "Dev", "Sam", "Ivy"];
 
 function play(rounds: number, seed: number) {
-  const { tree, slug } = MYSTERIES.find((m) => m.tree.meta.player_count === 4)!;
+  const { tree, slug } = MYSTERIES.find((m) => m.tree.meta.player_count === 4)!; // ponytail: 4p only; add ?m= when a second gallery story matters
   const rng = seeded(seed);
   let state: GameState = startGame(tree, NAMES.map((name, i) => ({ id: `p${i + 1}`, name })), rng);
   for (let r = 0; r < rounds && !state.ending; r++) {
@@ -55,6 +55,7 @@ async function Scene({ searchParams }: PageProps<"/dev/screens">) {
     "lobby-player": () => playerView(lobby, { id: "p1", name: "Mira" }, null),
     "mystery-narrate": () => hostView(base),
     "mystery-choose": () => hostView(choosing),
+    "mystery-resolving": () => hostView({ ...base, phase: "resolving" }),
     "story-narrate": () => playerView(base, youRef, null),
     "story-choose": () => playerView({ ...choosing, locked: new Set() }, youRef, null),
     "story-killer": () => playerView({ ...choosing, locked: new Set() }, { id: killer.id, name: killer.name }, null),

@@ -4,6 +4,7 @@ import { adminClient } from "@/lib/supabase/admin";
 import { optionsFor, resolveRound, startGame, validatePick } from "@/lib/engine/engine";
 import type { GameState, Pick, Slot } from "@/lib/engine/types";
 import { hostView, playerView, type HostView, type PlayerView, type RoomPhase, type RoomStatus, type ViewInput } from "@/lib/engine/view";
+import { fill, lexiconFor } from "@/mysteries/catalog";
 import { getMystery, type Mystery } from "@/mysteries";
 
 // The server-authoritative game loop. Every mutation: authorize by user id → conditional update
@@ -106,6 +107,7 @@ export async function preview(rawCode: string) {
     playerCount: tree.meta.player_count,
     seatsLeft: Math.max(0, tree.meta.player_count - players.length),
     status: room.status,
+    slug: room.mystery_slug,
   };
 }
 
@@ -154,17 +156,18 @@ export async function joinRoom(rawCode: string, userId: string, rawName: string)
   const existing = players.find((p) => p.user_id === userId);
   if (existing) return { code: room.code }; // rejoin: same seat, same name
   if (room.host_id === userId) throw new ApiError("This screen is hosting. Join from your phone.", 409);
-  if (room.status !== "lobby") throw new ApiError("That flight has left.", 409);
+  const words = lexiconFor(room.mystery_slug).join;
+  if (room.status !== "lobby") throw new ApiError(words.started, 409);
   const capacity = mysteryOf(room).tree.meta.player_count;
-  if (players.length >= capacity) throw new ApiError("Every seat is taken.", 409);
+  if (players.length >= capacity) throw new ApiError(words.full, 409);
   if (players.some((p) => p.name.toLowerCase() === name.toLowerCase())) {
-    throw new ApiError("Someone aboard already has that name.", 409);
+    throw new ApiError(words.nameTaken, 409);
   }
 
   const taken = new Set(players.map((p) => p.seat));
   const seat = Array.from({ length: capacity }, (_, i) => i + 1).find((s) => !taken.has(s))!;
   const { error } = await db.from("players").insert({ room_id: room.id, user_id: userId, name, seat });
-  if (error?.code === UNIQUE_VIOLATION) throw new ApiError("Someone took that seat or name a moment ago. Try again.", 409);
+  if (error?.code === UNIQUE_VIOLATION) throw new ApiError("Someone took that place or name a moment ago. Try again.", 409);
   if (error) throw error;
   await ring(room.code);
   return { code: room.code };
@@ -176,7 +179,7 @@ export async function startRoom(rawCode: string, userId: string) {
   if (room.status !== "lobby") return { code: room.code };
   const { tree } = mysteryOf(room);
   const missing = tree.meta.player_count - players.length;
-  if (missing > 0) throw new ApiError(`Waiting for ${missing} more aboard.`, 409);
+  if (missing > 0) throw new ApiError(`${fill(lexiconFor(room.mystery_slug).lobby.waiting, { n: missing })}.`, 409);
 
   const state = startGame(tree, players.map((p) => ({ id: p.id, name: p.name })), rng);
   const { error } = await adminClient()

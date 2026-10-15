@@ -1,11 +1,14 @@
 import type { ButtonHTMLAttributes } from "react";
 
-/** Full-width orange button. Hover/focus: orange wash fills left → right behind the label. */
+/**
+ * The primary action: a square pixel-framed block. Hover/focus: an orange wash fills left → right
+ * behind the label. Disabled keeps a full-contrast label that says why (CLAUDE.md §13).
+ */
 export function FillButton({ children, ...props }: ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
     <button
       {...props}
-      className="group relative w-full overflow-hidden rounded-md border border-orange py-3 text-base font-bold text-orange focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-40 sm:text-lg"
+      className="group pixel-border pb-orange relative min-h-14 w-[calc(100%-6px)] overflow-hidden py-3 font-pixel text-ui text-orange transition-[box-shadow,color] focus-visible:outline-none active:translate-y-px disabled:cursor-not-allowed disabled:pb-dim disabled:text-white"
     >
       <span
         aria-hidden

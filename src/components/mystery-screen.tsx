@@ -3,12 +3,17 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { FillButton } from "@/components/fill-button";
 import { Ground, groundClass } from "@/components/ground";
+import { LoaderLine } from "@/components/loader-line";
+import { Machine } from "@/components/machine";
 import { Narrator, sentences, type Beat } from "@/components/narrator";
 import { PhaseBar, type Ink } from "@/components/phase-bar";
 import { RoomLoading } from "@/components/room-loading";
+import { SoundToggle } from "@/components/sound-toggle";
+import { StoryArt } from "@/components/story-art";
 import { WaitingDots } from "@/components/waiting-dots";
 import type { HostView } from "@/lib/engine/view";
 import { capitalize, inWords, postJson, useRoom, useWakeLock } from "@/lib/use-room";
+import { lexiconFor } from "@/mysteries/catalog";
 
 const VOICE_KEY = "kk:voice";
 
@@ -95,7 +100,8 @@ export function Stage({ view, online }: { view: HostView; online: Set<string> })
     const out: Beat[] = [];
     for (const line of view.recap) {
       for (const s of sentences(line.text)) {
-        out.push({ text: s, ink: line.kind === "sabotage" || line.kind === "death" ? "red" : "white", flicker: line.kind === "death" });
+        const hit = line.kind === "death" || line.kind === "sabotage" ? line.kind : undefined;
+        out.push({ text: s, ink: hit ? "red" : "white", hit });
       }
     }
     if (view.intro) {
@@ -106,6 +112,7 @@ export function Stage({ view, online }: { view: HostView; online: Set<string> })
     return out;
   }, [view.recap, view.intro, view.clock.value, view.clock.unit]);
 
+  const words = lexiconFor(view.mystery.slug);
   const choosing = view.phase === "choosing";
   const resolving = view.phase === "resolving";
   const ended = view.status === "ended";
@@ -114,10 +121,10 @@ export function Stage({ view, online }: { view: HostView; online: Set<string> })
   const lockedCount = alive.filter((p) => p.locked).length;
 
   return (
-    <div className={`relative flex min-h-svh flex-1 flex-col overflow-hidden ${groundClass(step)}`}>
+    <Machine kind="tv" className={`min-h-svh overflow-hidden ${groundClass(step)}`}>
       <PhaseBar ink={ink}>
-        <span className="hidden sm:inline">{view.mystery.title}</span>
-        <span className="font-bold">
+        <span className="hidden font-pixel sm:inline">{view.mystery.title}</span>
+        <span className="font-pixel">
           <span className="sr-only">{view.clock.label} </span>
           {clockLabel}
         </span>
@@ -127,20 +134,22 @@ export function Stage({ view, online }: { view: HostView; online: Set<string> })
         <section className="lg:col-span-8" aria-label="Narration">
           {choosing ? (
             <div className="flex flex-col gap-8 motion-safe:animate-rise">
-              <p className="seam-ink text-statement font-bold [--seam-top:var(--orange)]">
-                Choose on your phones.
-              </p>
+              <p className="seam-ink font-pixel text-statement [--seam-top:var(--orange)]">Choose on your phones.</p>
               <p className="max-w-3xl text-body text-white">{view.intro}</p>
-              <p className="text-body text-blue">
+              <p className="font-pixel text-ui text-white">
                 {capitalize(inWords(lockedCount))} of {inWords(alive.length)} locked in
                 <WaitingDots />
               </p>
             </div>
           ) : resolving ? (
-            <p className="text-statement font-bold text-white">
-              The wind takes your choices
-              <WaitingDots />
-            </p>
+            <div className="flex flex-col gap-6">
+              <p className="font-pixel text-statement text-white">
+                {words.play.resolving}
+                <WaitingDots />
+              </p>
+              <StoryArt slug={view.mystery.slug} variant="loader" />
+              <LoaderLine lines={words.play.loaders} className="text-ui" />
+            </div>
           ) : (
             <Narrator
               key={`${view.status}-${view.clock.value}-${view.recap.length}`}
@@ -149,13 +158,11 @@ export function Stage({ view, online }: { view: HostView; online: Set<string> })
               onEnd={advance}
               end={
                 <div className="flex max-w-md flex-col gap-4">
-                  <p className="text-statement font-bold text-white">
-                    {ended ? "The ground is here." : "Everyone ready?"}
-                  </p>
+                  <p className="font-pixel text-statement text-white">{ended ? words.play.finale : "Everyone ready?"}</p>
                   <FillButton type="button" onClick={advance} disabled={advancing}>
                     {ended ? "Reveal the ending" : "Open the choices"}
                   </FillButton>
-                  <p className="text-meta text-blue">or press Enter</p>
+                  <p className="text-body text-white">or press Enter</p>
                   {error && (
                     <p role="alert" className="text-meta text-red">
                       {error}
@@ -171,15 +178,15 @@ export function Stage({ view, online }: { view: HostView; online: Set<string> })
           <ul className="flex flex-col gap-6">
             {view.players.map((p) => {
               const offline = !online.has(p.id);
-              const status = !p.alive ? "fallen" : offline ? "offline" : choosing ? (p.locked ? "locked in" : "thinking") : null;
+              const status = !p.alive ? words.play.fallen : offline ? "offline" : choosing ? (p.locked ? "locked in" : "thinking") : null;
               return (
                 <li key={p.id} className="flex flex-col">
-                  <span className={`text-ui font-bold ${p.alive ? "text-white" : "text-red line-through"}`}>{p.name}</span>
-                  {p.character && <span className="text-meta text-blue">{p.character.name}</span>}
+                  <span className={`font-pixel text-ui ${p.alive ? "text-white" : "text-red line-through"}`}>{p.name}</span>
+                  {p.character && <span className="text-body text-white">{p.character.name}</span>}
                   {status && (
                     <span
-                      className={`text-meta ${
-                        status === "locked in" ? "text-green" : status === "thinking" ? "text-blue" : "text-red"
+                      className={`text-body font-bold ${
+                        status === "locked in" ? "text-green" : status === "thinking" ? "text-white" : "text-red"
                       }`}
                     >
                       {status}
@@ -193,9 +200,11 @@ export function Stage({ view, online }: { view: HostView; online: Set<string> })
         </aside>
       </div>
 
-      <Ground />
+      <Ground glyphs={words.glyphs} />
 
-      <p className="absolute right-4 bottom-3 z-10 text-meta text-blue sm:right-8">
+      <div className="absolute right-4 bottom-3 z-10 flex items-center gap-6 sm:right-8">
+        <SoundToggle keyHint />
+        <p className="text-body text-white">
         <button
           type="button"
           onClick={toggleVoice}
@@ -205,7 +214,8 @@ export function Stage({ view, online }: { view: HostView; online: Set<string> })
           Voice {voice ? "on" : "off"}
         </button>
         <span aria-hidden> · V</span>
-      </p>
-    </div>
+        </p>
+      </div>
+    </Machine>
   );
 }

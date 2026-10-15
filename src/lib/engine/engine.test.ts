@@ -216,7 +216,9 @@ function playRandom(tree: Tree, seed: number) {
 const mysteriesDir = join(here, "../../mysteries");
 const shipped = (() => {
   try {
-    return readdirSync(mysteriesDir).filter((f) => f.endsWith(".json")).map((f) => [f, load(join(mysteriesDir, f))] as const);
+    return readdirSync(mysteriesDir, { withFileTypes: true })
+      .filter((d) => d.isDirectory())
+      .map((d) => [d.name, load(join(mysteriesDir, d.name, "tree.json"))] as const);
   } catch {
     return [];
   }

@@ -22,12 +22,15 @@ Only these five text colors are allowed anywhere in the UI. No other color, no T
 - Opacity modifiers on a palette token (`border-blue/40`) are allowed — it is still the same hue.
 - **Site frame:** `<body>` in `src/app/layout.tsx` carries `border border-orange` — one orange box around every page. Set it there only; inner surfaces still use `border-blue/30..40`.
 
-- **Font:** IBM Plex Mono, weights 600 (default, set on `body`) and 700 (`font-bold`) only, loaded via `next/font/google` in `src/app/layout.tsx`. `font-sans` and `font-mono` both resolve to it. Other weights (`font-normal`, `font-medium`…) are not loaded — the browser fakes them.
-  - Exception: ASCII art uses `font-art` (Geist Mono, loaded only for it). Plex Mono lacks box-drawing glyphs, so the KILLER art falls back glyph-by-glyph and the columns misalign.
+- **Glow and RGB split are allowed, in palette hues only** (user decision 2026-10-15, retro CRT look): phosphor `text-shadow` in the text's own colour (`.font-pixel` gets it automatically), red/blue split in the `glitch` hit, obsidian scanlines/vignette, white snow. No other hue enters through an effect.
+- **Fonts** (all via `next/font/google` in `src/app/layout.tsx`):
+  - Body: IBM Plex Mono 600 (default on `body`) / 700. `font-sans`/`font-mono` resolve to it. Anything read closely stays in Plex: phone options, clues, character card, premise, epilogue.
+  - Display: `font-pixel`, one pixel face per machine (§14): Pixelify Sans (TV), VT323 (phone terminal), Silkscreen (home computer). `font-arcade` = Press Start 2P for labels of three words or fewer (menu items, wordmark). Pixel faces get `font-synthesis: none` (no faux bold; VT323/Press Start ship one weight) and `font-size-adjust` so machines swap without reflow.
+  - ASCII art uses `font-art` (Geist Mono): Plex Mono lacks box-drawing glyphs, so the KILLER art would misalign.
 
 ## 2. Stack
 
-Next.js (App Router) + TypeScript + Tailwind v4. Supabase for data, auth and realtime (Supabase project `killer-killer`, ref `clymvaueusidcxaqezjz`, ap-south-1). Ably was replaced by Supabase Realtime on 2026-10-15; the Ably files remain unused (see MEMORY.md). One project holds both frontend and backend — no separate API service.
+Next.js (App Router) + TypeScript + Tailwind v4. Supabase for data, auth and realtime (Supabase project `killer-killer`, ref `clymvaueusidcxaqezjz`, ap-south-1).  Realtime is Supabase Realtime only (Ably removed 2026-10-15). One project holds both frontend and backend — no separate API service.
 
 ## 3. Backend responses
 
@@ -37,11 +40,11 @@ Every route handler returns the envelope from `src/lib/api.ts`:
 { success: boolean; errorMessage: string; errorCode: number; payload: T | null }
 ```
 
-Use `ok(payload)` / `fail(message, code)`. The only exception is `/api/ably/token`, which must return a raw Ably `TokenRequest` because the Ably SDK requires that exact shape.
+Use `ok(payload)` / `fail(message, code)`. No exceptions.
 
 ## 4. Secrets
 
-- `SUPABASE_SECRET_KEY`, `SUPABASE_DB_PASSWORD` (and legacy `ABLY_API_KEY`) are server-only. Never prefix with `NEXT_PUBLIC_`, never import `src/lib/ably.ts` from a Client Component.
+- `SUPABASE_SECRET_KEY`, `SUPABASE_DB_PASSWORD` are server-only. Never prefix with `NEXT_PUBLIC_`, never import `src/lib/supabase/admin.ts` from a Client Component.
 - The browser joins Realtime with its own anonymous-session JWT; private `room:<CODE>` channels are authorized by RLS on `realtime.messages` (members only, presence only, never broadcast).
 - `.env.local` is gitignored; keep `.env.example` in sync when adding a variable.
 
@@ -88,14 +91,16 @@ When context usage reaches **50%**, compact before continuing. Do not wait for t
 - Carry forward: files modified this session, failing tests with exact error text, DB migration state, architecture decisions and their *why*, the current task.
 - Anything already written to this file or `MEMORY.md` survives compaction — that's the point of §8 and §11. Write it down *before* compacting, not after.
 
-## 10. Motion — ominous tone
+## 10. Motion — layered, ominous base
 
-All motion is slow, heavy, deliberate. Nothing snaps, bounces, or springs.
+Three layers (user decision 2026-10-15: "all of the above"), one guardrail: **text being read never moves**.
 
-- Easing: `ease-ominous` (`cubic-bezier(0.7, 0, 0.3, 1)`). Default for every `transition-*` utility — don't override with `ease-out`/`ease-in`.
-- Duration: `transition` defaults to 700ms. Entrances 2s+. No sub-300ms motion except focus rings.
-- Entrances come out of the dark: fade from opacity 0, optionally out of blur. Flicker is the accent, used sparingly.
-- Tokens + keyframes live in `src/app/globals.css` (`@theme`). Gate every animation with `motion-safe:`.
+1. **Ambient, slow:** scanlines, tube hum (`animate-hum`), a rolling band on TV glass (`animate-scan-roll`), the rising ground, Hairline figures idling on their tour. Faint enough that narration stays legible.
+2. **Entrances, ominous:** `ease-ominous` (`cubic-bezier(0.7, 0, 0.3, 1)`, default for every `transition-*`), 700ms default, entrances out of the dark (`animate-rise`, `animate-print` for terminal lines, `animate-power-on` + snow `animate-static-burst` on every TV screen).
+3. **Hits, sharp (≤300ms):** `animate-glitch` (red/blue split, sliced) only on events: death, exposed sabotage, the reveal, all aboard, errors. `animate-flicker-in` for joins and lock-in. Loud moments = game start and the ending.
+- Every animation is gated `motion-safe:`; reduced motion keeps the content and drops the travel (the Hairline kernel skips its tour by itself).
+- Flashing: never more than three flashes a second over a large area (WCAG 2.3.1); the boot raster stays inside one thin bar.
+- Tokens + keyframes live in `src/app/globals.css` (`@theme`).
 
 ## 11. MEMORY.md — decision log + project memory
 
@@ -112,7 +117,9 @@ Rules stay here; history and state go there. Update it in the same turn as the c
 - **Realtime is a doorbell, not a pipe.** After each mutation the server sends a payload-free `state` broadcast (`httpSend`, secret key) on the private channel `room:<CODE>`; clients refetch `GET /api/rooms/[code]`. Clients may only listen and track presence (`supabase/migrations/*_realtime_rooms.sql`). Why: secrets can't leak over a channel that carries nothing, and reconnect = refetch.
 - **Views are the only data that leaves the server** (`src/lib/engine/view.ts`). Never send `killer_id`, `killer_method`, `points_to`, clue/item/scene/option ids, clue kinds or the track; phones submit picks by slot `A–D`. The fuzz test in `engine.test.ts` enforces this — keep it passing.
 - **Race-safety by conditional update:** state transitions are `update … where phase = <expected>`; only one request wins a resolve.
-- **Mysteries are repo files** (`src/mysteries/*.json` + `index.ts` manifest with ASCII art), generated and validated by the `murder-mystery-story-tree` skill (`validate_tree.py` = 0 errors before shipping). Imported `server-only`. Option text must complete "You will …".
+- **Mysteries are repo folders** `src/mysteries/<slug>/` written by the `murder-mystery-story-tree` skill: `tree.json` (`validate_tree.py` = 0 errors), `lexicon.json` (`validate_tree.py --lexicon`) and `art.ts` (its Hairline figure, wrapped by the skill's `scripts/art.py`). Option text must complete "You will …".
+  - Trees are secret → `src/mysteries/index.ts` (`server-only`). Words and art are public → `src/mysteries/catalog.ts` (`LEXICON`, code-split `ART`, `fill()`). A new story is registered in **both**. Views already carry `mystery.slug`; screens look words and art up by it.
+  - **The lexicon themes statements, statuses and loaders** (ship → decks and tides, space → hatches and oxygen); buttons keep plain verb + object labels. No setting words hard-coded in components or `rooms.ts`. Contract: the skill's `references/lexicon.md`, type in `src/mysteries/types.ts`.
 - Engine files use relative `.ts` imports so `npm test` (`node --test`) runs them natively.
 - `/dev/screens?s=<scene>` renders every game screen from engine-built views without DB/Realtime; 404 in production.
 - Supabase config is repo-tracked in `supabase/config.toml` (anonymous sign-ins on, 300/hour/IP — friends share one Wi-Fi). Change it there and `npx supabase config push`; never click-edit the dashboard. Review the diff before confirming: a blind `yes |` pushes every local default.
@@ -122,10 +129,22 @@ Rules stay here; history and state go there. Update it in the same turn as the c
 Art direction from the `design-taste-frontend` skill: direction `sentence-as-layout`, seed 563288058, with `--keep palette,type` (§1 always wins over the skill).
 - **One sentence at a time at poster scale** on the TV. Headlines ≤ 2 lines at every width.
 - **Type steps** (globals.css): `text-display`, `text-statement`, `text-ui`, `text-body`, `text-meta`. No other sizes in game screens.
-- **No round numbers anywhere** — the setting's clock (altitude) is the progress; the rising glyph ground (`ground.tsx`) shows it. No option letters, no 01/02 numbering, no eyebrow labels.
+- **No round numbers anywhere** — the setting's clock (altitude) is the progress; the rising glyph ground (`ground.tsx`, glyphs from the lexicon) shows it. No option letters, no 01/02 numbering, no eyebrow labels.
 - **Ink by phase** on the `PhaseBar`: narrating white, choosing orange, ended/recap red, solved green. Nothing else recolours.
 - **Seam ink** (`seam-ink` utility): text above the ground line in its ink, below it blue. Two flat inks with a hard edge, the one sanctioned use of a CSS gradient — never a visible gradient.
+- **TV legibility:** anything read from the sofa (players, characters, status, join instructions, seat labels, buttons) is `text-body` or larger in white; blue `text-meta` is decoration only, never information. Why: blue is 3.9:1 on obsidian and the palette is fixed, so contrast has to come from size and ink choice.
+- **Disabled actions keep a full-contrast label that says why** ("Pick what you will do", "Waiting for two more aboard"); only the fill goes inactive. Never fade a primary button with opacity.
 - Counts in words ("Two of four locked in"), never digits in prose. Dice/rolls never appear.
 - Secrets on phones sit behind hold-to-reveal.
+- **Pixel-art frames:** surfaces and controls use `pixel-border` + `pb-*` ink (square, corner pixel knocked out), never rounded corners. Swiss underneath: 12-column grid, flush left, blue hairline rules between sections.
+
+## 14. Retro machines, story art, sound
+
+Style (user, 2026-10-15): horror + pixel-art + maximalism + Swiss + flat 2D, as old machines. UX first; don't over-complicate.
+- **Machine by role** — wrap every screen in `<Machine kind>` (`src/components/machine.tsx`): `tv` = host lobby, `/mystery`, host `/end`, `RoomLoading`; `terminal` = `/join`, phone lobby, `/story`, phone `/end`; `computer` = `/` (boot sequence, once per session, any key skips) and `/start`. The machine sets the `font-pixel` face and lays CSS-only glass (scanlines, vignette, snow) over the screen.
+- **Story art** — `<StoryArt slug variant="card|hero|loader|end">` mounts the story's Hairline figure (`src/mysteries/<slug>/art.ts`) on the one shared kernel `src/lib/hairline/kernel.ts` (vendored verbatim; load it nowhere else — two instances duplicate the frame loop and mask ids). Everything but the case card idles on the figure's tour. Hairline tiers are mapped to the palette in `.story-art` (hi orange, edge white, mid blue, lo dim blue, plates obsidian). Art must be ominous; figures never set colours or text.
+- **Loaders are the story's own lines** (`<LoaderLine lines={lexicon.play.loaders}>` + a `loader` figure). Only the very first `RoomLoading`, before the story is known, is generic ("Tuning in" over snow).
+- **Sound** — `src/lib/sfx.ts`, WebAudio-synthesized (no files): `static`, `clack`, `blip`, `sting`, `thump`. On by default, toggle stored in `kk:sound`, `<SoundToggle>` on every game screen (TV also binds `S`). Audio unlocks on the first tap/key (autoplay rules). Hook sounds to events, never to idle loops.
+- The vendored kernel and the generated `art.ts` files are excluded from ESLint and carry `// @ts-nocheck` (they are verbatim skill output).
 
 @MEMORY.md

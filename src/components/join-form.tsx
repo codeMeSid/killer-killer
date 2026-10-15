@@ -4,20 +4,24 @@ import { useRouter } from "next/navigation";
 import { FillButton } from "@/components/fill-button";
 import { Fragment, useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
 import type { ApiResponse } from "@/lib/api";
-import { capitalize, inWords, postJson } from "@/lib/use-room";
+import { sfx } from "@/lib/sfx";
+import { capitalize, postJson } from "@/lib/use-room";
+import { fill, LEXICON } from "@/mysteries/catalog";
 
 const LENGTH = 8;
 
-type Preview = { title: string; difficulty: string; playerCount: number; seatsLeft: number; status: string };
+type Preview = { title: string; difficulty: string; playerCount: number; seatsLeft: number; status: string; slug: string };
 
-/** What the code found, as one line under the boxes. Null `ok` means still looking. */
-function describe(p: ApiResponse<Preview> | null): { text: string; ok: boolean | null } {
-  if (!p) return { text: "Looking for that flight…", ok: null };
+/** What the code found, as one line under the boxes, in the story's own words. Null `ok` = still looking. */
+function describe(p: ApiResponse<Preview> | null): { text: string; ok: boolean | null; joining?: string } {
+  if (!p) return { text: "Searching…", ok: null };
   if (!p.success || !p.payload) return { text: p.errorMessage || "No mystery with that code.", ok: false };
-  const { title, difficulty, seatsLeft, status } = p.payload;
-  if (status !== "lobby") return { text: "That flight has left.", ok: false };
-  if (seatsLeft === 0) return { text: "Every seat is taken.", ok: false };
-  return { text: `${title} · ${capitalize(difficulty)} · ${capitalize(inWords(seatsLeft))} ${seatsLeft === 1 ? "seat" : "seats"} left`, ok: true };
+  const { title, difficulty, seatsLeft, status, slug } = p.payload;
+  const words = LEXICON[slug]?.join;
+  if (status !== "lobby") return { text: words?.started ?? "That game has started.", ok: false };
+  if (seatsLeft === 0) return { text: words?.full ?? "Every place is taken.", ok: false };
+  const left = fill(words?.left ?? "Places left: {n}", { n: seatsLeft });
+  return { text: `${title} · ${capitalize(difficulty)} · ${left}`, ok: true, joining: words?.joining };
 }
 
 /**
@@ -102,8 +106,10 @@ export function JoinForm({ initialCode = "" }: { initialCode?: string }) {
     setJoining(true);
     setError(null);
     const res = await postJson<{ code: string }>(`/api/rooms/${code}/players`, { name: name.trim() });
-    if (res.success && res.payload) router.push(`/lobby/${res.payload.code}`);
-    else {
+    if (res.success && res.payload) {
+      sfx.clack();
+      router.push(`/lobby/${res.payload.code}`);
+    } else {
       setError(res.errorMessage);
       setJoining(false);
     }
@@ -112,13 +118,15 @@ export function JoinForm({ initialCode = "" }: { initialCode?: string }) {
   return (
     <form onSubmit={onSubmit} className="flex w-full max-w-lg flex-col gap-8 text-orange">
       <fieldset className="flex flex-col gap-3">
-        <legend className="mb-3 text-sm sm:text-base">Join code</legend>
+        <legend className="mb-3 font-pixel text-ui">
+          <span aria-hidden>&gt; </span>Join code
+        </legend>
         <div className="flex items-center gap-1.5 sm:gap-2">
           {digits.map((d, i) => (
             <Fragment key={i}>
               {i === LENGTH / 2 && (
-                <span aria-hidden className="px-1 text-xl sm:px-2 sm:text-3xl">
-                  –
+                <span aria-hidden className="px-1 font-pixel text-ui sm:px-2">
+                  -
                 </span>
               )}
               <input
@@ -138,34 +146,41 @@ export function JoinForm({ initialCode = "" }: { initialCode?: string }) {
                   if (!raw) setDigits((ds) => ds.map((c, k) => (k === i ? "" : c)));
                   else fill(i, raw);
                 }}
-                className="h-14 w-8 rounded-md border border-orange/40 bg-background text-center text-2xl font-bold text-orange caret-orange outline-none transition-colors focus:border-orange focus:ring-2 focus:ring-orange/30 sm:h-20 sm:w-13 sm:text-4xl"
+                className="pixel-border pb-dim h-14 w-7 bg-background text-center font-pixel text-statement text-orange caret-orange outline-none transition-[box-shadow] [caret-shape:block] focus:pb-orange sm:h-20 sm:w-12"
               />
             </Fragment>
           ))}
         </div>
-        <p aria-live="polite" className={`min-h-6 text-meta sm:text-body ${found?.ok === false ? "text-red" : "text-blue"}`}>
+        <p
+          key={found?.text}
+          aria-live="polite"
+          className={`min-h-[2lh] text-body ${found?.ok === false ? "text-red motion-safe:animate-glitch" : found?.ok ? "text-white" : "text-blue"}`}
+        >
+          {found && <span aria-hidden className="text-orange">&gt; </span>}
           {found?.text ?? ""}
         </p>
       </fieldset>
 
-      <label className="flex w-full flex-col gap-2 text-sm sm:text-base">
-        <span>Name</span>
+      <label className="flex w-full flex-col gap-2">
+        <span className="font-pixel text-ui">
+          <span aria-hidden>&gt; </span>Name
+        </span>
         <input
           value={name}
           onChange={(e) => setName(e.target.value)}
           maxLength={24}
           autoComplete="off"
           placeholder="who are you?"
-          className="w-full border-b border-orange/40 bg-background py-2 text-base text-orange caret-orange outline-none transition-colors placeholder:text-orange/40 focus:border-orange sm:text-lg"
+          className="w-full border-b border-orange/40 bg-background py-2 text-body text-orange caret-orange outline-none transition-colors [caret-shape:block] placeholder:text-orange/60 focus:border-orange"
         />
       </label>
 
       <div className="flex flex-col gap-3">
         <FillButton type="submit" disabled={!ready}>
-          {joining ? "Boarding…" : "Join Mystery"}
+          {joining ? (found?.joining ?? "Joining…") : "Join Mystery"}
         </FillButton>
         {error && (
-          <p role="alert" className="text-meta text-red sm:text-body">
+          <p role="alert" className="text-body text-red motion-safe:animate-glitch">
             {error}
           </p>
         )}
