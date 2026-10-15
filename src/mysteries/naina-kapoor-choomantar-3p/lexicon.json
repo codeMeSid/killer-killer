@@ -1,0 +1,36 @@
+{
+  "schema": "mm-lexicon/1",
+  "hook": "{victim} never came out.",
+  "glyphs": "~ ' . ░",
+  "lobby": {
+    "phase": "At the gate",
+    "seats": "{N} dared the haveli.",
+    "nobody": "Nobody has come yet.",
+    "some": "{N} inside the gate.",
+    "full": ["All inside.", "The gate is chained."],
+    "joined": ["You're inside", "the haveli."],
+    "present": "inside",
+    "empty": "unclaimed",
+    "waiting": "Waiting on {n} more to dare"
+  },
+  "join": {
+    "started": "The gate is chained.",
+    "full": "The haveli has enough.",
+    "left": "Dares left: {n}",
+    "joining": "Climbing the wall…",
+    "nameTaken": "That name is already inside."
+  },
+  "play": {
+    "resolving": "The haveli listens",
+    "finale": "The caretaker's key turns.",
+    "fallen": "gone",
+    "dead": "You didn't come out.",
+    "loaders": ["Listening at the tank", "Counting your footsteps", "Watching the north niche", "Feeding the last lamp", "Waiting for dawn"]
+  },
+  "end": {
+    "cast": "Who came out.",
+    "alive": "came out",
+    "dead": "gone",
+    "truth": "You named the truth."
+  }
+}

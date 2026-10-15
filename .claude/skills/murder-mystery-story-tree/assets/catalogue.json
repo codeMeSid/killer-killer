@@ -28,6 +28,20 @@
         "start": 10,
         "end": 1
       }
+    },
+    {
+      "id": "choomantar",
+      "name": "Choomantar",
+      "premise": "Four kids enter a haunted house on a dare, and only three will come out. One of them is already dead inside, and one of the other three is the reason why. They must find the killer before the night is over.",
+      "player_role": "suspects",
+      "tone": "haunted-house horror, whispered chants, guttering candlelight and things moving just out of sight; the ghost is only a rumour, the danger is real",
+      "content_rating": "pg13",
+      "clock": {
+        "label": "Minutes until dawn",
+        "unit": "min",
+        "start": 300,
+        "end": 30
+      }
     }
   ]
 }

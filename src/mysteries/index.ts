@@ -1,5 +1,6 @@
 import "server-only";
 import type { Tree } from "@/lib/engine/types";
+import nainaKapoor from "./naina-kapoor-choomantar-3p/tree.json";
 import brijmohanValentine from "./brijmohan-valentine-monster-4p/tree.json";
 
 // Every mystery is a folder written by the murder-mystery-story-tree skill: tree.json (validated by
@@ -11,6 +12,7 @@ export type Mystery = { slug: string; tree: Tree };
 
 export const MYSTERIES: Mystery[] = [
   { slug: "brijmohan-valentine-monster-4p", tree: brijmohanValentine as unknown as Tree },
+  { slug: "naina-kapoor-choomantar-3p", tree: nainaKapoor as unknown as Tree },
 ];
 
 export function getMystery(slug: string): Mystery | undefined {

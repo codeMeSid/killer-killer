@@ -10,6 +10,8 @@ and the epilogue. Read it as the room would hear it: a line that contradicts ano
 actor is unclear, or a choice that changes nothing is a writing bug to fix in the tree.
 
 Follows references/engine-rules.md. Picks are random (seeded); about one in three picks pushes luck.
+`play(tree, seed, phones, policy)` takes an optional `policy(player, options, rng, killer)` so a script can
+simulate a room that plays for the clues and count how often the Solved track is really reachable.
 """
 import argparse
 import json
@@ -22,7 +24,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import constants as C  # noqa: E402
 
 
-def play(t, seed, phones):
+def play(t, seed, phones, policy=None):
     rng = random.Random(seed)
     w, meta = t["world"], t["meta"]
     D = C.DIFFICULTY[meta["difficulty"]]
@@ -89,7 +91,7 @@ def play(t, seed, phones):
         picks = []
         for p in alive:
             opts = options(p)
-            o = rng.choice(opts)
+            o = policy(p, opts, rng, killer) if policy else rng.choice(opts)
             others = [x for x in alive if x is not p]
             if o.get("sabotage", {}).get("scope") == "player" and not others:
                 o = next(x for x in opts if not x.get("sabotage"))

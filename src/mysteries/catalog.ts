@@ -1,6 +1,7 @@
 import type { FigureDefine } from "@/lib/hairline";
 import { capitalize, inWords } from "@/lib/words";
 import type { Lexicon } from "./types";
+import nainaKapoorLexicon from "./naina-kapoor-choomantar-3p/lexicon.json";
 import brijmohanValentineLexicon from "./brijmohan-valentine-monster-4p/lexicon.json";
 
 // Client-safe story data: each story's words and its Hairline figure. Never import a tree here;
@@ -8,11 +9,13 @@ import brijmohanValentineLexicon from "./brijmohan-valentine-monster-4p/lexicon.
 
 export const LEXICON: Record<string, Lexicon> = {
   "brijmohan-valentine-monster-4p": brijmohanValentineLexicon as Lexicon,
+  "naina-kapoor-choomantar-3p": nainaKapoorLexicon as Lexicon,
 };
 
 /** Code-split: a figure loads only on the screen that shows it. */
 export const ART: Record<string, () => Promise<{ default: FigureDefine }>> = {
   "brijmohan-valentine-monster-4p": () => import("./brijmohan-valentine-monster-4p/art"),
+  "naina-kapoor-choomantar-3p": () => import("./naina-kapoor-choomantar-3p/art"),
 };
 
 export function lexiconFor(slug: string): Lexicon {
