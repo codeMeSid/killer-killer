@@ -10,7 +10,7 @@ import { capitalize, DIFFICULTY_INK, inWords, postJson } from "@/lib/use-room";
 
 /**
  * "Pick a case." over a row of cartridges, one per story, each carrying the story's own Hairline
- * figure (it answers the pointer). ←/→/↑/↓ anywhere moves the selection, Enter opens it; clicking a
+ * figure (it loops on its own). ←/→/↑/↓ anywhere moves the selection, Enter opens it; clicking a
  * cartridge opens it directly (same grammar as the home menu).
  */
 export function CasePicker({ cards }: { cards: MysteryCard[] }) {

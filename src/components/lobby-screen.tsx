@@ -182,7 +182,7 @@ export function HostLobby({ view, online }: { view: HostView; online: Set<string
           </div>
           <div className="order-first flex flex-wrap items-end gap-6 sm:flex-nowrap lg:order-none lg:col-span-4 lg:flex-col lg:items-end">
             {joinUrl && <JoinQr url={joinUrl} className="w-40 sm:w-48" />}
-            <StoryArt slug={view.mystery.slug} variant="hero" caption className="hidden max-w-[14rem] sm:flex lg:max-w-[24rem]" />
+            <StoryArt slug={view.mystery.slug} variant="hero" className="hidden max-w-[14rem] sm:flex lg:max-w-[24rem]" />
           </div>
         </section>
 

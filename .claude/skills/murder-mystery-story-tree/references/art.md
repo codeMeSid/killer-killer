@@ -1,7 +1,8 @@
 # Story art
 
-Every story ships one Hairline figure: an isometric line drawing that answers the pointer. The app shows it on the
-case card and idles its tour as a screensaver on the TV lobby, the loaders and the end screen.
+Every story ships one Hairline figure: an isometric line drawing that plays its tour on a loop. The app shows it, non-interactive, on the
+case card, the TV lobby, the loaders and the end screen. Players never touch it and never see read-outs or interaction
+states: the tour is the whole show, looping forever, so design the figure for the unseen pointer's lap.
 
 ## Make it with `hairline-create`
 
@@ -17,7 +18,7 @@ Never edit `kernel.js` or `bench.html`.
 - **Rest already feels wrong.** A cut line, an empty locker, a door ajar, a slack cord over an edge. The still frame
   is what most players see.
 - **One idea**, and it reads at 240px.
-- **The tour tells the story.** Three to six stops ending in `null`. The lap plays with no hand on the screen, so it
+- **The tour is the art.** Nobody can interact with it. Three to six stops ending in `null`. The lap plays with no hand on the screen, so it
   should end on the reveal (the cut, the empty one).
 - **Never set colours.** The app maps hairline's tiers onto its palette: `hi` → orange accent, edge → white,
   mid → blue, `lo` → dim blue, all on obsidian. Strokes and classes only, as hairline already requires.
@@ -26,7 +27,7 @@ Never edit `kernel.js` or `bench.html`.
 ## Workflow
 
 1. Offer two or three concepts, one line each:
-   `**Name.** object. what the pointer does. read-out. where the tour stops.`
+   `**Name.** object. what the unseen pointer does on the tour. where the tour stops.`
 2. Wait for the user's pick. Do not build before it.
 3. Write `<name>.js` in a scratch directory, in the shape of the examples.
 4. From that directory: `node ~/.agents/skills/hairline-create/look.mjs <name>.js --answer x,y,z --edge x,y,z`.

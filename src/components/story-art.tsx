@@ -18,24 +18,21 @@ const SIZE: Record<ArtVariant, string> = {
 
 /**
  * A story's own Hairline figure (src/mysteries/<slug>/art.ts): an ominous isometric line drawing
- * that answers the pointer. Everywhere but the case card it also idles on its own tour, like a
- * screensaver; the kernel skips the tour under reduced motion and sleeps while offscreen.
- * `caption` shows what the figure reads out (its names go to `read`, never into the drawing).
+ * that plays its tour on a loop, like a screensaver. It is not interactive: pointer events are off
+ * and the read-out is discarded, so nobody sees interaction states. The kernel skips the tour under
+ * reduced motion (the figure then rests on its composed pose) and sleeps while offscreen.
  */
 export function StoryArt({
   slug,
   variant,
-  caption = false,
   className = "",
 }: {
   slug: string;
   variant: ArtVariant;
-  caption?: boolean;
   className?: string;
 }) {
   const stage = useRef<HTMLDivElement>(null);
   const [means, setMeans] = useState("");
-  const [read, setRead] = useState("");
 
   useEffect(() => {
     const load = ART[slug];
@@ -51,19 +48,9 @@ export function StoryArt({
         el.dataset.hairline = decl.name;
         setMeans(decl.means);
         const svg = HL.mk("svg", { viewBox: "0 0 400 320", "aria-hidden": "true" }, el);
-        let last = "";
-        const readout = {
-          get textContent() {
-            return last;
-          },
-          set textContent(text: string) {
-            if (text === last) return;
-            last = text;
-            if (caption) setRead(text);
-          },
-        };
+        const readout = { textContent: "" }; // ponytail: read-out discarded, the art is not interactive
         const handle = decl.mount({ stage: el, svg, read: readout }, decl.range[1]);
-        const tour = variant === "card" ? null : HL.tour(el, decl.tour ?? HL.LAP);
+        const tour = HL.tour(el, decl.tour ?? HL.LAP);
         cleanup = () => {
           tour?.stop();
           handle.destroy();
@@ -75,16 +62,11 @@ export function StoryArt({
       live = false;
       cleanup();
     };
-  }, [slug, variant, caption]);
+  }, [slug]);
 
   return (
     <figure className={`flex flex-col gap-2 ${SIZE[variant]} ${className}`}>
-      <div ref={stage} role="img" aria-label={means || "Story art"} className="story-art relative aspect-[5/4] w-full" />
-      {caption && (
-        <figcaption aria-hidden className="min-h-[1lh] font-pixel text-body text-blue">
-          {read}
-        </figcaption>
-      )}
+      <div ref={stage} role="img" aria-label={means || "Story art"} className="story-art pointer-events-none relative aspect-[5/4] w-full" />
     </figure>
   );
 }
