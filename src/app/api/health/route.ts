@@ -6,8 +6,9 @@ type Check = { ok: boolean; detail: string };
 async function checkSupabase(): Promise<Check> {
   const url = requireEnv("NEXT_PUBLIC_SUPABASE_URL");
   const key = requireEnv("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY");
-  const res = await fetch(`${url}/rest/v1/`, { headers: { apikey: key }, cache: "no-store" });
-  return { ok: res.ok, detail: `GET /rest/v1/ -> ${res.status}` };
+  // The REST root is closed to publishable keys (401); the auth health endpoint answers 200.
+  const res = await fetch(`${url}/auth/v1/health`, { headers: { apikey: key }, cache: "no-store" });
+  return { ok: res.ok, detail: `GET /auth/v1/health -> ${res.status}` };
 }
 
 /** Proves Supabase is reachable with the configured credentials. */
