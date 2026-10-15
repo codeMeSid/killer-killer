@@ -61,7 +61,7 @@ export function CasePicker({ cards }: { cards: MysteryCard[] }) {
           const active = i === selected;
           const words = lexiconFor(card.slug);
           return (
-            <li key={card.slug} className={`motion-safe:animate-rise ${i ? "motion-safe:[animation-delay:300ms]" : ""}`}>
+            <li key={card.slug} className={`flex motion-safe:animate-rise ${i ? "motion-safe:[animation-delay:300ms]" : ""}`}>
               <button
                 type="button"
                 onMouseEnter={() => setSelected(i)}
@@ -71,13 +71,13 @@ export function CasePicker({ cards }: { cards: MysteryCard[] }) {
                   void open(card.slug);
                 }}
                 aria-label={`${card.title}, ${card.difficulty}, ${card.playerCount} players`}
-                className={`pixel-border flex w-[calc(100%-6px)] flex-col text-left transition-[box-shadow,transform] focus-visible:outline-none ${
+                className={`pixel-border flex w-[calc(100%-6px)] flex-col self-stretch text-left transition-[box-shadow,transform] focus-visible:outline-none ${
                   active ? "pb-orange -translate-y-1" : "pb-dim"
                 }`}
               >
                 <StoryArt slug={card.slug} variant="card" className="border-b border-blue/30" />
-                <span className="flex flex-col gap-3 p-5">
-                  <span className={`font-pixel text-ui ${active ? "text-orange" : "text-white"}`}>{card.title}</span>
+                <span className="flex flex-1 flex-col gap-3 p-5">
+                  <span className={`min-h-[2lh] font-pixel text-ui ${active ? "text-orange" : "text-white"}`}>{card.title}</span>
                   <span className="text-body text-white">{fill(words.hook, { victim: card.victim })}</span>
                   <span className="text-body">
                     <span className={DIFFICULTY_INK[card.difficulty] ?? "text-white"}>{capitalize(card.difficulty)}</span>
