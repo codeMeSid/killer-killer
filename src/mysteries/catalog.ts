@@ -2,22 +2,16 @@ import type { FigureDefine } from "@/lib/hairline";
 import { capitalize, inWords } from "@/lib/words";
 import type { Lexicon } from "./types";
 import brijmohanValentineLexicon from "./brijmohan-valentine-monster-4p/lexicon.json";
-import maxHarrowLexicon from "./max-harrow-skyfall-4p/lexicon.json";
-import theoMarshLexicon from "./theo-marsh-skyfall-2p/lexicon.json";
 
 // Client-safe story data: each story's words and its Hairline figure. Never import a tree here;
 // trees hold the killer and live behind `server-only` in ./index.ts. Register a new story in both.
 
 export const LEXICON: Record<string, Lexicon> = {
-  "theo-marsh-skyfall-2p": theoMarshLexicon as Lexicon,
-  "max-harrow-skyfall-4p": maxHarrowLexicon as Lexicon,
   "brijmohan-valentine-monster-4p": brijmohanValentineLexicon as Lexicon,
 };
 
 /** Code-split: a figure loads only on the screen that shows it. */
 export const ART: Record<string, () => Promise<{ default: FigureDefine }>> = {
-  "theo-marsh-skyfall-2p": () => import("./theo-marsh-skyfall-2p/art"),
-  "max-harrow-skyfall-4p": () => import("./max-harrow-skyfall-4p/art"),
   "brijmohan-valentine-monster-4p": () => import("./brijmohan-valentine-monster-4p/art"),
 };
 

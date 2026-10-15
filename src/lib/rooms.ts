@@ -1,7 +1,7 @@
 import "server-only";
 import { ApiError } from "@/lib/api";
 import { adminClient } from "@/lib/supabase/admin";
-import { optionsFor, resolveRound, startGame, validatePick } from "@/lib/engine/engine";
+import { optionsFor, resolveRound, resolveVote, startGame, validatePick, validateVote } from "@/lib/engine/engine";
 import type { GameState, Pick, Slot } from "@/lib/engine/types";
 import { hostView, playerView, type HostView, type PlayerView, type RoomPhase, type RoomStatus, type ViewInput } from "@/lib/engine/view";
 import { fill, lexiconFor } from "@/mysteries/catalog";
@@ -22,6 +22,7 @@ type RoomRow = {
 };
 type PlayerRow = { id: string; user_id: string; name: string; seat: number };
 type PickRow = { player_id: string; option_id: string; pushed: boolean; target_player_id: string | null };
+type VoteRow = { player_id: string; suspect_index: number };
 
 const CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // no 0/O/1/I: read off a TV across a room
 const UNIQUE_VIOLATION = "23505";
@@ -41,7 +42,7 @@ export function normalizeCode(raw: string): string {
 
 function mysteryOf(room: RoomRow): Mystery {
   const m = getMystery(room.mystery_slug);
-  if (!m) throw new Error(`Room ${room.code} references missing mystery ${room.mystery_slug}`);
+  if (!m) throw new ApiError("That case file is gone.", 404); // a story removed from the repo
   return m;
 }
 
@@ -71,6 +72,16 @@ async function roundPicks(room: RoomRow): Promise<PickRow[]> {
     .eq("room_id", room.id)
     .eq("round", room.round)
     .returns<PickRow[]>();
+  if (error) throw error;
+  return data ?? [];
+}
+
+async function roomVotes(room: RoomRow): Promise<VoteRow[]> {
+  const { data, error } = await adminClient()
+    .from("votes")
+    .select("player_id, suspect_index")
+    .eq("room_id", room.id)
+    .returns<VoteRow[]>();
   if (error) throw error;
   return data ?? [];
 }
@@ -115,7 +126,9 @@ export async function viewFor(rawCode: string, userId: string | null): Promise<H
   if (!userId) throw new ApiError("You're not in this mystery.", 401);
   const { room, players } = await load(normalizeCode(rawCode));
   const { tree } = mysteryOf(room);
-  const picks = room.status === "playing" ? await roundPicks(room) : [];
+  const voting = room.status === "playing" && room.phase === "voting";
+  const picks = room.status === "playing" && !voting ? await roundPicks(room) : [];
+  const votes = voting ? await roomVotes(room) : [];
   const input: ViewInput = {
     tree,
     slug: room.mystery_slug,
@@ -124,14 +137,15 @@ export async function viewFor(rawCode: string, userId: string | null): Promise<H
     phase: room.phase,
     state: room.state,
     roster: players.map((p) => ({ id: p.id, name: p.name })),
-    locked: new Set(picks.map((p) => p.player_id)),
+    locked: new Set((voting ? votes : picks).map((p) => p.player_id)),
   };
   if (room.host_id === userId) return hostView(input);
   const me = players.find((p) => p.user_id === userId);
   if (!me) throw new ApiError("You're not in this mystery.", 403);
   const mine = picks.find((p) => p.player_id === me.id);
   const slot = mine && room.state ? optionsFor(tree, room.state, me.id).find((o) => o.id === mine.option_id)?.slot : undefined;
-  return playerView(input, { id: me.id, name: me.name }, slot ? { slot } : null);
+  const myVote = votes.find((v) => v.player_id === me.id)?.suspect_index ?? null;
+  return playerView(input, { id: me.id, name: me.name }, slot ? { slot } : null, myVote);
 }
 
 // ---------------------------------------------------------------- mutations
@@ -192,12 +206,12 @@ export async function startRoom(rawCode: string, userId: string) {
   return { code: room.code };
 }
 
-/** Host finished narrating: open the round for choices, or (story over) reveal the ending. */
+/** Narration finished: open the round for choices, the vote (after round 10), or (story over) the ending. */
 export async function advance(rawCode: string, userId: string) {
   const { room } = await load(normalizeCode(rawCode));
   requireHost(room, userId);
-  if (room.phase !== "narrating") return { phase: room.phase }; // a double Enter is harmless
-  const phase: RoomPhase = room.status === "ended" ? "finale" : "choosing";
+  if (room.phase !== "narrating") return { phase: room.phase }; // a double call is harmless
+  const phase: RoomPhase = room.status === "ended" ? "finale" : room.state?.voting ? "voting" : "choosing";
   const { error } = await adminClient()
     .from("rooms")
     .update({ phase })
@@ -278,4 +292,43 @@ async function resolveIfComplete(room: RoomRow) {
     throw e;
   }
   await ring(room.code);
+}
+
+export async function castVote(rawCode: string, userId: string, body: { index: number }) {
+  const { room, players } = await load(normalizeCode(rawCode));
+  const me = players.find((p) => p.user_id === userId);
+  if (!me) throw new ApiError("You're not in this mystery.", 403);
+  if (room.status !== "playing" || room.phase !== "voting" || !room.state) {
+    throw new ApiError("The vote isn't open.", 409);
+  }
+  const { tree } = mysteryOf(room);
+  const problem = validateVote(tree, room.state, me.id, body.index);
+  if (problem) throw new ApiError(problem, 400);
+
+  const { error } = await adminClient().from("votes").insert({ room_id: room.id, player_id: me.id, suspect_index: body.index });
+  if (error?.code === UNIQUE_VIOLATION) throw new ApiError("You've already voted.", 409);
+  if (error) throw error;
+
+  await ring(room.code);
+  await countIfComplete(room);
+  return { voted: true };
+}
+
+/** When every living player has voted, exactly one request claims the count and ends the story. */
+async function countIfComplete(room: RoomRow) {
+  const state = room.state!;
+  const votes = await roomVotes(room);
+  const living = state.players.filter((p) => p.alive);
+  if (!living.every((p) => votes.some((v) => v.player_id === p.id))) return;
+
+  const { tree } = mysteryOf(room);
+  const next = resolveVote(tree, state, Object.fromEntries(votes.map((v) => [v.player_id, v.suspect_index])));
+  const { data: claimed, error } = await adminClient()
+    .from("rooms")
+    .update({ state: next, status: "ended", phase: "finale" })
+    .eq("id", room.id)
+    .eq("phase", "voting")
+    .select("id");
+  if (error) throw error;
+  if (claimed?.length) await ring(room.code); // another request may have counted first
 }

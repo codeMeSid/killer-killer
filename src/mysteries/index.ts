@@ -1,8 +1,6 @@
 import "server-only";
 import type { Tree } from "@/lib/engine/types";
 import brijmohanValentine from "./brijmohan-valentine-monster-4p/tree.json";
-import maxHarrow from "./max-harrow-skyfall-4p/tree.json";
-import theoMarsh from "./theo-marsh-skyfall-2p/tree.json";
 
 // Every mystery is a folder written by the murder-mystery-story-tree skill: tree.json (validated by
 // validate_tree.py), lexicon.json and art.ts (its Hairline figure). Trees are imported server-only: they
@@ -12,8 +10,6 @@ import theoMarsh from "./theo-marsh-skyfall-2p/tree.json";
 export type Mystery = { slug: string; tree: Tree };
 
 export const MYSTERIES: Mystery[] = [
-  { slug: "theo-marsh-skyfall-2p", tree: theoMarsh as unknown as Tree },
-  { slug: "max-harrow-skyfall-4p", tree: maxHarrow as unknown as Tree },
   { slug: "brijmohan-valentine-monster-4p", tree: brijmohanValentine as unknown as Tree },
 ];
 

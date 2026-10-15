@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FillButton } from "@/components/fill-button";
 import { Ground, groundClass } from "@/components/ground";
 import { Machine } from "@/components/machine";
@@ -47,6 +47,41 @@ function useRevealSting(delay: number) {
   }, [delay]);
 }
 
+const reducedMotion = () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/** Counts 0 → total, one step every `ms` (all at once under reduced motion), with a clack per step. */
+function useReveal(total: number, ms: number) {
+  const [n, setN] = useState(() => (reducedMotion() ? total : 0));
+  useEffect(() => {
+    if (n >= total) return;
+    const t = setTimeout(
+      () => {
+        sfx.clack(0.14);
+        setN(n + 1);
+      },
+      n === 0 ? 900 : ms,
+    );
+    return () => clearTimeout(t);
+  }, [n, total, ms]);
+  return n;
+}
+
+/** Who voted for whom, as far as the reveal has got. */
+function Votes({ ending, shown }: { ending: NonNullable<BaseView["ending"]>; shown: number }) {
+  return (
+    <ul className="flex flex-col gap-3">
+      {ending.votes.slice(0, shown).map((v) => (
+        <li key={v.voter} className="text-ui text-white motion-safe:animate-flicker-in">
+          {v.voter} <span className="text-blue">named</span> {v.accused}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+const accusedLine = (ending: NonNullable<BaseView["ending"]>) =>
+  ending.accused ? `The vote names ${ending.accused}.` : "A tie. Nobody is named.";
+
 /** The cast, reading right: who played whom, and how it ended for them. */
 function Cast({ ending, words }: { ending: NonNullable<BaseView["ending"]>; words: Lexicon["end"] }) {
   return (
@@ -71,39 +106,62 @@ function Cast({ ending, words }: { ending: NonNullable<BaseView["ending"]>; word
 
 export function HostEnd({ view }: { view: HostView }) {
   const ending = view.ending!;
+  const voted = ending.votes.length > 0;
+  // The reveal: each vote, then who it names, then the truth.
+  const steps = voted ? ending.votes.length + 2 : 0;
+  const shown = useReveal(steps, 1400);
+  return (
+    <Machine kind="tv" className={`min-h-svh overflow-hidden ${groundClass(9)}`}>
+      <PhaseBar ink={shown < steps ? "white" : ending.key === "solved" ? "green" : "red"}>
+        <span className="font-pixel">{view.mystery.title}</span>
+      </PhaseBar>
+      <div className="relative z-10 flex flex-1 flex-col gap-16 px-4 pt-10 pb-16 sm:px-8">
+        {voted && (
+          <section aria-label="The vote" className="flex flex-col gap-6">
+            <h2 className="font-pixel text-statement text-white">The vote.</h2>
+            <Votes ending={ending} shown={Math.min(shown, ending.votes.length)} />
+            {shown > ending.votes.length && (
+              <p className="font-pixel text-statement text-orange motion-safe:animate-glitch">{accusedLine(ending)}</p>
+            )}
+          </section>
+        )}
+        {shown >= steps && <Truth view={view} dropped={!voted} />}
+      </div>
+      <Ground glyphs={lexiconFor(view.mystery.slug).glyphs} />
+    </Machine>
+  );
+}
+
+/** The ending itself, once the vote has been read out. */
+function Truth({ view, dropped }: { view: HostView; dropped: boolean }) {
+  const ending = view.ending!;
   const [top, bottom] = HEADLINE[ending.key];
   const solved = ending.key === "solved";
   const words = lexiconFor(view.mystery.slug);
   useRevealSting(3200);
   return (
-    <Machine kind="tv" className={`min-h-svh overflow-hidden ${groundClass(9)}`}>
-      <PhaseBar ink={solved ? "green" : "red"}>
-        <span className="font-pixel">{view.mystery.title}</span>
-      </PhaseBar>
-      <div className="relative z-10 flex flex-1 flex-col gap-16 px-4 pt-10 pb-16 sm:px-8">
-        {/* Dropped so the second line sinks below the ground line and takes the seam's blue. */}
-        <section className="grid gap-8 pt-[22svh] lg:grid-cols-12 lg:items-start">
-          <div className="flex flex-col gap-6 lg:col-span-7">
-            <h1
-              className={`seam-ink font-pixel text-display motion-safe:animate-glitch motion-safe:[animation-delay:700ms] ${solved ? "[--seam-top:var(--green)]" : "[--seam-top:var(--red)]"}`}
-            >
-              {top}
-              <br />
-              {bottom}
-            </h1>
-            <p className="font-pixel text-ui text-white motion-safe:animate-rise motion-safe:[animation-delay:800ms]">{ending.title}</p>
-          </div>
-          <StoryArt slug={view.mystery.slug} variant="end" className="lg:col-span-5 lg:justify-self-end" />
-        </section>
-        <p className="max-w-3xl text-ui text-white motion-safe:animate-rise motion-safe:[animation-delay:1600ms]">{ending.epilogue}</p>
-        <p className="font-pixel text-statement text-orange motion-safe:animate-flicker-in motion-safe:[animation-delay:3200ms]">
-          {ending.killer.character} did it{ending.killer.player ? `, played by ${ending.killer.player}` : ""}.
-        </p>
-        <Cast ending={ending} words={words.end} />
-        <BackHome />
-      </div>
-      <Ground glyphs={words.glyphs} />
-    </Machine>
+    <>
+      {/* Dropped so the second line sinks below the ground line and takes the seam's blue. */}
+      <section className={`grid gap-8 lg:grid-cols-12 lg:items-start ${dropped ? "pt-[22svh]" : ""}`}>
+        <div className="flex flex-col gap-6 lg:col-span-7">
+          <h1
+            className={`seam-ink font-pixel text-display motion-safe:animate-glitch motion-safe:[animation-delay:700ms] ${solved ? "[--seam-top:var(--green)]" : "[--seam-top:var(--red)]"}`}
+          >
+            {top}
+            <br />
+            {bottom}
+          </h1>
+          <p className="font-pixel text-ui text-white motion-safe:animate-rise motion-safe:[animation-delay:800ms]">{ending.title}</p>
+        </div>
+        <StoryArt slug={view.mystery.slug} variant="end" className="lg:col-span-5 lg:justify-self-end" />
+      </section>
+      <p className="max-w-3xl text-ui text-white motion-safe:animate-rise motion-safe:[animation-delay:1600ms]">{ending.epilogue}</p>
+      <p className="font-pixel text-statement text-orange motion-safe:animate-flicker-in motion-safe:[animation-delay:3200ms]">
+        {ending.killer.character} did it{ending.killer.player ? `, played by ${ending.killer.player}` : ""}.
+      </p>
+      <Cast ending={ending} words={words.end} />
+      <BackHome />
+    </>
   );
 }
 
@@ -132,6 +190,12 @@ export function PlayerEnd({ view }: { view: PlayerView }) {
           <h2 className="font-pixel text-ui text-white">{ending.title}</h2>
           <p className="text-body text-white">{ending.epilogue}</p>
         </section>
+        {ending.votes.length > 0 && (
+          <section aria-label="The vote" className="flex flex-col gap-3 border-t border-blue/30 pt-8">
+            <h2 className="font-pixel text-ui text-white">{accusedLine(ending)}</h2>
+            <Votes ending={ending} shown={ending.votes.length} />
+          </section>
+        )}
         <Cast ending={ending} words={words.end} />
         <BackHome />
       </div>

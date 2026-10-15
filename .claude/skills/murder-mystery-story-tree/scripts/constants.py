@@ -1,6 +1,6 @@
 """Single source of truth for engine constants. Keep in sync with references/engine-rules.md."""
 
-SCHEMA_ID = "mm-story-tree/1"
+SCHEMA_ID = "mm-story-tree/2"
 
 ROUNDS = 10
 PIVOT_ROUND = 8            # ending track locks after this round resolves
@@ -37,7 +37,17 @@ EFFECT_TYPES = ("grant_clue", "grant_item", "luck", "share_private_clues")
 SAB_PLAYER = ("steal_private_clue", "steal_personal_item", "drain_luck")
 SAB_GROUP = ("destroy_party_clue", "destroy_party_item", "mislead_group")
 
-PLACEHOLDERS = {"player", "target", "party", "victim", "killer", "survivors"}
+PLACEHOLDERS = {"player", "target", "party", "victim", "killer", "survivors", "accused"}
+ENDING_ONLY_PLACEHOLDERS = {"accused"}   # who the vote named; only known once the vote is counted
+
+# Readability limits (warnings): narration is read off a TV, options off a phone.
+MAX_SENTENCE_WORDS = 25
+MAX_OPTION_WORDS = 8
+# Crowd words make a line claim what other players did, which clashes with their own picks.
+CROWD_WORDS = ("everyone", "everybody", "all of you", "all of them", "together", "the others", "the group", "we ")
+# Tired phrases the writing rules ban (warnings).
+CLICHES = ("blood ran cold", "little did", "sent shivers", "spine-chilling", "heart pounding", "all hell",
+           "deafening silence", "time stood still", "out of nowhere", "a chill ran")
 
 RULES_BLOCK = {
     "stats": list(STATS),

@@ -105,6 +105,27 @@ def check_effect(ef, where, tag, ctx, rep):
         rep.err(f"{where}: share_private_clues is only allowed on group-tagged options")
 
 
+SENTENCE = re.compile(r"(?<=[.!?…])\s+")
+
+
+def check_prose(s, where, rep, crowd=True):
+    """Readability warnings for a line shown on the TV."""
+    if not isinstance(s, str):
+        return
+    low = s.lower()
+    if crowd:
+        for w in C.CROWD_WORDS:
+            if w in low:
+                rep.warn(f"{where}: crowd word {w.strip()!r} claims what others did; it can clash with their picks ({s!r})")
+                break
+    for c in C.CLICHES:
+        if c in low:
+            rep.warn(f"{where}: cliché {c!r}")
+    for sent in SENTENCE.split(s):
+        if len(sent.split()) > C.MAX_SENTENCE_WORDS:
+            rep.warn(f"{where}: sentence over {C.MAX_SENTENCE_WORDS} words is hard to read off a TV ({sent!r})")
+
+
 def check_option(o, where, slot, ctx, rep):
     if not isinstance(o, dict):
         rep.err(f"{where}: option must be an object")
@@ -128,6 +149,13 @@ def check_option(o, where, slot, ctx, rep):
             rep.err(f"{where}: '{k}' must be non-empty")
     if "{player}" not in str(o.get("recap", "")):
         rep.err(f"{where}: recap must contain {{player}}")
+    check_prose(o.get("recap"), f"{where}.recap", rep)
+    text = o.get("text")
+    if nonempty(text):
+        if len(text.split()) > C.MAX_OPTION_WORDS:
+            rep.warn(f"{where}: option text over {C.MAX_OPTION_WORDS} words ({text!r})")
+        if text[0].isupper() or text.rstrip()[-1] in ".!?":
+            rep.warn(f"{where}: option text must complete 'You will …': lowercase start, no end mark ({text!r})")
     if o.get("tag") not in C.TAGS:
         rep.err(f"{where}: tag must be one of {C.TAGS}")
     if o.get("risk") not in C.RISKS:
@@ -145,6 +173,8 @@ def check_option(o, where, slot, ctx, rep):
         od = o.get("on_death")
         if not (isinstance(od, dict) and nonempty(od.get("narration"))):
             rep.err(f"{where}: risky options need on_death.narration")
+        elif "{player}" not in od["narration"]:
+            rep.err(f"{where}: on_death.narration must name the actor with {{player}}")
     for k in ("follows_red_herring", "decisive"):
         if not isinstance(o.get(k), bool):
             rep.err(f"{where}: {k} must be true/false")
@@ -158,6 +188,12 @@ def check_option(o, where, slot, ctx, rep):
             continue
         for j, ef in enumerate(blk["effects"]):
             check_effect(ef, f"{where}.{name}.effects[{j}]", o.get("tag"), ctx, rep)
+        if "{player}" not in blk["narration"]:
+            rep.err(f"{where}: {name}.narration must name the actor with {{player}} (lines are read interleaved)")
+        check_prose(blk["narration"], f"{where}.{name}", rep)
+    succ = o.get("on_success")
+    if (isinstance(succ, dict) and not succ.get("effects") and not o.get("sabotage") and o.get("decisive") is not True):
+        rep.err(f"{where}: on_success changes nothing; every option needs an effect, a sabotage, or to be decisive")
     sab = o.get("sabotage")
     if sab is not None:
         if o.get("tag") != "solo":
@@ -170,14 +206,28 @@ def check_option(o, where, slot, ctx, rep):
                     f"(player: {C.SAB_PLAYER}; group: {C.SAB_GROUP})")
         if "{player}" not in str(o.get("exposure", "")):
             rep.err(f"{where}: sabotage options need an 'exposure' line containing {{player}}")
+        check_prose(o.get("exposure"), f"{where}.exposure", rep, crowd=False)
 
 
-def option_list(scene):
-    for o in scene.get("options", []):
-        if isinstance(o, dict):
-            yield o
+def option_sets(scene):
+    """(label, options) per player: one shared set in investigators mode, one per player_slot in suspects mode."""
+    if isinstance(scene.get("personal"), dict):
+        return [(f"p{k}", v) for k, v in sorted(scene["personal"].items())]
+    return [("", scene.get("options"))]
+
+
+def option_list(scene, skip_slot=None):
+    """Every option in a scene, variants included; `skip_slot` leaves out one character's own options."""
+    for label, opts in option_sets(scene):
+        if skip_slot is not None and label == f"p{skip_slot}":
+            continue
+        for o in opts if isinstance(opts, list) else []:
+            if isinstance(o, dict):
+                yield o
     for v in scene.get("variants", []) or []:
         if isinstance(v, dict) and isinstance(v.get("option"), dict):
+            if skip_slot is not None and v.get("player_slot") == skip_slot:
+                continue
             yield v["option"]
 
 
@@ -198,6 +248,10 @@ def check_tree(t, allow_todo, rep):
             if ph not in C.PLACEHOLDERS:
                 rep.err(f"unknown placeholder {{{ph}}} (allowed: {sorted(C.PLACEHOLDERS)})")
                 break
+    for s in strings({k: v for k, v in t.items() if k != "endings"}):
+        for ph in C.ENDING_ONLY_PLACEHOLDERS:
+            if "{" + ph + "}" in s:
+                rep.err(f"{{{ph}}} is only known once the vote is counted; use it in endings only ({s!r})")
 
     meta = t.get("meta") or {}
     for k in ("title", "setting_id", "premise", "tone"):
@@ -238,7 +292,9 @@ def check_tree(t, allow_todo, rep):
     if len(set(sus_ids)) != len(sus_ids) or not all(nonempty(i) for i in sus_ids):
         rep.err("suspects need unique non-empty ids")
     for s in suspects:
-        for k in ("name", "description", "public_alibi", "motive"):
+        if "short_name" in (s or {}) and not nonempty(s["short_name"]):
+            rep.err(f"suspect {s.get('id')!r}: short_name must be a non-empty string when present")
+        for k in ("name", "description", "public_alibi", "motive") + (("secret",) if role == "suspects" else ()):
             if not nonempty((s or {}).get(k)):
                 rep.err(f"suspect {s.get('id')!r} missing {k}")
     killer_id = world.get("killer_id")
@@ -302,6 +358,17 @@ def check_tree(t, allow_todo, rep):
         rep.err("exactly one item must be decisive")
     decisive_id = decisive[0] if decisive else None
 
+    # finale evidence: the TV shows `proof` (solved track, decisive move landed) or `frame` (wrong track)
+    fin = world.get("finale") or {}
+    if not (nonempty(fin.get("proof")) and nonempty(fin.get("frame"))):
+        rep.err("world.finale needs proof and frame (the evidence shown before the vote)")
+    framed = {c.get("points_to") for c in clues.values() if c.get("kind") == "red_herring"}
+    if fin.get("frame_points_to") not in framed:
+        rep.err("world.finale.frame_points_to must be a suspect a red-herring clue points to")
+    for k in ("proof", "frame"):
+        check_prose(fin.get(k), f"world.finale.{k}", rep, crowd=False)
+    killer_slot = next((s.get("player_slot") for s in suspects if isinstance(s, dict) and s.get("id") == killer_id), None)
+
     # ---- scenes
     scenes, by_round = {}, {}
     ctx = {"clues": clues, "items": items, "opt_ids": set()}
@@ -333,60 +400,85 @@ def check_tree(t, allow_todo, rep):
     key_ids = {i for i, c in clues.items() if c.get("kind") == "key"}
     red_ids = set(clues) - key_ids
     granted = set()
-    group_sab = player_sab = killer_variants = rh_options = 0
+    group_sab = player_sab = killer_sab = rh_options = 0
+    player_slots = {str(i) for i in range(1, n + 1)}
 
     for sid, sc in scenes.items():
         r = int(SCENE_ID.match(sid).group(1))
         if not nonempty(sc.get("intro")):
             rep.err(f"{sid}: intro missing")
-        opts = sc.get("options")
-        if not (isinstance(opts, list) and len(opts) == 4):
-            rep.err(f"{sid}: exactly 4 options required")
+        else:
+            check_prose(sc["intro"], f"{sid}.intro", rep, crowd=False)
+            if len(SENTENCE.split(sc["intro"].strip())) > 3:
+                rep.warn(f"{sid}: intro over 3 sentences; set the place, then pose the question")
+        if role == "suspects":
+            if "options" in sc or not isinstance(sc.get("personal"), dict) or set(sc["personal"]) != player_slots:
+                rep.err(f"{sid}: suspects mode needs 'personal' with exactly the keys {sorted(player_slots)} "
+                        f"(one set of 4 options per character) and no shared 'options'")
+                continue
+        elif "personal" in sc or not isinstance(sc.get("options"), list):
+            rep.err(f"{sid}: investigators mode needs 4 shared 'options' and no 'personal'")
             continue
-        for slot, o in zip(C.SLOTS, opts):
-            check_option(o, f"{sid}.{slot}", slot, ctx, rep)
-        tags = {o.get("tag") for o in opts if isinstance(o, dict)}
-        if tags != {"group", "solo"}:
-            rep.err(f"{sid}: default options must include at least one group and one solo option")
-        risky = [o for o in opts if isinstance(o, dict) and o.get("risk") == "risky"]
-        if len(risky) > D["max_risky"]:
-            rep.err(f"{sid}: {diff} allows at most {D['max_risky']} risky option(s) per scene")
-        if sum(1 for o in opts if isinstance(o, dict) and o.get("lethal_on_fail") is True) > 1:
-            rep.err(f"{sid}: at most one lethal_on_fail option per scene")
-        if sorted(sc.get("tie_break_order") or []) != sorted(C.SLOTS):
-            rep.err(f"{sid}: tie_break_order must be a permutation of A,B,C,D")
-        for o in opts:
-            if isinstance(o, dict) and o.get("decisive") is True:
-                rep.err(f"{sid}: decisive options may only appear as gated variants in r10_solved")
+        bad = False
+        for label, opts in option_sets(sc):
+            at = f"{sid}.{label}" if label else sid
+            if not (isinstance(opts, list) and len(opts) == 4):
+                rep.err(f"{at}: exactly 4 options required")
+                bad = True
+                continue
+            for slot, o in zip(C.SLOTS, opts):
+                check_option(o, f"{at}.{slot}", slot, ctx, rep)
+            tags = {o.get("tag") for o in opts if isinstance(o, dict)}
+            if tags != {"group", "solo"}:
+                rep.err(f"{at}: options must include at least one group and one solo option")
+            risky = [o for o in opts if isinstance(o, dict) and o.get("risk") == "risky"]
+            if len(risky) > D["max_risky"]:
+                rep.err(f"{at}: {diff} allows at most {D['max_risky']} risky option(s) per set")
+            if sum(1 for o in opts if isinstance(o, dict) and o.get("lethal_on_fail") is True) > 1:
+                rep.err(f"{at}: at most one lethal_on_fail option per set")
+            for o in opts:
+                if isinstance(o, dict) and o.get("decisive") is True:
+                    rep.err(f"{at}: decisive options may only appear as gated variants in r10_solved")
+                if isinstance(o, dict) and o.get("sabotage") and label == f"p{killer_slot}":
+                    killer_sab += 1
+        if bad:
+            continue
 
         for vi, v in enumerate(sc.get("variants") or []):
             vw = f"{sid}.variants[{vi}]"
             if v.get("slot") not in C.SLOTS:
                 rep.err(f"{vw}: slot must be A-D")
                 continue
+            ps = v.get("player_slot")
+            if ps is not None and not (role == "suspects" and is_int(ps) and 1 <= ps <= n):
+                rep.err(f"{vw}: player_slot must be null, or 1-{n} in suspects mode")
             req = v.get("requires")
-            if not (isinstance(req, dict) and req and set(req) <= {"items", "min_stat", "role"}):
-                rep.err(f"{vw}: requires must use only items, min_stat, role")
+            if not (isinstance(req, dict) and req and set(req) <= {"items", "min_stat"}):
+                rep.err(f"{vw}: requires must use only items, min_stat")
                 req = {}
             for it in req.get("items", []) or []:
                 if it not in items:
                     rep.err(f"{vw}: requires unknown item {it!r}")
             if "min_stat" in req and not (is_int(req["min_stat"]) and 1 <= req["min_stat"] <= C.STAT_MAX):
                 rep.err(f"{vw}: min_stat must be 1-{C.STAT_MAX}")
-            if "role" in req:
-                if req["role"] != "killer" or role != "suspects":
-                    rep.err(f"{vw}: role gate is only 'killer', and only in suspects mode")
-                else:
-                    killer_variants += 1
             check_option(v.get("option"), vw, v["slot"], ctx, rep)
             vo = v.get("option") or {}
             if vo.get("decisive") is True:
-                ok = (sid == "r10_solved" and req.get("items") == [decisive_id]
+                ok = (sid == "r10_solved" and ps is None and req.get("items") == [decisive_id]
                       and req.get("min_stat") == D["key_needed"] and vo.get("tag") == "group"
                       and vo.get("tier") == "medium" and vo.get("risk") == "normal")
                 if not ok:
-                    rep.err(f"{vw}: decisive variant must be in r10_solved, requires exactly the decisive item with "
-                            f"min_stat {D['key_needed']}, and be group-tagged, tier medium, risk normal")
+                    rep.err(f"{vw}: decisive variant must be in r10_solved, open to every player (no player_slot), "
+                            f"require exactly the decisive item with min_stat {D['key_needed']}, and be group-tagged, "
+                            f"tier medium, risk normal")
+
+        # branching: ties go to the order of next scenes in tie_break_order
+        targets = {o.get("leads_to") for o in option_list(sc) if o.get("leads_to")}
+        tbo = sc.get("tie_break_order")
+        if r <= 7 and not (isinstance(tbo, list) and len(tbo) == len(set(tbo)) and set(tbo) == targets):
+            rep.err(f"{sid}: tie_break_order must list each scene this scene leads to, once ({sorted(targets)})")
+        if r >= 8 and tbo != []:
+            rep.err(f"{sid}: tie_break_order must be [] from round 8 on (no leads_to to break ties between)")
 
         # references and counts
         for o in option_list(sc):
@@ -438,13 +530,10 @@ def check_tree(t, allow_todo, rep):
 
     # ---- solvability: some path through rounds 1-8 can grant enough key clues + decisive item
     def grants(sc):
+        """What a path can grant without relying on the killer's own options."""
         ks, its = set(), set()
-        for o in option_list(sc):
-            gate_killer = False
-            for v in sc.get("variants") or []:
-                if v.get("option") is o and (v.get("requires") or {}).get("role"):
-                    gate_killer = True
-            if gate_killer or not isinstance(o.get("on_success"), dict):
+        for o in option_list(sc, skip_slot=killer_slot):
+            if not isinstance(o.get("on_success"), dict):
                 continue
             for e in o["on_success"].get("effects", []):
                 if isinstance(e, dict) and e.get("type") == "grant_clue" and e.get("clue_id") in key_ids:
@@ -483,21 +572,21 @@ def check_tree(t, allow_todo, rep):
         rep.warn("no group-scope sabotage option anywhere")
     if player_sab == 0:
         rep.warn("no player-scope sabotage option anywhere")
-    if role == "suspects" and killer_variants < 3:
-        rep.warn("suspects mode: give the killer at least 3 private cover-up variants (requires.role = killer)")
+    if role == "suspects" and killer_sab < 3:
+        rep.warn("suspects mode: give the killer's character at least 3 sabotage options to cover their tracks")
 
-    # round 9 must let players pool private clues
+    # round 9 must let every player pool private clues
     for tr in C.TRACKS:
         sc = scenes.get(f"r9_{tr}")
         if not sc:
             continue
-        has = any(o.get("tag") == "group" and any(
-            isinstance(e, dict) and e.get("type") == "share_private_clues"
-            for e in (o.get("on_success") or {}).get("effects", [])) for o in option_list(sc)
-            if isinstance(o.get("on_success"), dict))
-        if not has:
-            (rep.err if tr == "solved" else rep.warn)(
-                f"r9_{tr}: needs a group option with a share_private_clues success effect")
+        for label, opts in option_sets(sc):
+            has = any(isinstance(o, dict) and o.get("tag") == "group" and isinstance(o.get("on_success"), dict) and any(
+                isinstance(e, dict) and e.get("type") == "share_private_clues" for e in o["on_success"].get("effects", []))
+                for o in opts or [])
+            if not has:
+                (rep.err if tr == "solved" else rep.warn)(
+                    f"r9_{tr}{'.' + label if label else ''}: needs a group option with a share_private_clues success effect")
 
     # decisive variant present in r10_solved
     s10 = scenes.get("r10_solved")
@@ -511,8 +600,15 @@ def check_tree(t, allow_todo, rep):
     for k, e in ends.items():
         if not (isinstance(e, dict) and nonempty(e.get("title")) and nonempty(e.get("epilogue"))):
             rep.err(f"endings.{k} needs title and epilogue")
-    if isinstance(ends.get("culprit_escapes"), dict) and not nonempty(ends["culprit_escapes"].get("epilogue_if_downgraded")):
-        rep.err("endings.culprit_escapes needs epilogue_if_downgraded (used when the Solved track fails in round 10)")
+            continue
+        if set(e) - {"title", "epilogue"}:
+            rep.err(f"endings.{k}: only title and epilogue (v2 dropped epilogue_if_downgraded)")
+        has_accused = "{accused}" in e["title"] + e["epilogue"]
+        if k == "wrong_culprit" and "{accused}" not in e["epilogue"]:
+            rep.err("endings.wrong_culprit.epilogue must name who the vote wrongly accused with {accused}")
+        elif k != "wrong_culprit" and has_accused:
+            rep.err(f"endings.{k}: {{accused}} is only set when the vote names an innocent (wrong_culprit)")
+        check_prose(e["epilogue"], f"endings.{k}", rep, crowd=False)
 
 
 # ------------------------------------------------------------------ lexicon

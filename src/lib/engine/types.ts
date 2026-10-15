@@ -1,4 +1,4 @@
-// Story-tree shape (`mm-story-tree/1`), from the skill's references/schema.md.
+// Story-tree shape (`mm-story-tree/2`), from the skill's references/schema.md.
 // The skill's validate_tree.py is the authority on what a valid tree looks like.
 
 export type Slot = "A" | "B" | "C" | "D";
@@ -45,7 +45,9 @@ export type Option = {
 
 export type Variant = {
   slot: Slot;
-  requires: { items?: string[]; min_stat?: number; role?: "killer" };
+  /** Limits the variant to one character; absent = open to every player. */
+  player_slot?: number;
+  requires: { items?: string[]; min_stat?: number };
   option: Option;
 };
 
@@ -53,17 +55,25 @@ export type Scene = {
   id: string;
   round: number;
   intro: string;
-  options: Option[];
-  tie_break_order: Slot[];
+  /** Investigators mode: the four options every player sees. */
+  options?: Option[];
+  /** Suspects mode: each character's own four options, keyed by player_slot. */
+  personal?: Record<string, Option[]>;
+  /** Next-scene ids in tie-break order (rounds 1-7). */
+  tie_break_order: string[];
   variants: Variant[];
 };
 
 export type Suspect = {
   id: string;
   name: string;
+  /** What the narration calls the character (defaults to name). */
+  short_name?: string;
   description: string;
   public_alibi: string;
   motive: string;
+  /** Private: shown only on this character's own phone. */
+  secret?: string;
   player_slot: number | null;
 };
 
@@ -84,7 +94,7 @@ export type Item = {
 };
 
 export type Tree = {
-  schema: "mm-story-tree/1";
+  schema: "mm-story-tree/2";
   meta: {
     title: string;
     setting_id: string;
@@ -104,13 +114,11 @@ export type Tree = {
     killer_method: string;
     clues: Clue[];
     items: Item[];
+    /** Evidence shown before the vote: proof (solved track, decisive move landed) or frame (wrong track). */
+    finale: { proof: string; frame: string; frame_points_to: string };
   };
   scenes: Scene[];
-  endings: {
-    solved: { title: string; epilogue: string };
-    wrong_culprit: { title: string; epilogue: string };
-    culprit_escapes: { title: string; epilogue: string; epilogue_if_downgraded: string };
-  };
+  endings: Record<EndingKey, { title: string; epilogue: string }>;
 };
 
 // ---- runtime state (server-only; never sent to a client as-is)
@@ -129,10 +137,22 @@ export type PlayerState = {
   items: string[];
 };
 
-export type RecapKind = "choice" | "outcome" | "sabotage" | "death";
+/** `evidence` is the finale proof or frame, read out at the end of round 10. */
+export type RecapKind = "choice" | "outcome" | "sabotage" | "death" | "evidence";
 export type RecapLine = { kind: RecapKind; text: string; playerId?: string };
 
-export type Ending = { key: EndingKey; downgraded: boolean };
+/** `accused` is the index into world.suspects the vote named (null: tie, or the story ended before a vote). */
+export type Ending = { key: EndingKey; accused: number | null };
+
+/** What one round did to one player, shown only on their phone. Ids never leave the server raw. */
+export type Result =
+  | { type: "found_clue"; clueId: string; shared: boolean }
+  | { type: "found_item"; itemId: string; shared: boolean }
+  | { type: "shared" }
+  | { type: "lost"; what: "clue" | "item" }
+  | { type: "luck"; up: boolean };
+
+export type HistoryEntry = { clock: string; intro: string; recap: { kind: RecapKind; text: string }[] };
 
 export type GameState = {
   round: number;
@@ -145,6 +165,16 @@ export type GameState = {
   track: Track | null;
   /** What happened in the round that just resolved (empty before round 1). */
   recap: RecapLine[];
+  /** Earlier rounds as they were narrated (filled text), oldest first: the phones' "story so far". */
+  history: HistoryEntry[];
+  /** The last round's private results per player id. */
+  results: Record<string, Result[]>;
+  /** Finale evidence text, set when round 10 resolves (null: the room votes blind). */
+  evidence: string | null;
+  /** Round 10 is over and the accusation vote is open. */
+  voting: boolean;
+  /** Who voted for whom (player id → suspect index), once the vote is counted. */
+  votes: Record<string, number> | null;
   ending: Ending | null;
 };
 

@@ -54,13 +54,15 @@ export function MysteryScreen({ code }: { code: string }) {
 }
 
 export function Stage({ view, online }: { view: HostView; online: Set<string> }) {
+  // On by default: the narrator speaks unless someone turned it off on this screen.
   const [voice, setVoice] = useState(() => {
     try {
-      return localStorage.getItem(VOICE_KEY) === "on";
+      return localStorage.getItem(VOICE_KEY) !== "off";
     } catch {
-      return false;
+      return true;
     }
   });
+  const [voiceBlocked, setVoiceBlocked] = useState(false);
   const [advancing, setAdvancing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -101,7 +103,7 @@ export function Stage({ view, online }: { view: HostView; online: Set<string> })
     for (const line of view.recap) {
       for (const s of sentences(line.text)) {
         const hit = line.kind === "death" || line.kind === "sabotage" ? line.kind : undefined;
-        out.push({ text: s, ink: hit ? "red" : "white", hit });
+        out.push({ text: s, ink: hit ? "red" : line.kind === "evidence" ? "orange" : "white", hit });
       }
     }
     if (view.intro) {
@@ -115,10 +117,14 @@ export function Stage({ view, online }: { view: HostView; online: Set<string> })
   const words = lexiconFor(view.mystery.slug);
   const choosing = view.phase === "choosing";
   const resolving = view.phase === "resolving";
+  const voting = view.voting;
   const ended = view.status === "ended";
+  // After round 10 there is no next scene: the narration ends in the vote.
+  const voteNext = !ended && !view.intro;
   const ink: Ink = choosing ? "orange" : ended ? "red" : "white";
   const alive = view.players.filter((p) => p.alive);
   const lockedCount = alive.filter((p) => p.locked).length;
+  const evidence = [...view.party.clues, ...view.party.items.map((it) => it.name), ...(view.party.evidence ? [view.party.evidence] : [])];
 
   return (
     <Machine kind="tv" className={`min-h-svh overflow-hidden ${groundClass(step)}`}>
@@ -132,10 +138,24 @@ export function Stage({ view, online }: { view: HostView; online: Set<string> })
 
       <div className="relative z-10 grid flex-1 content-start gap-12 px-4 pt-10 pb-[calc(var(--ground)+2rem)] sm:px-8 lg:grid-cols-12 lg:pt-16">
         <section className="lg:col-span-8" aria-label="Narration">
-          {choosing ? (
+          {voting ? (
             <div className="flex flex-col gap-8 motion-safe:animate-rise">
-              <p className="seam-ink font-pixel text-statement [--seam-top:var(--orange)]">Choose on your phones.</p>
-              <p className="max-w-3xl text-body text-white">{view.intro}</p>
+              <p className="font-pixel text-statement text-orange">Who did it?</p>
+              <p className="max-w-3xl text-ui text-white">Vote on your phones. The most votes is accused.</p>
+              <p className="font-pixel text-ui text-white">
+                {capitalize(inWords(voting.voted))} of {inWords(voting.voters)} voted
+                <WaitingDots />
+              </p>
+              <ul className="flex flex-wrap gap-x-8 gap-y-2 text-body text-white">
+                {voting.candidates.map((name) => (
+                  <li key={name}>{name}</li>
+                ))}
+              </ul>
+            </div>
+          ) : choosing ? (
+            <div className="flex flex-col gap-8 motion-safe:animate-rise">
+              <p className="font-pixel text-statement text-orange">Choose on your phones.</p>
+              <p className="max-w-3xl text-ui text-white">{view.intro}</p>
               <p className="font-pixel text-ui text-white">
                 {capitalize(inWords(lockedCount))} of {inWords(alive.length)} locked in
                 <WaitingDots />
@@ -152,21 +172,25 @@ export function Stage({ view, online }: { view: HostView; online: Set<string> })
             </div>
           ) : (
             <Narrator
-              key={`${view.status}-${view.clock.value}-${view.recap.length}`}
+              key={`${view.status}-${view.clock.value}-${view.recap.length}-${view.history.length}`}
               beats={beats}
               voice={voice}
               onEnd={advance}
+              onVoiceBlocked={setVoiceBlocked}
               end={
-                <div className="flex max-w-md flex-col gap-4">
-                  <p className="font-pixel text-statement text-white">{ended ? words.play.finale : "Everyone ready?"}</p>
-                  <FillButton type="button" onClick={advance} disabled={advancing}>
-                    {ended ? "Reveal the ending" : "Open the choices"}
-                  </FillButton>
-                  <p className="text-body text-white">or press Enter</p>
+                <div className="flex max-w-xl flex-col gap-4">
+                  <p className="font-pixel text-statement text-orange">
+                    {ended ? words.play.finale : voteNext ? "Time to name the killer." : "Choices are open on your phones."}
+                  </p>
                   {error && (
-                    <p role="alert" className="text-meta text-red">
-                      {error}
-                    </p>
+                    <>
+                      <p role="alert" className="text-body text-red">
+                        {error}
+                      </p>
+                      <FillButton type="button" onClick={advance} disabled={advancing}>
+                        {advancing ? "Trying again…" : "Try again"}
+                      </FillButton>
+                    </>
                   )}
                 </div>
               }
@@ -178,7 +202,15 @@ export function Stage({ view, online }: { view: HostView; online: Set<string> })
           <ul className="flex flex-col gap-6">
             {view.players.map((p) => {
               const offline = !online.has(p.id);
-              const status = !p.alive ? words.play.fallen : offline ? "offline" : choosing ? (p.locked ? "locked in" : "thinking") : null;
+              const status = !p.alive
+                ? words.play.fallen
+                : offline
+                  ? "offline"
+                  : choosing || voting
+                    ? p.locked
+                      ? voting ? "voted" : "locked in"
+                      : "thinking"
+                    : null;
               return (
                 <li key={p.id} className="flex flex-col">
                   <span className={`font-pixel text-ui ${p.alive ? "text-white" : "text-red line-through"}`}>{p.name}</span>
@@ -186,7 +218,7 @@ export function Stage({ view, online }: { view: HostView; online: Set<string> })
                   {status && (
                     <span
                       className={`text-body font-bold ${
-                        status === "locked in" ? "text-green" : status === "thinking" ? "text-white" : "text-red"
+                        status === "locked in" || status === "voted" ? "text-green" : status === "thinking" ? "text-white" : "text-red"
                       }`}
                     >
                       {status}
@@ -197,12 +229,26 @@ export function Stage({ view, online }: { view: HostView; online: Set<string> })
               );
             })}
           </ul>
+          {evidence.length > 0 && (
+            <section aria-label="What everyone knows" className="mt-10 flex flex-col gap-4 border-t border-blue/30 pt-6">
+              <h2 className="font-pixel text-ui text-white">What everyone knows</h2>
+              <ul className="flex flex-col gap-4">
+                {evidence.map((text, k) => (
+                  <li key={k} className="text-body text-white motion-safe:animate-flicker-in">
+                    {text}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
         </aside>
       </div>
 
       <Ground glyphs={words.glyphs} />
 
-      <div className="absolute right-4 bottom-3 z-10 flex items-center gap-6 sm:right-8">
+      <div className="absolute right-4 bottom-3 z-10 flex flex-wrap items-center justify-end gap-x-6 gap-y-1 sm:right-8">
+        {voice && voiceBlocked && <p className="text-body text-orange">Click anywhere to hear the narrator</p>}
+        <p className="hidden text-body text-white sm:block">Enter skips</p>
         <SoundToggle keyHint />
         <p className="text-body text-white">
         <button

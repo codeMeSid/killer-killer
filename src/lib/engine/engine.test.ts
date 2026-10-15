@@ -4,7 +4,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { GameState, Pick, Rng, Slot, Tree } from "./types.ts";
-import { optionsFor, playerWon, resolveRound, startGame, statOf, validatePick } from "./engine.ts";
+import { candidatesFor, optionsFor, playerWon, resolveRound, resolveVote, startGame, statOf, validatePick, validateVote } from "./engine.ts";
 import { hostView, playerView } from "./view.ts";
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -59,10 +59,37 @@ test("rolls: threshold, natural 1, push, group bonus, shared vs private grants",
   assert.equal(statOf(suspects2p, next, b), 1, "shared key clue counts for everyone");
   assert.equal(next.round, 2);
 
-  // pushed medium roll: die 3 + luck 3 + 2 = 8 ≥ 7 → success; push cost 1, group +1 → back to 3.
+  // pushed medium roll: die 3 + luck 3 + 2 = 8 ≥ 7 → success; push -1, the option's luck effect +1, group +1 → 4.
   const s2 = start2p();
   const r = resolveRound(suspects2p, s2, [pick(s2, suspects2p, "p1", "C", { pushed: true }), pick(s2, suspects2p, "p2", "B")], dice(3, 4));
-  assert.equal(r.players[0].luck, 3);
+  assert.equal(r.players[0].luck, 4);
+});
+
+test("each character sees their own four options, and the story names characters, not players", () => {
+  const s = start2p();
+  const own = (id: string) => optionsFor(suspects2p, s, id).map((o) => o.id);
+  assert.deepEqual(own("p1"), ["r1_a_p1_A", "r1_a_p1_B", "r1_a_p1_C", "r1_a_p1_D"]);
+  assert.deepEqual(own("p2"), ["r1_a_p2_A", "r1_a_p2_B", "r1_a_p2_C", "r1_a_p2_D"]);
+  const named: Tree = structuredClone(suspects2p);
+  named.world.suspects[0].name = "Rafe";
+  named.world.suspects[1].name = "Tara";
+  const next = resolveRound(named, s, [pick(s, named, "p1", "A"), pick(s, named, "p2", "B")], dice(4, 4));
+  assert.ok(next.recap.every((l) => !l.text.includes("Ana") && !l.text.includes("Ben")), "player names leaked into narration");
+  assert.ok(next.recap[0].text.startsWith("Rafe "));
+});
+
+test("results, history and the red-herring half rule", () => {
+  const s = atScene("r2_a", 2);
+  // p1 A (group, grants k2) succeeds; p2 D (follows a red herring, grants h1) succeeds → half the picks follow it.
+  const next = resolveRound(suspects2p, s, [pick(s, suspects2p, "p1", "A"), pick(s, suspects2p, "p2", "D")], dice(4, 6));
+  assert.deepEqual(next.results.p1, [{ type: "found_clue", clueId: "k2", shared: true }, { type: "luck", up: true }]);
+  assert.equal(next.results.p2[0].type, "found_clue");
+  assert.equal(next.redHerrings, 1, "one of two picks followed a red herring: half counts");
+  assert.equal(next.history.length, 1);
+  assert.equal(next.history[0].recap.length, next.recap.length);
+  // nothing happened → an empty result list (the phone says "Nothing came of it")
+  const dull = resolveRound(suspects2p, s, [pick(s, suspects2p, "p1", "D"), pick(s, suspects2p, "p2", "D")], dice(2, 3));
+  assert.deepEqual(dull.results.p1, []);
 });
 
 test("natural 6 success adds luck, clamped to 5", () => {
@@ -108,8 +135,9 @@ test("a failed lethal risky option kills and drops belongings to the party", () 
   assert.ok(next.partyClues.includes("k3"));
   assert.ok(next.partyItems.includes("lucky_item"));
   assert.ok(next.recap.some((l) => l.kind === "death"));
-  // only the killer is left alive → culprit escapes immediately
-  assert.deepEqual(next.ending, { key: "culprit_escapes", downgraded: false });
+  // only the killer is left alive → culprit escapes immediately, no vote
+  assert.deepEqual(next.ending, { key: "culprit_escapes", accused: null });
+  assert.equal(next.voting, false);
 });
 
 test("pivot at round 8 locks solved / wrong / escape", () => {
@@ -124,17 +152,48 @@ test("pivot at round 8 locks solved / wrong / escape", () => {
   assert.equal(e.round, 9);
 });
 
-test("round 10: decisive success solves; otherwise the solved track is downgraded", () => {
+test("round 10: the track decides the evidence, then the vote opens", () => {
   const s = atScene("r10_solved", 10, { track: "solved", partyClues: ["k1", "k2", "k3"], partyItems: ["decisive_item"] });
   const opts = optionsFor(suspects2p, s, "p1");
   assert.ok(opts.find((o) => o.slot === "A")!.decisive, "gated decisive variant shows");
-  const win = resolveRound(suspects2p, s, [pick(s, suspects2p, "p1", "A"), pick(s, suspects2p, "p2", "B")], dice(6, 3));
-  assert.deepEqual(win.ending, { key: "solved", downgraded: false });
-  assert.equal(playerWon(win, "p1"), true);
-  assert.equal(playerWon(win, "p2"), false, "killer loses when solved");
-  const miss = resolveRound(suspects2p, s, [pick(s, suspects2p, "p1", "B"), pick(s, suspects2p, "p2", "B")], dice(3, 3));
-  assert.deepEqual(miss.ending, { key: "culprit_escapes", downgraded: true });
-  assert.equal(playerWon(miss, "p2"), true, "killer wins when the culprit escapes");
+  const landed = resolveRound(suspects2p, s, [pick(s, suspects2p, "p1", "A"), pick(s, suspects2p, "p2", "B")], dice(6, 3));
+  assert.equal(landed.voting, true);
+  assert.equal(landed.ending, null);
+  assert.equal(landed.evidence, suspects2p.world.finale.proof);
+  assert.equal(landed.recap.at(-1)!.kind, "evidence");
+  const missed = resolveRound(suspects2p, s, [pick(s, suspects2p, "p1", "B"), pick(s, suspects2p, "p2", "B")], dice(3, 3));
+  assert.equal(missed.evidence, null, "no decisive move, no proof");
+  const wrong = atScene("r10_wrong", 10, { track: "wrong" });
+  const framed = resolveRound(suspects2p, wrong, [pick(wrong, suspects2p, "p1", "B"), pick(wrong, suspects2p, "p2", "B")], dice(3, 3));
+  assert.equal(framed.evidence, suspects2p.world.finale.frame);
+  assert.throws(() => resolveRound(suspects2p, framed, [], dice(3)), /over/);
+});
+
+test("the vote: most votes on the killer solves, on an innocent is wrong, a tie lets them go", () => {
+  const four = startGame(investigators4p, ["a", "b", "c", "d"].map((id) => ({ id, name: id })), dice(3));
+  const open = { ...four, voting: true };
+  const killer = investigators4p.world.suspects.findIndex((x) => x.id === investigators4p.world.killer_id);
+  const innocent = killer === 0 ? 1 : 0;
+  assert.deepEqual(resolveVote(investigators4p, open, { a: killer, b: killer, c: innocent, d: 2 }).ending, { key: "solved", accused: killer });
+  assert.deepEqual(resolveVote(investigators4p, open, { a: innocent, b: innocent, c: killer, d: 2 }).ending, { key: "wrong_culprit", accused: innocent });
+  assert.deepEqual(resolveVote(investigators4p, open, { a: killer, b: killer, c: innocent, d: innocent }).ending, { key: "culprit_escapes", accused: null });
+  // the dead don't count
+  const dead = { ...open, players: open.players.map((p) => (p.id === "d" ? { ...p, alive: false } : p)) };
+  assert.equal(resolveVote(investigators4p, dead, { a: killer, b: innocent, c: killer, d: innocent }).ending!.key, "solved");
+});
+
+test("validateVote: living players only, never your own character", () => {
+  const s = { ...start2p(), voting: true };
+  assert.deepEqual(candidatesFor(suspects2p, s, "p1"), [1], "p1 is suspect 0 and can only accuse suspect 1");
+  assert.equal(validateVote(suspects2p, s, "p1", 0), "You can't accuse that person.");
+  assert.equal(validateVote(suspects2p, s, "p1", 1), null);
+  assert.equal(validateVote(suspects2p, { ...s, voting: false }, "p1", 1), "The vote isn't open.");
+  s.players[0].alive = false;
+  assert.equal(validateVote(suspects2p, s, "p1", 1), "The dead don't vote.");
+  const won = resolveVote(suspects2p, { ...start2p(), voting: true }, { p1: 1, p2: 0 });
+  assert.equal(won.ending!.key, "culprit_escapes", "one vote each is a tie");
+  assert.equal(playerWon(won, "p2"), true, "killer wins when the culprit escapes");
+  assert.equal(playerWon(resolveVote(suspects2p, { ...start2p(), voting: true }, { p1: 1 }), "p1"), true);
 });
 
 test("validatePick rejects illegal lock-ins", () => {
@@ -171,13 +230,18 @@ function assertNoLeaks(tree: Tree, state: GameState, json: string, viewer: strin
     }
   }
   if (viewer !== state.killerPlayerId) assert.ok(!json.includes('"killer":true'), "killer identity leaked");
+  for (const p of state.players) {
+    const secret = tree.world.suspects.find((x) => x.id === p.suspectId)?.secret;
+    if (secret && p.id !== viewer) assert.ok(!json.includes(JSON.stringify(secret)), `secret of ${p.id} leaked to ${viewer ?? "host"}`);
+  }
+  assert.ok(!/"(found_clue|found_item|clueId|itemId)"/.test(json), "raw result leaked");
 }
 
 function playRandom(tree: Tree, seed: number) {
   const rng = seeded(seed);
   const players = Array.from({ length: tree.meta.player_count }, (_, i) => ({ id: `p${i + 1}`, name: `Player ${i + 1}` }));
   let state = startGame(tree, players, rng);
-  for (let guard = 0; guard < 12 && !state.ending; guard++) {
+  for (let guard = 0; guard < 12 && !state.ending && !state.voting; guard++) {
     const picks: Pick[] = [];
     for (const p of state.players.filter((x) => x.alive)) {
       const opts = optionsFor(tree, state, p.id);
@@ -205,11 +269,28 @@ function playRandom(tree: Tree, seed: number) {
       assert.ok(statOf(tree, state, p) <= 5);
     }
   }
-  assert.ok(state.ending, "game must end within 10 rounds");
+  if (state.voting) {
+    const votes: Record<string, number> = {};
+    for (const p of state.players.filter((x) => x.alive)) {
+      const choices = candidatesFor(tree, state, p.id);
+      votes[p.id] = choices[Math.floor(rng() * choices.length)];
+      assert.equal(validateVote(tree, state, p.id, votes[p.id]), null);
+    }
+    const input = { tree, slug: "t", code: "ABCDEFGH", status: "playing" as const, phase: "voting" as const, state, roster: [], locked: new Set<string>() };
+    assertNoLeaks(tree, state, JSON.stringify(hostView(input)), null);
+    for (const p of state.players) {
+      const pv = playerView(input, { id: p.id, name: p.name }, null);
+      assertNoLeaks(tree, state, JSON.stringify(pv), p.id);
+      assert.equal(!!pv.ballot, p.alive, "only the living get a ballot");
+    }
+    state = resolveVote(tree, state, votes);
+  }
+  assert.ok(state.ending, "game must end within 10 rounds and a vote");
   const end = { tree, slug: "t", code: "ABCDEFGH", status: "ended" as const, phase: "finale" as const, state, roster: [], locked: new Set<string>() };
   const v = hostView(end);
   assert.ok(v.ending && v.ending.title && v.ending.epilogue);
-  assert.ok(!/\{(player|target|party|victim|killer|survivors)\}/.test(JSON.stringify(v)), "unfilled placeholder");
+  assert.ok(!/\{(player|target|party|victim|killer|survivors|accused)\}/.test(JSON.stringify(v)), "unfilled placeholder");
+  assert.equal(v.history.length, state.history.length);
   return state.ending!.key;
 }
 

@@ -12,11 +12,14 @@ export type DevScene =
   | "mystery-narrate"
   | "mystery-choose"
   | "mystery-resolving"
+  | "mystery-vote"
   | "story-narrate"
   | "story-choose"
   | "story-killer"
   | "story-locked"
   | "story-dead"
+  | "story-vote"
+  | "story-voted"
   | "end-host"
   | "end-player";
 

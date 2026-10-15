@@ -131,6 +131,16 @@ export const sfx = {
     tone(a, "sawtooth", 110, 98, 1.4, lp);
     tone(a, "sawtooth", 116.5, 103, 1.4, lp);
   },
+  /** Your move: two rising notes when the choices or the vote open on a phone. */
+  chime() {
+    const a = audio();
+    if (!a) return;
+    tone(a, "triangle", 523, 530, 0.12, envelope(a, 0.12, 0.005, 0.18));
+    setTimeout(() => {
+      const b = audio();
+      if (b) tone(b, "triangle", 784, 790, 0.16, envelope(b, 0.12, 0.005, 0.28));
+    }, 130);
+  },
   /** The tube warming up. */
   thump() {
     const a = audio();
