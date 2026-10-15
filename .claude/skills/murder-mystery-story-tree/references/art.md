@@ -2,7 +2,8 @@
 
 Every story ships one Hairline figure: an isometric line drawing that plays its tour on a loop. The app shows it, non-interactive, on the
 case card, the TV lobby, the loaders and the end screen. Players never touch it and never see read-outs or interaction
-states: the tour is the whole show, looping forever, so design the figure for the unseen pointer's lap.
+states: the tour is the whole show, looping while the card is in focus or the lobby art is hovered (always on loaders and the
+ending), and the figure rests on its composed pose otherwise, so design both the rest pose and the unseen pointer's lap.
 
 ## Make it with `hairline-create`
 

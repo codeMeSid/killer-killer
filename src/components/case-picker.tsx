@@ -75,7 +75,7 @@ export function CasePicker({ cards }: { cards: MysteryCard[] }) {
                   active ? "pb-orange -translate-y-1" : "pb-dim"
                 }`}
               >
-                <StoryArt slug={card.slug} variant="card" className="border-b border-blue/30" />
+                <StoryArt slug={card.slug} variant="card" play={active} className="border-b border-blue/30" />
                 <span className="flex flex-1 flex-col gap-3 p-5">
                   <span className={`min-h-[2lh] font-pixel text-ui ${active ? "text-orange" : "text-white"}`}>{card.title}</span>
                   <span className="min-h-[2lh] text-body text-white">{fill(words.hook, { victim: card.victim })}</span>

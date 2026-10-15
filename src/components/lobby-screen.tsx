@@ -82,6 +82,7 @@ export function HostLobby({ view, online }: { view: HostView; online: Set<string
   const [starting, setStarting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [artHover, setArtHover] = useState(false);
   const words = lexiconFor(view.mystery.slug);
   const n = view.mystery.playerCount;
   const k = view.players.length;
@@ -182,7 +183,9 @@ export function HostLobby({ view, online }: { view: HostView; online: Set<string
           </div>
           <div className="order-first flex flex-wrap items-end gap-6 sm:flex-nowrap lg:order-none lg:col-span-4 lg:flex-col lg:items-end">
             {joinUrl && <JoinQr url={joinUrl} className="w-40 sm:w-48" />}
-            <StoryArt slug={view.mystery.slug} variant="hero" className="hidden max-w-[14rem] sm:flex lg:max-w-[24rem]" />
+            <div onMouseEnter={() => setArtHover(true)} onMouseLeave={() => setArtHover(false)} className="hidden w-full max-w-[14rem] sm:block lg:max-w-[24rem]">
+              <StoryArt slug={view.mystery.slug} variant="hero" play={artHover} />
+            </div>
           </div>
         </section>
 
