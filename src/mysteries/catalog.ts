@@ -1,6 +1,7 @@
 import type { FigureDefine } from "@/lib/hairline";
 import { capitalize, inWords } from "@/lib/words";
 import type { Lexicon } from "./types";
+import brijmohanValentineLexicon from "./brijmohan-valentine-monster-4p/lexicon.json";
 import maxHarrowLexicon from "./max-harrow-skyfall-4p/lexicon.json";
 import theoMarshLexicon from "./theo-marsh-skyfall-2p/lexicon.json";
 
@@ -10,12 +11,14 @@ import theoMarshLexicon from "./theo-marsh-skyfall-2p/lexicon.json";
 export const LEXICON: Record<string, Lexicon> = {
   "theo-marsh-skyfall-2p": theoMarshLexicon as Lexicon,
   "max-harrow-skyfall-4p": maxHarrowLexicon as Lexicon,
+  "brijmohan-valentine-monster-4p": brijmohanValentineLexicon as Lexicon,
 };
 
 /** Code-split: a figure loads only on the screen that shows it. */
 export const ART: Record<string, () => Promise<{ default: FigureDefine }>> = {
   "theo-marsh-skyfall-2p": () => import("./theo-marsh-skyfall-2p/art"),
   "max-harrow-skyfall-4p": () => import("./max-harrow-skyfall-4p/art"),
+  "brijmohan-valentine-monster-4p": () => import("./brijmohan-valentine-monster-4p/art"),
 };
 
 export function lexiconFor(slug: string): Lexicon {

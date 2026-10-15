@@ -236,6 +236,16 @@
       transform: translateX(-50%);
     }
   }
+  /* Identity card: the bar drains as the card's auto-hide runs out (10s, matches HIDE_AFTER_MS). */
+  --animate-drain: drain 10s linear both;
+  @keyframes drain {
+    from {
+      transform: scaleX(1);
+    }
+    to {
+      transform: scaleX(0);
+    }
+  }
   /* Block cursor. */
   --animate-blink: blink 1s steps(1, end) infinite;
   @keyframes blink {

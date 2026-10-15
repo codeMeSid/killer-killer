@@ -14,7 +14,8 @@ import { sfx } from "@/lib/sfx";
 import { postJson, useRoom, useWakeLock } from "@/lib/use-room";
 import { lexiconFor } from "@/mysteries/catalog";
 
-const HOLD_MS = 1200;
+// The identity card hides itself after this long (the drain bar shows it).
+const HIDE_AFTER_MS = 10000;
 
 export function StoryScreen({ code }: { code: string }) {
   const { view, error } = useRoom(code);
@@ -78,7 +79,7 @@ export function Controller({ view }: { view: PlayerView }) {
             <h1 className="font-pixel text-statement text-white motion-safe:animate-print">Eyes on the screen.</h1>
             <p className="text-body text-white">
               {view.clock.step === 0 && view.players.some((p) => p.id === me.id && p.character)
-                ? "Press and hold the box below to see who you are. Nobody else can."
+                ? "Tap the box below to see who you are. Nobody else can."
                 : "Your choices will appear here when the narrator is done"}
               <WaitingDots />
             </p>
@@ -233,25 +234,26 @@ function Locked({ view, loaders }: { view: PlayerView; loaders: string[] }) {
 }
 
 /**
- * Press and hold to see who you are. Released, it hides again, so a phone face-up on the
- * table leaks nothing. The killer's notice only ever appears here.
+ * Tap to see who you are, tap again to hide. It also hides by itself after a few seconds and
+ * whenever the phone is put away, so a phone left face-up on the table leaks nothing. A plain
+ * toggle, not a press-and-hold: no gesture to discover, works with one thumb, a keyboard and a
+ * screen reader. The killer's notice only ever appears here.
  */
 function Identity({ view }: { view: PlayerView }) {
   const me = view.me!;
   const character = view.players.find((p) => p.id === me.id)?.character ?? null;
   const [shown, setShown] = useState(false);
-  const [holding, setHolding] = useState(false);
-  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const press = () => {
-    setHolding(true);
-    timer.current = setTimeout(() => setShown(true), HOLD_MS);
-  };
-  const release = () => {
-    if (timer.current) clearTimeout(timer.current);
-    setHolding(false);
-    setShown(false);
-  };
+  useEffect(() => {
+    if (!shown) return;
+    const t = setTimeout(() => setShown(false), HIDE_AFTER_MS);
+    const away = () => document.visibilityState === "hidden" && setShown(false);
+    document.addEventListener("visibilitychange", away);
+    return () => {
+      clearTimeout(t);
+      document.removeEventListener("visibilitychange", away);
+    };
+  }, [shown]);
 
   if (!character && !me.killer) return null;
 
@@ -259,29 +261,36 @@ function Identity({ view }: { view: PlayerView }) {
     <section aria-label="Who you are" className="flex flex-col gap-4">
       <button
         type="button"
-        onPointerDown={press}
-        onPointerUp={release}
-        onPointerLeave={release}
-        onPointerCancel={release}
-        onKeyDown={(e) => (e.key === " " || e.key === "Enter") && !holding && press()}
-        onKeyUp={release}
-        onContextMenu={(e) => e.preventDefault()}
-        className="group pixel-border pb-dim relative min-h-14 w-[calc(100%-6px)] touch-none overflow-hidden px-4 py-4 text-left font-pixel text-ui text-white select-none focus-visible:pb-white focus-visible:outline-none"
+        aria-expanded={shown}
+        aria-controls="identity-card"
+        onClick={() => {
+          sfx.blip();
+          setShown((s) => !s);
+        }}
+        className={`pixel-border relative min-h-14 w-[calc(100%-6px)] overflow-hidden px-4 py-4 text-left font-pixel text-ui text-white transition-[box-shadow,transform] [touch-action:manipulation] focus-visible:pb-white focus-visible:outline-none active:translate-y-px ${
+          shown ? "pb-orange" : "pb-dim"
+        }`}
       >
-        <span
-          aria-hidden
-          className={`absolute inset-0 origin-left bg-white/10 ${holding ? "scale-x-100 duration-[1200ms] ease-linear" : "scale-x-0 duration-300"} transition-transform`}
-        />
-        <span className="relative">{shown ? "Release to hide" : "Hold to see who you are"}</span>
+        {shown ? "Hide who you are" : "Show who you are"}
+        {/* How long until it hides itself: a bar draining along the bottom edge. */}
+        {shown && (
+          <span aria-hidden className="absolute inset-x-0 bottom-0 h-1 origin-left bg-orange motion-safe:animate-drain" />
+        )}
       </button>
       {shown && (
-        <div className="flex flex-col gap-2 motion-safe:animate-fade-in">
+        <div id="identity-card" className="flex flex-col gap-2 motion-safe:animate-[fade-in_250ms_ease-out_both]">
           {character && (
             <>
               <p className="font-pixel text-ui text-white">{character.name}</p>
               <p className="text-body text-white">{character.description}</p>
-              <p className="text-meta text-blue">Alibi: {character.alibi}</p>
-              <p className="text-meta text-blue">Motive: {character.motive}</p>
+              <p className="text-body text-white">
+                <span className="text-blue">Alibi: </span>
+                {character.alibi}
+              </p>
+              <p className="text-body text-white">
+                <span className="text-blue">Motive: </span>
+                {character.motive}
+              </p>
             </>
           )}
           {me.killer && (
@@ -289,6 +298,7 @@ function Identity({ view }: { view: PlayerView }) {
               You did it. Nobody knows. Steer them wrong without being seen.
             </p>
           )}
+          <p className="text-meta text-blue">Hides again by itself.</p>
         </div>
       )}
     </section>

@@ -135,7 +135,7 @@ Art direction from the `design-taste-frontend` skill: direction `sentence-as-lay
 - **TV legibility:** anything read from the sofa (players, characters, status, join instructions, seat labels, buttons) is `text-body` or larger in white; blue `text-meta` is decoration only, never information. Why: blue is 3.9:1 on obsidian and the palette is fixed, so contrast has to come from size and ink choice.
 - **Disabled actions keep a full-contrast label that says why** ("Pick what you will do", "Waiting for two more aboard"); only the fill goes inactive. Never fade a primary button with opacity.
 - Counts in words ("Two of four locked in"), never digits in prose. Dice/rolls never appear.
-- Secrets on phones sit behind hold-to-reveal.
+- Secrets on phones sit behind a tap-to-show toggle (`Identity` in `story-screen.tsx`) that hides itself after ten seconds and when the phone is put away. Never press-and-hold: a hidden gesture, hard one-handed, invisible to screen readers (user correction 2026-10-15).
 - **Pixel-art frames:** surfaces and controls use `pixel-border` + `pb-*` ink (square, corner pixel knocked out), never rounded corners. Swiss underneath: 12-column grid, flush left, blue hairline rules between sections.
 
 ## 14. Retro machines, story art, sound

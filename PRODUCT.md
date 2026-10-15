@@ -21,7 +21,7 @@ Ominous, cinematic, played on old machines. Horror + pixel-art + maximalism + Sw
 ## Design Principles
 1. **One sentence at a time.** The TV is a narrator; every beat is a single poster-scale statement.
 2. **The setting is the interface.** The story's clock, not round numbers or progress bars, shows where we are.
-3. **Secrets stay secret.** Phones hide identity behind hold-to-reveal; nothing on a table-top screen leaks the killer.
+3. **Secrets stay secret.** Phones show identity only on a tap, and it hides itself again; nothing on a table-top screen leaks the killer.
 4. **Layered motion, still text.** Slow ambience, ominous entrances, sharp glitch hits on events; text being read never moves; always gated for reduced motion.
 5. **Each story is its own world.** Its words theme the lobby, loaders and statuses; its Hairline figure appears on the case, the lobby, the waits and the ending.
 6. **Strict palette, no surface tints.** Five inks on obsidian (glow allowed in those hues); surfaces are separated by pixel frames and hairline rules, never fills.

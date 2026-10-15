@@ -1,0 +1,2897 @@
+{
+  "schema": "mm-story-tree/1",
+  "meta": {
+    "title": "Dead Before Dawn",
+    "setting_id": "monster",
+    "difficulty": "easy",
+    "player_count": 4,
+    "player_role": "suspects",
+    "victim": {
+      "name": "BrijMohan Valentine",
+      "description": "Charming, controlling host whose family owns the cabin. He kept a quiet tally of what everyone owed him, in money and in secrets."
+    },
+    "tone": "claustrophobic cabin-in-the-woods dread, Until Dawn horror, creaking dark and long silences",
+    "content_rating": "mature",
+    "premise": "Five friends come to a secluded cabin in the woods. One of them is found dead in the basement cellar, and one of the others was caught sleeping with the victim's sister and the victim's girlfriend. The rest must find the killer before help arrives."
+  },
+  "rules": {
+    "stats": [
+      "closer_to_mystery",
+      "luck"
+    ],
+    "thresholds": {
+      "easy": 5,
+      "medium": 7,
+      "hard": 9
+    },
+    "start": {
+      "luck": 3,
+      "stat": 0
+    },
+    "pivot_round": 8,
+    "rounds": 10
+  },
+  "world": {
+    "clock": {
+      "label": "Hours until help",
+      "unit": "h",
+      "values": [
+        "10",
+        "9",
+        "8",
+        "7",
+        "6",
+        "5",
+        "4",
+        "3",
+        "2",
+        "1"
+      ]
+    },
+    "suspects": [
+      {
+        "id": "s1",
+        "name": "Rafe Kincaid",
+        "description": "Brij's oldest friend and favourite rival. Easy grin, worse decisions. Caught tonight with Brij's sister, and weeks ago with his girlfriend.",
+        "public_alibi": "Says he spent that hour locked in the upstairs bathroom, sick on whiskey. Nobody saw him come out.",
+        "motive": "Brij caught him with Tara and with Kiara, and swore at dinner to ruin him.",
+        "player_slot": 1
+      },
+      {
+        "id": "s2",
+        "name": "Tara Valentine",
+        "description": "Brij's younger sister. Sharp, sleepless and finished with living in his shadow.",
+        "public_alibi": "Smoked on the porch with Jonah, watching the treeline, the whole hour.",
+        "motive": "Brij caught her with Rafe and threatened to tell their father, who still pays her rent.",
+        "player_slot": 2
+      },
+      {
+        "id": "s3",
+        "name": "Kiara Sol",
+        "description": "Brij's girlfriend of three years. Brittle smile, ring finger bare since dinner.",
+        "public_alibi": "Packing upstairs to leave at first light. Her footsteps creaked overhead the whole time.",
+        "motive": "Brij read her messages to Rafe aloud at the dinner table and laughed.",
+        "player_slot": 3
+      },
+      {
+        "id": "s4",
+        "name": "Jonah Pike",
+        "description": "Brij's best friend and business partner. Soft voice, steady hands, the one who drove everyone up here.",
+        "public_alibi": "Smoked on the porch with Tara, watching the treeline, the whole hour.",
+        "motive": "Takes full control of the company they built together if Brij is gone.",
+        "player_slot": 4
+      }
+    ],
+    "killer_id": "s4",
+    "killer_method": "Just after one in the morning Jonah told Tara he was going to check the generator. He followed Brij down to the cellar, where Brij had gone to confront him about the missing money, and struck him from behind with the fire iron he had carried from the hearth. He laid Brij at the foot of the steps to look like a fall, wiped the iron, hung it back by the fire and switched the generator off by hand so the cellar stayed dark. Motive: Jonah had drained their company for two years, Brij had found the proof, and he meant to hand it to the police at dawn.",
+    "clues": [
+      {
+        "id": "k1",
+        "kind": "key",
+        "clarity": "obvious",
+        "text": "Brij's phone lies face down in the cellar with one unsent message: 'Jonah. I know about the money. Cellar. Now.'",
+        "points_to": "s4"
+      },
+      {
+        "id": "k2",
+        "kind": "key",
+        "clarity": "obvious",
+        "text": "Tara admits Jonah left the porch to check the generator and was gone long enough for two cigarettes to burn down.",
+        "points_to": "s4"
+      },
+      {
+        "id": "k3",
+        "kind": "key",
+        "clarity": "obvious",
+        "text": "The fire iron hangs by the hearth, wiped too clean. In the ash beneath it is the print of a heavy work boot. Only Jonah wears work boots.",
+        "points_to": "s4"
+      },
+      {
+        "id": "k4",
+        "kind": "key",
+        "clarity": "obvious",
+        "text": "The generator was switched off by hand, not tripped. The lever is smeared with the same red cellar clay caked on Jonah's boots.",
+        "points_to": "s4"
+      },
+      {
+        "id": "k5",
+        "kind": "key",
+        "clarity": "obvious",
+        "text": "In Jonah's coat pocket: a torn strip of ledger paper in Brij's handwriting, the word 'Jonah' underlined twice.",
+        "points_to": "s4"
+      },
+      {
+        "id": "h1",
+        "kind": "red_herring",
+        "clarity": "obvious",
+        "text": "Rafe's belt lies coiled on the cellar steps, and his whiskey glass stands on the shelf right beside the body.",
+        "points_to": "s1"
+      }
+    ],
+    "items": [
+      {
+        "id": "decisive_item",
+        "name": "Brij's ledger",
+        "description": "The company ledger Brij hid behind the cellar boiler. Two years of missing money, every line initialled by the same hand.",
+        "luck_on_grant": 0,
+        "decisive": true
+      },
+      {
+        "id": "lucky_item",
+        "name": "Brass lighter",
+        "description": "Brij's heavy brass lighter. Its small flame keeps the dark back, and somehow keeps your nerve steady too.",
+        "luck_on_grant": 1,
+        "decisive": false
+      }
+    ]
+  },
+  "scenes": [
+    {
+      "id": "r1_a",
+      "round": 1,
+      "intro": "The cellar bulb flickers on. BrijMohan lies at the foot of the steps, eyes open, very still. The road is washed out and help is hours away. One of you put him there.",
+      "options": [
+        {
+          "id": "r1_a_A",
+          "slot": "A",
+          "text": "search Brij's body together",
+          "recap": "{player} knelt by Brij and searched him while the others held the light.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r2_a",
+          "on_success": {
+            "narration": "His phone is still in his hand, screen lit with a message he never sent. The cellar goes very quiet.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k1"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "Hands shake and the torch beam swings. Nobody can bring themselves to look closely.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r1_a_B",
+          "slot": "B",
+          "text": "go upstairs and lock your door",
+          "recap": "{player} went upstairs and locked their door.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r2_a",
+          "on_success": {
+            "narration": "The bolt slides home. Behind it, {player}'s breathing finally slows.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The lock is broken. {player} jams a chair under the handle and does not sleep.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r1_a_C",
+          "slot": "C",
+          "text": "bar the cellar hatch together",
+          "recap": "{player} got everyone to drag the cellar hatch shut and pile chairs on it.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r2_b",
+          "on_success": {
+            "narration": "The hatch thuds closed under the weight. Whatever is down there, it stays down there.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The hatch sticks halfway. It takes all of you to force it, and it still will not latch.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r1_a_D",
+          "slot": "D",
+          "text": "pocket something from the cellar shelf",
+          "recap": "{player} lingered at the cellar shelf a moment too long.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r2_b",
+          "on_success": {
+            "narration": "{player} slips something into a pocket and says nothing. No one else noticed.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "{player} knocks a jar from the shelf. It shatters, and every head turns.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r2_a",
+      "round": 2,
+      "intro": "Upstairs the power is gone. Four of you sit around a dying fire, and every face is a stranger's.",
+      "options": [
+        {
+          "id": "r2_a_A",
+          "slot": "A",
+          "text": "make everyone account for the last hour",
+          "recap": "{player} made everyone account for the last hour, one by one.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": "k3",
+          "leads_to": "r3_a",
+          "on_success": {
+            "narration": "Stories come out tight and rehearsed. Then Tara hesitates, and her story changes.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k2"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The questions turn into shouting. Nobody says anything useful.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r2_a_B",
+          "slot": "B",
+          "text": "slip out to check the generator alone",
+          "recap": "{player} slipped out alone to look at the generator.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r3_a",
+          "on_success": {
+            "narration": "{player} comes back with mud on their hands and a closed expression, and keeps the reason quiet.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k4"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The shed door slams in the wind. {player} runs back without getting inside.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r2_a_C",
+          "slot": "C",
+          "text": "light every candle and stay in one room",
+          "recap": "{player} lit every candle in the cabin and herded everyone into one room.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r3_b",
+          "on_success": {
+            "narration": "Shadows pull back to the corners. For a while nobody feels watched.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The candles gutter in a draught nobody can find.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r2_a_D",
+          "slot": "D",
+          "text": "go back down to the cellar alone",
+          "recap": "{player} went back down into the cellar alone.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": true,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r3_b",
+          "on_success": {
+            "narration": "{player} returns pale, clutching something, and will not say what.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "h1"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "Halfway down, the bulb dies. {player} feels their way back up the steps in the dark.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r2_b",
+      "round": 2,
+      "intro": "Something scrapes under the floorboards, slow and patient, then stops. The barricade holds. Nobody believes it was the wind.",
+      "options": [
+        {
+          "id": "r2_b_A",
+          "slot": "A",
+          "text": "ask who went near the cellar tonight",
+          "recap": "{player} asked, flatly, who had been near the cellar tonight.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": "k3",
+          "leads_to": "r3_a",
+          "on_success": {
+            "narration": "A long silence. Then Tara speaks, and her story does not match the one she told before.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k2"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "Everyone answers at once. The truth drowns in the noise.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r2_b_B",
+          "slot": "B",
+          "text": "listen at the hatch alone",
+          "recap": "{player} pressed an ear to the cellar hatch, alone.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r3_a",
+          "on_success": {
+            "narration": "{player} hears something below that nobody else heard, and keeps it close.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "Only silence. {player} backs away from the hatch, shaking.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r2_b_C",
+          "slot": "C",
+          "text": "pile more weight on the hatch together",
+          "recap": "{player} rallied everyone to pile the woodbox onto the hatch.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r3_b",
+          "on_success": {
+            "narration": "The hatch is buried under oak and iron. The scraping does not come back.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The woodbox splits as you drag it, and logs roll across the floor.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r2_b_D",
+          "slot": "D",
+          "text": "pry the hatch open alone",
+          "recap": "{player} pried the hatch open alone and slipped down the steps.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": true,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r3_b",
+          "on_success": {
+            "narration": "{player} comes back up with something clenched in one fist and says nothing.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "h1"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The hatch drops shut on {player}'s fingers. They pull free, swearing.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r3_a",
+      "round": 3,
+      "intro": "A branch hammers the window. There is still no signal; the nearest road is an hour's walk through black woods.",
+      "options": [
+        {
+          "id": "r3_a_A",
+          "slot": "A",
+          "text": "examine the hearth together",
+          "recap": "{player} called everyone over to examine the hearth.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r4_a",
+          "on_success": {
+            "narration": "The fire iron hangs too clean. In the ash beneath it, a boot print waits for someone to notice.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k3"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "Someone stokes the fire before anyone can stop them. The ash is churned to nothing.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r3_a_B",
+          "slot": "B",
+          "text": "keep watch at the window alone",
+          "recap": "{player} took the window and watched the treeline alone.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r4_a",
+          "on_success": {
+            "narration": "Nothing moves out there. {player} feels a little steadier for having looked.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "A shape seems to cross the trees. {player} blinks, and it is gone.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r3_a_C",
+          "slot": "C",
+          "text": "search the kitchen drawers for light",
+          "recap": "{player} led a search of the kitchen for anything that burns.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r4_b",
+          "on_success": {
+            "narration": "At the back of a drawer, Brij's brass lighter. Its flame is small and very welcome.",
+            "effects": [
+              {
+                "type": "grant_item",
+                "item_id": "lucky_item"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "Drawer after drawer of nothing. The dark presses closer.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r3_a_D",
+          "slot": "D",
+          "text": "corner Rafe about the affair",
+          "recap": "{player} cornered Rafe about the affair, away from the others.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": true,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r4_b",
+          "on_success": {
+            "narration": "Rafe goes grey and stops talking. {player} walks away with something to think about.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "h1"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "Rafe shoves past without a word. {player} gets nothing.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": [
+        {
+          "slot": "B",
+          "requires": {
+            "role": "killer"
+          },
+          "option": {
+            "id": "r3_a_B_killer",
+            "slot": "B",
+            "text": "hide the fire iron somewhere new",
+            "recap": "{player} wandered off toward the hearth on their own.",
+            "tag": "solo",
+            "risk": "normal",
+            "tier": "medium",
+            "lethal_on_fail": false,
+            "lethal_if_stat_below": null,
+            "follows_red_herring": false,
+            "decisive": false,
+            "bonus_clue_id": null,
+            "leads_to": "r4_a",
+            "on_success": {
+              "narration": "{player} comes back calm. Something on the shared table is missing.",
+              "effects": []
+            },
+            "on_failure": {
+              "narration": "{player} fumbles in the dark and knocks over the poker stand.",
+              "effects": []
+            },
+            "sabotage": {
+              "scope": "group",
+              "effect": "destroy_party_clue"
+            },
+            "exposure": "{player} was seen pulling evidence from the shared pile and feeding it to the stove."
+          }
+        }
+      ]
+    },
+    {
+      "id": "r3_b",
+      "round": 3,
+      "intro": "The fire gutters. Rafe paces. Tara will not look at him, and Kiara has not spoken since the cellar.",
+      "options": [
+        {
+          "id": "r3_b_A",
+          "slot": "A",
+          "text": "examine the hearth together",
+          "recap": "{player} called everyone over to look at the hearth.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r4_a",
+          "on_success": {
+            "narration": "The fire iron hangs too clean, and the ash beneath it holds a boot print.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k3"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "Someone throws on a log before anyone can look. Sparks bury everything.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r3_b_B",
+          "slot": "B",
+          "text": "sit with Kiara and listen",
+          "recap": "{player} sat with Kiara and simply listened.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r4_a",
+          "on_success": {
+            "narration": "Kiara does not say much, but her hands stop shaking. So do {player}'s.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "Kiara stares through {player} as if they are not there.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r3_b_C",
+          "slot": "C",
+          "text": "search the kitchen drawers for light",
+          "recap": "{player} led a search of the kitchen for anything that burns.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r4_b",
+          "on_success": {
+            "narration": "At the back of a drawer, Brij's brass lighter. Its flame is small and very welcome.",
+            "effects": [
+              {
+                "type": "grant_item",
+                "item_id": "lucky_item"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "Drawer after drawer of nothing. The dark presses closer.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r3_b_D",
+          "slot": "D",
+          "text": "corner Rafe about the affair",
+          "recap": "{player} cornered Rafe about the affair.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": true,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r4_b",
+          "on_success": {
+            "narration": "Rafe's denial falls apart halfway through. {player} keeps what they learned.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "h1"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "Rafe laughs in {player}'s face and walks off.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": [
+        {
+          "slot": "B",
+          "requires": {
+            "role": "killer"
+          },
+          "option": {
+            "id": "r3_b_B_killer",
+            "slot": "B",
+            "text": "hide the fire iron somewhere new",
+            "recap": "{player} wandered off toward the hearth on their own.",
+            "tag": "solo",
+            "risk": "normal",
+            "tier": "medium",
+            "lethal_on_fail": false,
+            "lethal_if_stat_below": null,
+            "follows_red_herring": false,
+            "decisive": false,
+            "bonus_clue_id": null,
+            "leads_to": "r4_a",
+            "on_success": {
+              "narration": "{player} comes back calm. Something on the shared table is missing.",
+              "effects": []
+            },
+            "on_failure": {
+              "narration": "{player} fumbles in the dark and knocks over the poker stand.",
+              "effects": []
+            },
+            "sabotage": {
+              "scope": "group",
+              "effect": "destroy_party_clue"
+            },
+            "exposure": "{player} was seen pulling evidence from the shared pile and feeding it to the stove."
+          }
+        }
+      ]
+    },
+    {
+      "id": "r4_a",
+      "round": 4,
+      "intro": "The generator shed stands at the edge of the trees, its door swinging on one hinge.",
+      "options": [
+        {
+          "id": "r4_a_A",
+          "slot": "A",
+          "text": "go to the generator shed together",
+          "recap": "{player} led everyone out to the generator shed.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r5_a",
+          "on_success": {
+            "narration": "The switch is off, not tripped. Somebody's muddy hand put it there.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k4"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "Torches die in the rain. You stumble back without reaching the shed.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r4_a_B",
+          "slot": "B",
+          "text": "go through someone's pockets",
+          "recap": "{player} went quietly through someone's pockets.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r5_a",
+          "on_success": {
+            "narration": "{player} finds nothing worth keeping, and nobody saw.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "{player}'s hand comes away empty and shaking.",
+            "effects": []
+          },
+          "sabotage": {
+            "scope": "player",
+            "effect": "steal_private_clue"
+          },
+          "exposure": "{player} was caught with a hand deep in {target}'s pockets."
+        },
+        {
+          "id": "r4_a_C",
+          "slot": "C",
+          "text": "try to fix the radio together",
+          "recap": "{player} got everyone working on the dead radio.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r5_b",
+          "on_success": {
+            "narration": "Static, then a voice: help is coming, at first light. Not before.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The radio pops and smokes. Nobody touches it again.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r4_a_D",
+          "slot": "D",
+          "text": "follow Rafe outside",
+          "recap": "{player} followed Rafe out into the rain.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": true,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r5_b",
+          "on_success": {
+            "narration": "{player} watches Rafe stop at the cellar window, then hurries back with something to hide.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "h1"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "Rafe hears {player}'s footsteps and turns. They stare at each other in the rain.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r4_b",
+      "round": 4,
+      "intro": "Something heavy crosses the porch boards and is gone by the time anyone reaches the window.",
+      "options": [
+        {
+          "id": "r4_b_A",
+          "slot": "A",
+          "text": "check the porch and shed together",
+          "recap": "{player} took everyone out to the porch and the shed beyond.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r5_a",
+          "on_success": {
+            "narration": "Boot prints in red clay lead from the shed to the cellar door. The generator was switched off by hand.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k4"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The rain has washed the porch clean. Whatever crossed it left nothing.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r4_b_B",
+          "slot": "B",
+          "text": "go through the bags while others look away",
+          "recap": "{player} went through the bags while everyone looked away.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r5_a",
+          "on_success": {
+            "narration": "{player} closes a bag again and keeps a straight face.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "A zip catches loud in the silence. {player} freezes.",
+            "effects": []
+          },
+          "sabotage": {
+            "scope": "player",
+            "effect": "steal_private_clue"
+          },
+          "exposure": "{player} was caught with a hand deep in {target}'s pockets."
+        },
+        {
+          "id": "r4_b_C",
+          "slot": "C",
+          "text": "board up the front door together",
+          "recap": "{player} got everyone nailing boards across the front door.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r5_b",
+          "on_success": {
+            "narration": "The last nail goes in. The door no longer rattles.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The boards split on the first swing of the hammer.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r4_b_D",
+          "slot": "D",
+          "text": "search Rafe's room alone",
+          "recap": "{player} searched Rafe's room alone.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": true,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r5_b",
+          "on_success": {
+            "narration": "{player} finds something under the bed and pockets it without a word.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "h1"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "Rafe's footsteps sound on the stairs. {player} bolts before finding anything.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r5_a",
+      "round": 5,
+      "intro": "Midnight has become something later. The cold is inside the walls now, and the fire is losing.",
+      "options": [
+        {
+          "id": "r5_a_A",
+          "slot": "A",
+          "text": "go through every coat on the rack together",
+          "recap": "{player} pulled every coat off the rack for the group to search.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r6_a",
+          "on_success": {
+            "narration": "In one coat pocket, a torn strip of ledger paper. Brij's handwriting. A name, underlined twice.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k5"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "Coats tangle and pockets turn up lint. Tempers fray.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r5_a_B",
+          "slot": "B",
+          "text": "doze by the fire alone",
+          "recap": "{player} dozed by the fire while the others argued.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r6_a",
+          "on_success": {
+            "narration": "{player} wakes rested, with clearer eyes.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "{player} dreams of the cellar steps and wakes with a cry.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r5_a_C",
+          "slot": "C",
+          "text": "search behind the cellar boiler together",
+          "recap": "{player} led everyone back down to search behind the cellar boiler.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r6_b",
+          "on_success": {
+            "narration": "Wedged behind the boiler, wrapped in a bin bag: Brij's ledger. Every page is a reason.",
+            "effects": [
+              {
+                "type": "grant_item",
+                "item_id": "decisive_item"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The boiler hisses and spits. You retreat with nothing but soot.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r5_a_D",
+          "slot": "D",
+          "text": "read Kiara's messages to Rafe",
+          "recap": "{player} read Kiara's messages to Rafe while she slept.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": true,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r6_b",
+          "on_success": {
+            "narration": "{player} sets the phone down carefully, and keeps what they read to themselves.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "h1"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "Kiara stirs. {player} puts the phone back too fast.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": [
+        {
+          "slot": "B",
+          "requires": {
+            "role": "killer"
+          },
+          "option": {
+            "id": "r5_a_B_killer",
+            "slot": "B",
+            "text": "burn a page in the stove",
+            "recap": "{player} spent a long minute alone by the stove.",
+            "tag": "solo",
+            "risk": "normal",
+            "tier": "medium",
+            "lethal_on_fail": false,
+            "lethal_if_stat_below": null,
+            "follows_red_herring": false,
+            "decisive": false,
+            "bonus_clue_id": null,
+            "leads_to": "r6_a",
+            "on_success": {
+              "narration": "The stove flares and dies down. One fewer thing for anyone to find.",
+              "effects": []
+            },
+            "on_failure": {
+              "narration": "The paper will not catch. {player} stuffs it back into a pocket.",
+              "effects": []
+            },
+            "sabotage": {
+              "scope": "group",
+              "effect": "destroy_party_clue"
+            },
+            "exposure": "{player} was seen burning something from the shared evidence in the stove."
+          }
+        }
+      ]
+    },
+    {
+      "id": "r5_b",
+      "round": 5,
+      "intro": "The radio has gone quiet. Somewhere upstairs a door opens and closes on its own.",
+      "options": [
+        {
+          "id": "r5_b_A",
+          "slot": "A",
+          "text": "go through every coat on the rack together",
+          "recap": "{player} pulled every coat off the rack for the group to search.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r6_a",
+          "on_success": {
+            "narration": "In one pocket, a torn strip of Brij's ledger with one name underlined twice.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k5"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The coats give up nothing but cold.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r5_b_B",
+          "slot": "B",
+          "text": "check the upstairs door alone",
+          "recap": "{player} went up alone to check the door that opened by itself.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r6_a",
+          "on_success": {
+            "narration": "Just the wind and a bad latch. {player} comes back steadier.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The door is shut again when {player} arrives. Nobody was there.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r5_b_C",
+          "slot": "C",
+          "text": "search behind the cellar boiler together",
+          "recap": "{player} led everyone down to search behind the boiler.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r6_b",
+          "on_success": {
+            "narration": "Behind the boiler, wrapped in plastic: Brij's ledger.",
+            "effects": [
+              {
+                "type": "grant_item",
+                "item_id": "decisive_item"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "Soot and spiders. Nothing else.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r5_b_D",
+          "slot": "D",
+          "text": "go through Rafe's phone",
+          "recap": "{player} went through Rafe's phone while he was outside.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": true,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r6_b",
+          "on_success": {
+            "narration": "{player} finds something on it and keeps it quiet.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "h1"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The phone is locked. {player} puts it back where it was.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": [
+        {
+          "slot": "B",
+          "requires": {
+            "role": "killer"
+          },
+          "option": {
+            "id": "r5_b_B_killer",
+            "slot": "B",
+            "text": "burn a page in the stove",
+            "recap": "{player} spent a long minute alone by the stove.",
+            "tag": "solo",
+            "risk": "normal",
+            "tier": "medium",
+            "lethal_on_fail": false,
+            "lethal_if_stat_below": null,
+            "follows_red_herring": false,
+            "decisive": false,
+            "bonus_clue_id": null,
+            "leads_to": "r6_a",
+            "on_success": {
+              "narration": "The stove flares and dies down. One fewer thing for anyone to find.",
+              "effects": []
+            },
+            "on_failure": {
+              "narration": "The paper will not catch. {player} stuffs it back into a pocket.",
+              "effects": []
+            },
+            "sabotage": {
+              "scope": "group",
+              "effect": "destroy_party_clue"
+            },
+            "exposure": "{player} was seen burning something from the shared evidence in the stove."
+          }
+        }
+      ]
+    },
+    {
+      "id": "r6_a",
+      "round": 6,
+      "intro": "Kiara finally speaks. Brij was afraid of someone in this cabin, she says. He never told her who.",
+      "options": [
+        {
+          "id": "r6_a_A",
+          "slot": "A",
+          "text": "lay out everything you know together",
+          "recap": "{player} laid out every scrap the group had found, side by side.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r7_a",
+          "on_success": {
+            "narration": "Patterns start to form in the candlelight. Fear gives way to focus.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The scraps slide into a mess. Nobody can agree what they mean.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r6_a_B",
+          "slot": "B",
+          "text": "whisper a theory about Rafe",
+          "recap": "{player} whispered a theory about Rafe to anyone who would listen.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r7_a",
+          "on_success": {
+            "narration": "The theory spreads from ear to ear. Everyone glances at Rafe.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "Nobody bites. {player}'s theory dies in the dark.",
+            "effects": []
+          },
+          "sabotage": {
+            "scope": "group",
+            "effect": "mislead_group"
+          },
+          "exposure": "{player} was overheard steering everyone toward Rafe with a story nobody else had seen."
+        },
+        {
+          "id": "r6_a_C",
+          "slot": "C",
+          "text": "check the cellar steps by torchlight",
+          "recap": "{player} took everyone down to check the cellar steps by torchlight.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r7_b",
+          "on_success": {
+            "narration": "The top step is dry. Brij did not slip. Someone wanted it to look that way.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The torch flickers out halfway down. You climb back blind.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r6_a_D",
+          "slot": "D",
+          "text": "slip out to the car alone",
+          "recap": "{player} slipped out to the cars alone.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r7_b",
+          "on_success": {
+            "narration": "The car is locked tight, but {player} comes back calmer for having tried.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "Something moves between the trees. {player} runs back without the car keys.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r6_b",
+      "round": 6,
+      "intro": "The radio crackles once more: help comes at first light, not one minute before. The dark has hours left in it.",
+      "options": [
+        {
+          "id": "r6_b_A",
+          "slot": "A",
+          "text": "lay out everything you know together",
+          "recap": "{player} laid out everything the group had found.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r7_a",
+          "on_success": {
+            "narration": "The pieces start to line up. Somebody at this table is lying.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The pieces will not fit. Voices rise.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r6_b_B",
+          "slot": "B",
+          "text": "whisper a theory about Rafe",
+          "recap": "{player} whispered a theory about Rafe.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r7_a",
+          "on_success": {
+            "narration": "The whisper spreads. Rafe notices everyone looking.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "The whisper goes nowhere.",
+            "effects": []
+          },
+          "sabotage": {
+            "scope": "group",
+            "effect": "mislead_group"
+          },
+          "exposure": "{player} was overheard steering everyone toward Rafe with a story nobody else had seen."
+        },
+        {
+          "id": "r6_b_C",
+          "slot": "C",
+          "text": "walk the cellar steps together",
+          "recap": "{player} walked the cellar steps with the others, one at a time.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r7_b",
+          "on_success": {
+            "narration": "Every step is dry and solid. Nobody falls down these by accident.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The cellar is too dark. You go back up with nothing.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r6_b_D",
+          "slot": "D",
+          "text": "hide a kitchen knife on yourself",
+          "recap": "{player} slipped a kitchen knife into their sleeve.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r7_b",
+          "on_success": {
+            "narration": "The weight of it is a strange comfort. Nobody saw.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The knife clatters on the floor. Every head turns to {player}.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r7_a",
+      "round": 7,
+      "intro": "The fire is almost out. Something taps on the cellar hatch from below, three times, and never again.",
+      "options": [
+        {
+          "id": "r7_a_A",
+          "slot": "A",
+          "text": "hold together and keep the fire alive",
+          "recap": "{player} kept everyone close and fed the last logs to the fire.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r8_a",
+          "on_success": {
+            "narration": "The flames climb back. In their light, the faces around you look human again.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The last log is wet. The fire smoulders and sulks.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r7_a_B",
+          "slot": "B",
+          "text": "keep watch on the hatch alone",
+          "recap": "{player} sat alone, watching the cellar hatch.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r8_a",
+          "on_success": {
+            "narration": "The tapping never returns. {player} keeps watch until their nerve steadies.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "{player} nods off and wakes with a start, sure the hatch has moved.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r7_a_C",
+          "slot": "C",
+          "text": "search the crawlspace together",
+          "recap": "{player} led everyone into the crawlspace under the stairs.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r8_b",
+          "on_success": {
+            "narration": "Old boxes, dust and a mouse. Nothing that tapped.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The crawlspace light dies. You all scramble back out.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r7_a_D",
+          "slot": "D",
+          "text": "walk into the woods toward the road",
+          "recap": "{player} set off alone through the woods toward the road.",
+          "tag": "solo",
+          "risk": "risky",
+          "tier": "medium",
+          "lethal_on_fail": true,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r8_b",
+          "on_success": {
+            "narration": "{player} reaches the road, finds no one, and makes it back with numb hands and a clear head.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "{player} loses the path in the black trees.",
+            "effects": []
+          },
+          "on_death": {
+            "narration": "{player} walked into the trees and the dark closed behind them. At first light they were found at the bottom of the ravine."
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": [
+        {
+          "slot": "B",
+          "requires": {
+            "role": "killer"
+          },
+          "option": {
+            "id": "r7_a_B_killer",
+            "slot": "B",
+            "text": "drop evidence down the well",
+            "recap": "{player} stepped outside for air, alone.",
+            "tag": "solo",
+            "risk": "normal",
+            "tier": "medium",
+            "lethal_on_fail": false,
+            "lethal_if_stat_below": null,
+            "follows_red_herring": false,
+            "decisive": false,
+            "bonus_clue_id": null,
+            "leads_to": "r8_a",
+            "on_success": {
+              "narration": "{player} comes back with wet sleeves. Something from the shared pile is gone for good.",
+              "effects": []
+            },
+            "on_failure": {
+              "narration": "The well cover is frozen shut. {player} comes back empty-handed.",
+              "effects": []
+            },
+            "sabotage": {
+              "scope": "group",
+              "effect": "destroy_party_clue"
+            },
+            "exposure": "{player} was spotted at the old well, dropping evidence into the dark."
+          }
+        }
+      ]
+    },
+    {
+      "id": "r7_b",
+      "round": 7,
+      "intro": "Someone is crying in the dark, and nobody will admit it is them.",
+      "options": [
+        {
+          "id": "r7_b_A",
+          "slot": "A",
+          "text": "hold together and keep the fire alive",
+          "recap": "{player} gathered everyone at the fire.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r8_a",
+          "on_success": {
+            "narration": "The flames hold. So, for now, do you.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The fire coughs smoke into the room.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r7_b_B",
+          "slot": "B",
+          "text": "find the crying and stay with them",
+          "recap": "{player} found whoever was crying and stayed with them.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r8_a",
+          "on_success": {
+            "narration": "Neither of you says anything. You do not need to.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The crying stops when {player} gets close. Nobody is there.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r7_b_C",
+          "slot": "C",
+          "text": "search the attic together",
+          "recap": "{player} led a search of the attic.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r8_b",
+          "on_success": {
+            "narration": "Old photos of five friends who used to be happy. Nothing else.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The attic ladder snaps. Nobody goes up.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r7_b_D",
+          "slot": "D",
+          "text": "walk into the woods toward the road",
+          "recap": "{player} set off alone through the woods toward the road.",
+          "tag": "solo",
+          "risk": "risky",
+          "tier": "medium",
+          "lethal_on_fail": true,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r8_b",
+          "on_success": {
+            "narration": "{player} reaches the road and staggers back, frozen but alive.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "{player} loses the path in the black trees.",
+            "effects": []
+          },
+          "on_death": {
+            "narration": "{player} walked into the trees and the dark closed behind them. At first light they were found at the bottom of the ravine."
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": [
+        {
+          "slot": "B",
+          "requires": {
+            "role": "killer"
+          },
+          "option": {
+            "id": "r7_b_B_killer",
+            "slot": "B",
+            "text": "drop evidence down the well",
+            "recap": "{player} stepped outside for air, alone.",
+            "tag": "solo",
+            "risk": "normal",
+            "tier": "medium",
+            "lethal_on_fail": false,
+            "lethal_if_stat_below": null,
+            "follows_red_herring": false,
+            "decisive": false,
+            "bonus_clue_id": null,
+            "leads_to": "r8_a",
+            "on_success": {
+              "narration": "{player} comes back with wet sleeves. Something from the shared pile is gone for good.",
+              "effects": []
+            },
+            "on_failure": {
+              "narration": "The well cover is frozen shut. {player} comes back empty-handed.",
+              "effects": []
+            },
+            "sabotage": {
+              "scope": "group",
+              "effect": "destroy_party_clue"
+            },
+            "exposure": "{player} was spotted at the old well, dropping evidence into the dark."
+          }
+        }
+      ]
+    },
+    {
+      "id": "r8_a",
+      "round": 8,
+      "intro": "The windows go grey at the edges. It is the last stretch of dark, and the longest.",
+      "options": [
+        {
+          "id": "r8_a_A",
+          "slot": "A",
+          "text": "go over the night one last time together",
+          "recap": "{player} took the group through the whole night, one last time.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "Every lie from the night sits in a row on the table.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "Exhaustion wins. The story blurs.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r8_a_B",
+          "slot": "B",
+          "text": "sit apart and watch everyone's hands",
+          "recap": "{player} sat apart and watched everyone's hands.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "One pair of hands never stops moving. {player} notes whose.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "{player}'s eyes close despite everything.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r8_a_C",
+          "slot": "C",
+          "text": "stand guard at the boarded door together",
+          "recap": "{player} got everyone to stand guard at the door.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "Shoulder to shoulder, the night feels shorter.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "Someone keeps drifting away from the line.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r8_a_D",
+          "slot": "D",
+          "text": "rehearse what you'll tell the police",
+          "recap": "{player} rehearsed in a whisper what they would tell the police.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "{player}'s story is smooth now. Maybe too smooth.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "The words keep coming out in the wrong order.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r8_b",
+      "round": 8,
+      "intro": "The birds start before the light does. Nobody here has slept, and nobody is going to.",
+      "options": [
+        {
+          "id": "r8_b_A",
+          "slot": "A",
+          "text": "compare every story out loud together",
+          "recap": "{player} made everyone retell their night, out loud.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "The stories line up, except one.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "The stories only tangle further.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r8_b_B",
+          "slot": "B",
+          "text": "watch the treeline alone",
+          "recap": "{player} stood alone at the window, watching the treeline.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "Nothing out there moves. {player} turns back to the room.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "A shape stands between the trees, then is not there.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r8_b_C",
+          "slot": "C",
+          "text": "pack everyone's things together",
+          "recap": "{player} got everyone packing, ready to leave.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "Bags by the door. Hands busy. It helps.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "Someone snaps at the wrong question, and packing stops.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r8_b_D",
+          "slot": "D",
+          "text": "hide your phone where no one looks",
+          "recap": "{player} hid their phone where nobody would think to look.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "{player} hides it and says nothing.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "{player} drops it with a clatter in the silence.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r9_solved",
+      "round": 9,
+      "intro": "Pale light leaks over the treeline. The truth has been sitting at this table all night.",
+      "options": [
+        {
+          "id": "r9_solved_A",
+          "slot": "A",
+          "text": "lay every secret on the table",
+          "recap": "{player} asked everyone to put their secrets on the table at last.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_solved",
+          "on_success": {
+            "narration": "One by one, private findings come out. Together they point at one chair.",
+            "effects": [
+              {
+                "type": "share_private_clues"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The silence wins. Secrets stay where they are.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r9_solved_B",
+          "slot": "B",
+          "text": "watch the killer's chair alone",
+          "recap": "{player} watched one chair in silence.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_solved",
+          "on_success": {
+            "narration": "Whoever sits there cannot stop moving.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "{player} loses their nerve and looks away.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r9_solved_C",
+          "slot": "C",
+          "text": "hold the ledger up to the window together",
+          "recap": "{player} held the evidence up to the grey window for everyone.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_solved",
+          "on_success": {
+            "narration": "In the first light, the initials on every page are unmistakable.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "The light is not strong enough yet.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r9_solved_D",
+          "slot": "D",
+          "text": "block the back door alone",
+          "recap": "{player} stood alone in front of the back door.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_solved",
+          "on_success": {
+            "narration": "Nobody is leaving through there.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "{player} steps away for a moment too long.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r9_wrong",
+      "round": 9,
+      "intro": "Everyone has decided it was Rafe. Rafe has stopped arguing. The quiet is worse than the shouting.",
+      "options": [
+        {
+          "id": "r9_wrong_A",
+          "slot": "A",
+          "text": "make everyone share what they found",
+          "recap": "{player} made everyone share what they had found.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_wrong",
+          "on_success": {
+            "narration": "Every finding points where the group already looks.",
+            "effects": [
+              {
+                "type": "share_private_clues"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "Nobody wants to hear anything new.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r9_wrong_B",
+          "slot": "B",
+          "text": "sit beside Rafe alone",
+          "recap": "{player} sat beside Rafe without a word.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_wrong",
+          "on_success": {
+            "narration": "Rafe looks at {player} as if they are the only one left.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "Rafe shifts away.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r9_wrong_C",
+          "slot": "C",
+          "text": "tie Rafe's wrists together",
+          "recap": "{player} got the group to bind Rafe's wrists with a belt.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_wrong",
+          "on_success": {
+            "narration": "Rafe does not fight. He only stares at the floor.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "Rafe pulls free and backs into a corner.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r9_wrong_D",
+          "slot": "D",
+          "text": "doubt everyone quietly",
+          "recap": "{player} quietly doubted everyone at the table.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_wrong",
+          "on_success": {
+            "narration": "{player} keeps their doubts and their distance.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "{player} cannot hold the doubt; it slips away.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r9_escape",
+      "round": 9,
+      "intro": "Nothing fits together. Every theory eats the one before it, and the night is nearly spent.",
+      "options": [
+        {
+          "id": "r9_escape_A",
+          "slot": "A",
+          "text": "pool every clue one last time",
+          "recap": "{player} gathered every clue for one last look.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_escape",
+          "on_success": {
+            "narration": "Pieces sit side by side and still refuse to fit.",
+            "effects": [
+              {
+                "type": "share_private_clues"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The pile only grows more confusing.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r9_escape_B",
+          "slot": "B",
+          "text": "watch the door alone",
+          "recap": "{player} watched the door alone.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_escape",
+          "on_success": {
+            "narration": "Nobody moves. Yet.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "{player} blinks, and a chair is empty.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r9_escape_C",
+          "slot": "C",
+          "text": "wait for dawn together",
+          "recap": "{player} got everyone to sit together and wait for dawn.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_escape",
+          "on_success": {
+            "narration": "Four of you in one room. Nobody knows who to fear.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "The waiting breaks into arguing.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r9_escape_D",
+          "slot": "D",
+          "text": "pack quietly and say nothing",
+          "recap": "{player} packed quietly and said nothing.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_escape",
+          "on_success": {
+            "narration": "{player} is ready to leave the moment help arrives.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "{player}'s bag spills across the floor.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r10_solved",
+      "round": 10,
+      "intro": "Headlights sweep the trees. Help is here. Before that door opens, someone has to say the name.",
+      "options": [
+        {
+          "id": "r10_solved_A",
+          "slot": "A",
+          "text": "say the name together",
+          "recap": "{player} tried to get everyone to say the name together.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "Voices waver and the name comes out half-said.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "Nobody can quite say it aloud.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r10_solved_B",
+          "slot": "B",
+          "text": "run for the cars",
+          "recap": "{player} broke for the cars.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "{player} reaches a car and locks themselves inside.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "{player} slips in the mud and stays down.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r10_solved_C",
+          "slot": "C",
+          "text": "bar the door until the police come in",
+          "recap": "{player} got everyone to hold the door shut until the police could take over.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "Nobody gets out. Nobody gets in. Not yet.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "The door bucks under someone's shoulder.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r10_solved_D",
+          "slot": "D",
+          "text": "vanish into the trees",
+          "recap": "{player} slipped out the back toward the trees.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "{player} is gone before anyone turns around.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "{player} freezes at the treeline, caught in the headlights.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": [
+        {
+          "slot": "A",
+          "requires": {
+            "items": [
+              "decisive_item"
+            ],
+            "min_stat": 3
+          },
+          "option": {
+            "id": "r10_solved_A_decisive",
+            "slot": "A",
+            "text": "open the ledger and name the killer",
+            "recap": "{player} opened Brij's ledger on the table and named the killer.",
+            "tag": "group",
+            "risk": "normal",
+            "tier": "medium",
+            "lethal_on_fail": false,
+            "lethal_if_stat_below": null,
+            "follows_red_herring": false,
+            "decisive": true,
+            "bonus_clue_id": null,
+            "leads_to": null,
+            "on_success": {
+              "narration": "Every initial, every missing month, every lie of the night lines up behind one name. Nobody argues.",
+              "effects": []
+            },
+            "on_failure": {
+              "narration": "The name comes out, but the proof slips from shaking hands and scatters across the floor.",
+              "effects": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "r10_wrong",
+      "round": 10,
+      "intro": "Headlights sweep the trees. Help is here, and the group has already chosen its monster.",
+      "options": [
+        {
+          "id": "r10_wrong_A",
+          "slot": "A",
+          "text": "hand Rafe over together",
+          "recap": "{player} led the others in handing Rafe to the police.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "Rafe goes without a word. Behind you, someone breathes out.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "Rafe stumbles. Nobody helps him up.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r10_wrong_B",
+          "slot": "B",
+          "text": "run for the cars",
+          "recap": "{player} broke for the cars.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "{player} gets away into a car and locks the doors.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "{player} falls in the mud.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r10_wrong_C",
+          "slot": "C",
+          "text": "tell the police everything together",
+          "recap": "{player} got everyone telling the police everything at once.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "The story is loud and certain and wrong.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "Nobody can tell it straight.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r10_wrong_D",
+          "slot": "D",
+          "text": "stay silent and watch",
+          "recap": "{player} stayed silent and watched.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "{player} sees one person smile, just slightly, and says nothing.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "{player} sees nothing at all.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r10_escape",
+      "round": 10,
+      "intro": "Headlights sweep the trees. Help is here, and nothing has come together. Someone in this room is going home free.",
+      "options": [
+        {
+          "id": "r10_escape_A",
+          "slot": "A",
+          "text": "demand answers before anyone leaves",
+          "recap": "{player} demanded answers before anyone could leave.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "Voices rise, but none of the answers agree.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "Nobody even turns around.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r10_escape_B",
+          "slot": "B",
+          "text": "run for the cars",
+          "recap": "{player} broke for the cars.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "{player} makes it into a car and locks the doors.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "{player} slips in the mud.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r10_escape_C",
+          "slot": "C",
+          "text": "walk out together",
+          "recap": "{player} got everyone to walk out together.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "Four of you step into the light. Only three of you are innocent.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "Someone hangs back in the doorway.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r10_escape_D",
+          "slot": "D",
+          "text": "slip away into the trees",
+          "recap": "{player} slipped away toward the trees.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "{player} is gone before anyone notices.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "{player} freezes in the headlights.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    }
+  ],
+  "endings": {
+    "solved": {
+      "title": "First Light",
+      "epilogue": "The ledger lies open on the kitchen table when the police come in, and nobody has to explain it. {killer} does not run; there is nowhere left to go. The money, the cellar, the fire iron wiped too clean, all of it comes out in the grey morning. {survivors} walk out into the cold, alive and changed. {victim} is carried up the cellar steps at last."
+    },
+    "wrong_culprit": {
+      "title": "The Wrong Monster",
+      "epilogue": "Rafe is led to the car in the rain, still saying he only wanted a drink in the cellar. The group watches him go and feels nothing like relief. {killer} stands with the others, coat buttoned, face composed for grief. {survivors} will tell the story of that night for years and never once get it right. {victim} deserved the truth, and got a scapegoat."
+    },
+    "culprit_escapes": {
+      "title": "Nothing at Dawn",
+      "epilogue": "The police find a fall down the cellar steps, a houseful of exhausted friends and no proof of anything. {killer} drives home alone and parks in the same space as always. {survivors} stop answering each other's messages within a month. {victim}'s cabin goes up for sale, cellar and all. Some nights you still hear something on the steps.",
+      "epilogue_if_downgraded": "The proof was in your hands and the name was on your tongue, and in the last second it all came apart. {killer} walked out to the police car as a witness, not a suspect. {survivors} will relive that one wasted moment for the rest of their lives. {victim}'s ledger went into an evidence bag nobody ever reopened."
+    }
+  }
+}

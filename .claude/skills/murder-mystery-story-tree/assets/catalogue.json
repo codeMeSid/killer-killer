@@ -7,8 +7,27 @@
       "player_role": "suspects",
       "tone": "tense, breathless, high-altitude suspense with wind and adrenaline",
       "content_rating": "pg13",
-      "clock": { "label": "Altitude", "unit": "m", "start": 4000, "end": 0 },
+      "clock": {
+        "label": "Altitude",
+        "unit": "m",
+        "start": 4000,
+        "end": 0
+      },
       "sample": true
+    },
+    {
+      "id": "monster",
+      "name": "Monster",
+      "premise": "Five friends come to a secluded cabin in the woods. One of them is found dead in the basement cellar, and one of the others was caught sleeping with the victim's sister and the victim's girlfriend. The rest must find the killer before help arrives.",
+      "player_role": "suspects",
+      "tone": "claustrophobic cabin-in-the-woods dread, Until Dawn horror, creaking dark and long silences",
+      "content_rating": "mature",
+      "clock": {
+        "label": "Hours until help",
+        "unit": "h",
+        "start": 10,
+        "end": 1
+      }
     }
   ]
 }
