@@ -1,0 +1,3041 @@
+{
+  "schema": "mm-story-tree/1",
+  "meta": {
+    "title": "Terminal Velocity",
+    "setting_id": "skyfall",
+    "difficulty": "medium",
+    "player_count": 4,
+    "player_role": "suspects",
+    "victim": {
+      "name": "Max Harrow",
+      "description": "Fearless team captain and competitive skydiver; his formation team had just won the Summit Cup purse, to be shared with the group."
+    },
+    "tone": "tense, breathless, high-altitude suspense with wind and adrenaline",
+    "content_rating": "pg13",
+    "premise": "A group of friends go skydiving together. One of them dies when their parachute fails to open. The rest must work out who sabotaged it before they land."
+  },
+  "rules": {
+    "stats": [
+      "closer_to_mystery",
+      "luck"
+    ],
+    "thresholds": {
+      "easy": 5,
+      "medium": 7,
+      "hard": 9
+    },
+    "start": {
+      "luck": 3,
+      "stat": 0
+    },
+    "pivot_round": 8,
+    "rounds": 10
+  },
+  "world": {
+    "clock": {
+      "label": "Altitude",
+      "unit": "m",
+      "values": [
+        "4000",
+        "3500",
+        "3000",
+        "2600",
+        "2200",
+        "1800",
+        "1400",
+        "1000",
+        "500",
+        "0"
+      ]
+    },
+    "suspects": [
+      {
+        "id": "s1",
+        "name": "Dara Quill",
+        "description": "Camera flyer with scarred knuckles and a razor tongue. Films everything, trusts nothing.",
+        "public_alibi": "Filmed the awards ceremony from the stage steps; her chest cam ran the whole time.",
+        "motive": "Max cut her from the sponsor deal and kept her image fees.",
+        "player_slot": 1
+      },
+      {
+        "id": "s2",
+        "name": "Nell Okafor",
+        "description": "Team treasurer and coach. Calm, tidy, never rattled; carries the prize cheque in a pouch on her thigh.",
+        "public_alibi": "Stood at Max's side for every ceremony photo; the photographer has her in every frame.",
+        "motive": "As treasurer she signs for the whole purse if Max cannot.",
+        "player_slot": 2
+      },
+      {
+        "id": "s3",
+        "name": "Silas Brandt",
+        "description": "Quiet ex-army rigger who packs every canopy by hand. Measures twice, speaks once.",
+        "public_alibi": "Alone in the packing loft during the ceremony, folding spare canopies.",
+        "motive": "Max planned to hand the team's rigging to a bigger firm, ending his job.",
+        "player_slot": 3
+      },
+      {
+        "id": "s4",
+        "name": "Rex Calloway",
+        "description": "Wingsuit showman with a booming laugh and a bigger tab. Never met a crowd he didn't love.",
+        "public_alibi": "Flew wingsuit stunts for the crowd on the tarmac; dozens of phones filmed him.",
+        "motive": "Lost a huge bet to Max, who meant to take it out of Rex's share.",
+        "player_slot": 4
+      }
+    ],
+    "killer_id": "s2",
+    "killer_method": "At the ramp buddy check Nell swapped herself in as Max's partner. Under cover of straightening his harness she taped his main pilot-chute pocket shut with a strip of clear rigging tape and nicked his reserve cable with her hook knife. The main could not launch and the reserve cable parted when he pulled it. Motive: Nell had been skimming the team fund for a year, Max found out, and the prize purse was her only way to quietly refill it.",
+    "clues": [
+      {
+        "id": "k1",
+        "kind": "key",
+        "clarity": "obvious",
+        "text": "On the ramp, Max's mic caught him: 'Thanks, Nell, snug as ever.' She was the last to touch his rig.",
+        "points_to": "s2"
+      },
+      {
+        "id": "k2",
+        "kind": "key",
+        "clarity": "subtle",
+        "text": "A curl of clear rigging tape is stuck inside Nell's left glove, still tacky. Nell never packs rigs, so she has no reason to carry it.",
+        "points_to": "s2"
+      },
+      {
+        "id": "k3",
+        "kind": "key",
+        "clarity": "obvious",
+        "text": "A fund statement is folded behind the prize cheque. A year of cash withdrawals is circled in Max's red pen, every one signed by Nell.",
+        "points_to": "s2"
+      },
+      {
+        "id": "k4",
+        "kind": "key",
+        "clarity": "subtle",
+        "text": "Nell's hook knife has a fresh nick, with a thread of reserve-cable green caught in the blade. Max's reserve cable was that exact green.",
+        "points_to": "s2"
+      },
+      {
+        "id": "k5",
+        "kind": "key",
+        "clarity": "subtle",
+        "text": "The pilot's ramp sheet shows Max's buddy check was assigned to Silas. It was swapped to Nell at the last minute, at her own request.",
+        "points_to": "s2"
+      },
+      {
+        "id": "k6",
+        "kind": "key",
+        "clarity": "subtle",
+        "text": "Right after the fall, Nell sobbed that Max's reserve cable had parted. From this height, nobody could have seen that.",
+        "points_to": "s2"
+      },
+      {
+        "id": "h1",
+        "kind": "red_herring",
+        "clarity": "obvious",
+        "text": "The team packing log shows Max's reserve was repacked at 3 a.m., signed by Silas alone. No witness, no second signature.",
+        "points_to": "s3"
+      },
+      {
+        "id": "h2",
+        "kind": "red_herring",
+        "clarity": "subtle",
+        "text": "Dara's chest-cam clip of the ceremony skips six minutes, right while the rigs sat alone. Her alibi says the camera never stopped.",
+        "points_to": "s1"
+      }
+    ],
+    "items": [
+      {
+        "id": "decisive_item",
+        "name": "Ramp-cam footage",
+        "description": "The chest cam filmed the whole ramp check. Everyone touches everyone's rig in it, so it proves nothing unless you know exactly what to look for.",
+        "luck_on_grant": 0,
+        "decisive": true
+      },
+      {
+        "id": "lucky_item",
+        "name": "Team charm",
+        "description": "A brass wing pin that rides the lead line on every winning jump. Holding it makes the whole stack feel luckier.",
+        "luck_on_grant": 1,
+        "decisive": false
+      }
+    ]
+  },
+  "scenes": [
+    {
+      "id": "r1_a",
+      "round": 1,
+      "intro": "Four canopies snap open in the roaring wind. Max's never does; he falls away beneath you. One of you made sure of it.",
+      "options": [
+        {
+          "id": "r1_a_A",
+          "slot": "A",
+          "text": "replay Max's last radio words",
+          "recap": "{player} replayed Max's last radio words for the whole stack.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r2_a",
+          "on_success": {
+            "narration": "Through the static, Max thanks someone for fixing his rig on the ramp. The stack goes cold and quiet.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k1"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The replay drowns in static. Whatever Max said is lost for now.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r1_a_B",
+          "slot": "B",
+          "text": "check your own harness for damage",
+          "recap": "{player} checked their own harness with shaking hands.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r2_a",
+          "on_success": {
+            "narration": "Every strap holds. {player} steadies and breathes a little easier.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "A strap flaps loose in the gale. {player} wrestles it back into place.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r1_a_C",
+          "slot": "C",
+          "text": "tighten the stack and steady the lines",
+          "recap": "{player} pulled the stack tight and steadied the lines.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": "k5",
+          "leads_to": "r2_b",
+          "on_success": {
+            "narration": "The canopies lock into a firmer shape. The shaking slows and the group draws breath.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The lines jerk and sag. The stack drifts apart before it settles.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r1_a_D",
+          "slot": "D",
+          "text": "search a jumper's glove on the sly",
+          "recap": "{player} slipped a hand into a glove and kept quiet.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r2_b",
+          "on_success": {
+            "narration": "{player} finds something in the lining and says nothing. The wind hides the silence.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k2"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The glove jerks away. Someone shoots {player} a sharp look.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r2_a",
+      "round": 2,
+      "intro": "The rigs sat alone on the hangar bench during the ceremony. Everyone has an alibi for that window. Every alibi sounds rehearsed.",
+      "options": [
+        {
+          "id": "r2_a_A",
+          "slot": "A",
+          "text": "make everyone recite their alibi",
+          "recap": "{player} made everyone recite their alibi aloud.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": "k3",
+          "leads_to": "r3_a",
+          "on_success": {
+            "narration": "Four stories come out smooth and stiff. The group files away every pause.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "The alibis dissolve into shouting. Nobody learns a thing.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r2_a_B",
+          "slot": "B",
+          "text": "thumb through the team packing log",
+          "recap": "{player} thumbed through the team packing log alone.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": true,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r3_a",
+          "on_success": {
+            "narration": "{player} stops on one page and keeps the discovery quiet.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "h1"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "Wind rips the pages loose. {player} clutches the cover and nothing else.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r2_a_C",
+          "slot": "C",
+          "text": "pin down the timeline step by step",
+          "recap": "{player} walked the stack through the timeline step by step.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r3_b",
+          "on_success": {
+            "narration": "Bench, ceremony, ramp, door. Every step has someone's hands on it.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The timeline tangles. Nobody agrees what happened when.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r2_a_D",
+          "slot": "D",
+          "text": "trade a secret for a secret",
+          "recap": "{player} traded secrets with another jumper.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r3_b",
+          "on_success": {
+            "narration": "A whispered bargain is struck. {player} comes away looking pleased.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 2
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The deal collapses in a hiss of wind. {player} gives more than they get.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r2_b",
+      "round": 2,
+      "intro": "A gust rips through the stack and the lines snarl. Voices crack over the radio. Trust is the first thing to go.",
+      "options": [
+        {
+          "id": "r2_b_A",
+          "slot": "A",
+          "text": "untangle the lines as a team",
+          "recap": "{player} rallied the stack to untangle its lines.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": "k3",
+          "leads_to": "r3_a",
+          "on_success": {
+            "narration": "Hands work in rhythm and the lines come free. In the sudden quiet, the group finally hears each other.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "The knots only tighten. Panic creeps into every voice.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r2_b_B",
+          "slot": "B",
+          "text": "scan the team log while others tangle",
+          "recap": "{player} scanned the team log while the others fought the lines.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": true,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r3_a",
+          "on_success": {
+            "narration": "{player} finds a late entry in the log and says nothing.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "h1"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The log slips from {player}'s fingers and flaps away.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r2_b_C",
+          "slot": "C",
+          "text": "brace the weakest canopy together",
+          "recap": "{player} led the push to brace the weakest canopy.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r3_b",
+          "on_success": {
+            "narration": "Together you hold the sagging canopy. It wobbles, steadies, and holds.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The canopy buckles. Everyone scrambles to take the strain.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r2_b_D",
+          "slot": "D",
+          "text": "cut a deal while the lines are snarled",
+          "recap": "{player} cut a quiet deal in the middle of the chaos.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r3_b",
+          "on_success": {
+            "narration": "A hand clasp in the chaos seals it. {player} comes away stronger.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 2
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The deal falls through as the lines whip free. {player} loses face.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r3_a",
+      "round": 3,
+      "intro": "The prize cheque rides in a pouch on Nell's thigh. Max was about to split it five ways. Now the shares have changed.",
+      "options": [
+        {
+          "id": "r3_a_A",
+          "slot": "A",
+          "text": "open the cheque pouch together",
+          "recap": "{player} insisted the cheque pouch be opened for everyone.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r4_a",
+          "on_success": {
+            "narration": "Something is folded behind the cheque. The group reads it in silence, and the wind sounds louder.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k3"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The pouch zipper jams in the cold. The cheque stays hidden for now.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r3_a_B",
+          "slot": "B",
+          "text": "watch everyone's hands in silence",
+          "recap": "{player} watched everyone's hands in silence.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r4_a",
+          "on_success": {
+            "narration": "{player} marks who grips tight and who grips loose.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "{player} stares too hard and draws a few sharp glares.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r3_a_C",
+          "slot": "C",
+          "text": "grab the team charm off the lead line",
+          "recap": "{player} grabbed the team charm off the lead line.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r4_b",
+          "on_success": {
+            "narration": "The brass charm swings into reach and is caught. The stack feels braver for an instant.",
+            "effects": [
+              {
+                "type": "grant_item",
+                "item_id": "lucky_item"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The charm whips away on its line, out of reach.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r3_a_D",
+          "slot": "D",
+          "text": "scrub the ceremony footage alone",
+          "recap": "{player} scrubbed through the ceremony footage alone.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": true,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r4_b",
+          "on_success": {
+            "narration": "{player} finds something odd in the clip and keeps it quiet.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "h2"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The screen glares white in the sun. {player} sees nothing.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": [
+        {
+          "slot": "B",
+          "requires": {
+            "role": "killer"
+          },
+          "option": {
+            "id": "r3_a_B_killer",
+            "slot": "B",
+            "text": "shred the freshest shared evidence",
+            "recap": "{player} turned away and fumbled with their gloves.",
+            "tag": "solo",
+            "risk": "normal",
+            "tier": "medium",
+            "lethal_on_fail": false,
+            "lethal_if_stat_below": null,
+            "follows_red_herring": false,
+            "decisive": false,
+            "bonus_clue_id": null,
+            "leads_to": "r4_a",
+            "on_success": {
+              "narration": "{player} keeps cool, hands steady, face blank.",
+              "effects": [
+                {
+                  "type": "luck",
+                  "delta": 1
+                }
+              ]
+            },
+            "on_failure": {
+              "narration": "{player}'s hands tremble, and nobody can say why.",
+              "effects": []
+            },
+            "sabotage": {
+              "scope": "group",
+              "effect": "destroy_party_clue"
+            },
+            "exposure": "{player} tore up the freshest clue and let the wind take it."
+          }
+        }
+      ]
+    },
+    {
+      "id": "r3_b",
+      "round": 3,
+      "intro": "A cold shear drags the stack sideways. The cheque pouch strains at its strap. Someone tightens a hand around it.",
+      "options": [
+        {
+          "id": "r3_b_A",
+          "slot": "A",
+          "text": "unclip the cheque pouch for everyone",
+          "recap": "{player} unclipped the cheque pouch for the whole stack.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r4_a",
+          "on_success": {
+            "narration": "A sheet is tucked behind the cheque. It passes hand to hand, flapping in the roar.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k3"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "A gust snatches at the pouch and the group hauls it back. Nothing gets read.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r3_b_B",
+          "slot": "B",
+          "text": "study each face when money comes up",
+          "recap": "{player} studied each face when the money came up.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r4_a",
+          "on_success": {
+            "narration": "{player} watches every jaw tighten at the word purse.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "{player} stares too hard and gets stared back at.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r3_b_C",
+          "slot": "C",
+          "text": "snag the team charm as it swings",
+          "recap": "{player} snagged the team charm as it swung past.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r4_b",
+          "on_success": {
+            "narration": "The charm is caught on the second pass. The stack feels braver, for a moment.",
+            "effects": [
+              {
+                "type": "grant_item",
+                "item_id": "lucky_item"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The charm whips off into the wind, gone.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r3_b_D",
+          "slot": "D",
+          "text": "rewatch the ceremony clip in private",
+          "recap": "{player} rewatched the ceremony clip in private.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": true,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r4_b",
+          "on_success": {
+            "narration": "{player} freezes on a frame and says nothing.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "h2"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The cold kills the screen. {player} sees only black glass.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": [
+        {
+          "slot": "B",
+          "requires": {
+            "role": "killer"
+          },
+          "option": {
+            "id": "r3_b_B_killer",
+            "slot": "B",
+            "text": "bury the freshest clue where nobody looks",
+            "recap": "{player} slipped a hand into a pocket and said nothing.",
+            "tag": "solo",
+            "risk": "normal",
+            "tier": "medium",
+            "lethal_on_fail": false,
+            "lethal_if_stat_below": null,
+            "follows_red_herring": false,
+            "decisive": false,
+            "bonus_clue_id": null,
+            "leads_to": "r4_a",
+            "on_success": {
+              "narration": "{player} wears a perfect, empty calm.",
+              "effects": [
+                {
+                  "type": "luck",
+                  "delta": 1
+                }
+              ]
+            },
+            "on_failure": {
+              "narration": "{player} twitches as the wind bites, a little too fast.",
+              "effects": []
+            },
+            "sabotage": {
+              "scope": "group",
+              "effect": "destroy_party_clue"
+            },
+            "exposure": "{player} buried the freshest clue in a pocket, and it is gone for good."
+          }
+        }
+      ]
+    },
+    {
+      "id": "r4_a",
+      "round": 4,
+      "intro": "The pilot's voice crackles in every helmet. He sounds shaken and very far away. The ground crew is waiting below.",
+      "options": [
+        {
+          "id": "r4_a_A",
+          "slot": "A",
+          "text": "ask the pilot what he saw at the door",
+          "recap": "{player} asked the pilot what he saw at the door.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": "k4",
+          "leads_to": "r5_a",
+          "on_success": {
+            "narration": "The pilot's answer comes in pieces. Five jumpers, one fast door, nobody lingering.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "The pilot's voice breaks into static. The channel goes dead.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r4_a_B",
+          "slot": "B",
+          "text": "lift a clue from another jumper's pocket",
+          "recap": "{player} reached for another jumper's pocket.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r5_a",
+          "on_success": {
+            "narration": "{player}'s fingers close on something small and private.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "A hand slaps {player}'s wrist away. Nobody pretends it didn't happen.",
+            "effects": []
+          },
+          "sabotage": {
+            "scope": "player",
+            "effect": "steal_private_clue"
+          },
+          "exposure": "{player} was caught rifling through {target}'s pockets for a private clue."
+        },
+        {
+          "id": "r4_a_C",
+          "slot": "C",
+          "text": "have the pilot read out the ramp sheet",
+          "recap": "{player} had the pilot read out the ramp sheet.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r5_b",
+          "on_success": {
+            "narration": "The pilot reads line by line. One pairing was swapped at the very last minute.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k5"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The pilot cuts out mid-line. The ramp sheet stays unread.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r4_a_D",
+          "slot": "D",
+          "text": "replay the first minute of radio alone",
+          "recap": "{player} replayed the first minute of radio alone.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r5_b",
+          "on_success": {
+            "narration": "{player} listens to the first panicked minute and goes very still.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k6"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The recording crackles apart. {player} hears only wind.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r4_b",
+      "round": 4,
+      "intro": "Cloud shreds past the stack and the pilot's voice breaks in, ragged. He keeps saying he checked everything. Below, the ground crew waits.",
+      "options": [
+        {
+          "id": "r4_b_A",
+          "slot": "A",
+          "text": "ask the pilot to describe the ramp",
+          "recap": "{player} asked the pilot to describe the ramp.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": "k4",
+          "leads_to": "r5_a",
+          "on_success": {
+            "narration": "The pilot lists a crowd, a clock, five jumpers hurrying. Nobody broke the pattern.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "The pilot's reply dissolves in static.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r4_b_B",
+          "slot": "B",
+          "text": "slide a hand into someone's pocket",
+          "recap": "{player} slid a hand toward someone's pocket.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r5_a",
+          "on_success": {
+            "narration": "{player} comes away with something small, and a cold smile.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "A glove grabs {player}'s wrist. The pocket stays shut.",
+            "effects": []
+          },
+          "sabotage": {
+            "scope": "player",
+            "effect": "steal_private_clue"
+          },
+          "exposure": "{player} was caught slipping a hand into {target}'s pocket."
+        },
+        {
+          "id": "r4_b_C",
+          "slot": "C",
+          "text": "get the pilot to read the ramp sheet",
+          "recap": "{player} got the pilot to read the ramp sheet.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r5_b",
+          "on_success": {
+            "narration": "The pilot reads the sheet slowly. One last-minute swap sits in the middle of it.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k5"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "Static eats the pilot's words. The sheet stays a mystery.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r4_b_D",
+          "slot": "D",
+          "text": "listen to the first radio minute alone",
+          "recap": "{player} listened to the first radio minute alone.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r5_b",
+          "on_success": {
+            "narration": "{player} hears something in the crackle and goes quiet.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k6"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "Wind swallows the recording. {player} learns nothing.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r5_a",
+      "round": 5,
+      "intro": "A chest cam on one harness filmed the whole ramp check. It saw everyone who touched Max's rig. Getting it to talk is the trouble.",
+      "options": [
+        {
+          "id": "r5_a_A",
+          "slot": "A",
+          "text": "hold the stack steady for the others",
+          "recap": "{player} held the stack steady for the others.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r6_a",
+          "on_success": {
+            "narration": "{player} takes the strain on every line. Everyone else works a little easier.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "{player}'s arms shake, but the stack holds.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r5_a_B",
+          "slot": "B",
+          "text": "let the others do the dirty work",
+          "recap": "{player} let the others do the dirty work.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r6_a",
+          "on_success": {
+            "narration": "{player} keeps both hands clean and stays out of it.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "{player}'s calm looks like indifference, and everyone notices.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r5_a_C",
+          "slot": "C",
+          "text": "pull the chest cam's footage together",
+          "recap": "{player} pulled the chest cam's footage up for the group.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r6_b",
+          "on_success": {
+            "narration": "The memory card spools back. The whole ramp check is there, if you know where to look.",
+            "effects": [
+              {
+                "type": "grant_item",
+                "item_id": "decisive_item"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The card stalls and the screen dies. The footage stays just out of reach.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r5_a_D",
+          "slot": "D",
+          "text": "chase the loudest lead on your own",
+          "recap": "{player} chased the loudest lead alone.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": true,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r6_b",
+          "on_success": {
+            "narration": "{player} finds proof that seems solid, and holds it tight.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "h1"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The lead goes cold in {player}'s hands.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": [
+        {
+          "slot": "B",
+          "requires": {
+            "role": "killer"
+          },
+          "option": {
+            "id": "r5_a_B_killer",
+            "slot": "B",
+            "text": "snatch the freshest clue and bury it",
+            "recap": "{player} reached toward the group's findings.",
+            "tag": "solo",
+            "risk": "normal",
+            "tier": "medium",
+            "lethal_on_fail": false,
+            "lethal_if_stat_below": null,
+            "follows_red_herring": false,
+            "decisive": false,
+            "bonus_clue_id": null,
+            "leads_to": "r6_a",
+            "on_success": {
+              "narration": "{player} stays composed, even smiling a little.",
+              "effects": [
+                {
+                  "type": "luck",
+                  "delta": 1
+                }
+              ]
+            },
+            "on_failure": {
+              "narration": "{player} fumbles, then freezes.",
+              "effects": []
+            },
+            "sabotage": {
+              "scope": "group",
+              "effect": "destroy_party_clue"
+            },
+            "exposure": "{player} snatched the freshest clue and buried it in a pocket for good."
+          }
+        }
+      ]
+    },
+    {
+      "id": "r5_b",
+      "round": 5,
+      "intro": "The stack lurches as the chest cam's strap works loose. One harness, one filmed ramp, a dozen reasons not to hand it over.",
+      "options": [
+        {
+          "id": "r5_b_A",
+          "slot": "A",
+          "text": "brace the stack against the crosswind",
+          "recap": "{player} braced the stack against the crosswind.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r6_a",
+          "on_success": {
+            "narration": "{player} anchors the lines. The whole stack steadies behind them.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The crosswind wins a few metres, but the stack holds.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r5_b_B",
+          "slot": "B",
+          "text": "tuck your own gear out of sight",
+          "recap": "{player} tucked their gear out of sight.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r6_a",
+          "on_success": {
+            "narration": "{player} shifts a pocket flap and hides something small.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "A buckle clatters. Heads turn toward {player}.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r5_b_C",
+          "slot": "C",
+          "text": "unclip the chest cam and review it",
+          "recap": "{player} unclipped the chest cam to review it with the group.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r6_b",
+          "on_success": {
+            "narration": "The screen flares to life. The ramp check plays back, jittery and complete.",
+            "effects": [
+              {
+                "type": "grant_item",
+                "item_id": "decisive_item"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The strap jams and the cam swings out of reach.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r5_b_D",
+          "slot": "D",
+          "text": "follow the loudest accusation",
+          "recap": "{player} followed the loudest accusation.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": true,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r6_b",
+          "on_success": {
+            "narration": "{player} gathers a handful of damning scraps and clings to them.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "h2"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The accusation collapses in {player}'s hands.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": [
+        {
+          "slot": "B",
+          "requires": {
+            "role": "killer"
+          },
+          "option": {
+            "id": "r5_b_B_killer",
+            "slot": "B",
+            "text": "kill the freshest clue before it spreads",
+            "recap": "{player} fumbled in a pocket and kept moving.",
+            "tag": "solo",
+            "risk": "normal",
+            "tier": "medium",
+            "lethal_on_fail": false,
+            "lethal_if_stat_below": null,
+            "follows_red_herring": false,
+            "decisive": false,
+            "bonus_clue_id": null,
+            "leads_to": "r6_a",
+            "on_success": {
+              "narration": "{player}'s face is a perfect, polite blank.",
+              "effects": [
+                {
+                  "type": "luck",
+                  "delta": 1
+                }
+              ]
+            },
+            "on_failure": {
+              "narration": "{player} glances away too quickly.",
+              "effects": []
+            },
+            "sabotage": {
+              "scope": "group",
+              "effect": "destroy_party_clue"
+            },
+            "exposure": "{player} crushed the freshest clue and let the scraps fly."
+          }
+        }
+      ]
+    },
+    {
+      "id": "r6_a",
+      "round": 6,
+      "intro": "Voices rise over the roar. Accusations fly, and every one sounds plausible. Someone is steering the argument.",
+      "options": [
+        {
+          "id": "r6_a_A",
+          "slot": "A",
+          "text": "calm the shouting and ask for facts",
+          "recap": "{player} called for calm and asked for facts.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r7_a",
+          "on_success": {
+            "narration": "The shouting drops. Facts come out, thin but real.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The shouting only grows. Nobody listens.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r6_a_B",
+          "slot": "B",
+          "text": "feed the group a convenient theory",
+          "recap": "{player} offered the group a neat, convenient theory.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r7_a",
+          "on_success": {
+            "narration": "The theory lands, and heads nod. {player} looks quietly satisfied.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The theory falls flat, but its seed is planted.",
+            "effects": []
+          },
+          "sabotage": {
+            "scope": "group",
+            "effect": "mislead_group"
+          },
+          "exposure": "{player} pushed a false theory to turn the whole group the wrong way."
+        },
+        {
+          "id": "r6_a_C",
+          "slot": "C",
+          "text": "check every account against the timeline",
+          "recap": "{player} checked every account against the timeline.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": "k6",
+          "leads_to": "r7_b",
+          "on_success": {
+            "narration": "The accounts line up. A few do not, and everyone sees which.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The timeline buckles under the shouting.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r6_a_D",
+          "slot": "D",
+          "text": "search a jumper's glove mid-argument",
+          "recap": "{player} slipped a hand into a glove mid-argument.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r7_b",
+          "on_success": {
+            "narration": "{player} finds something in the lining and says nothing.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k2"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The jumper twists away. A cold stare follows {player}.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r6_b",
+      "round": 6,
+      "intro": "Turbulence slams the stack. Lines sing, harnesses creak, and everyone talks at once. Whoever stays calm looks guilty.",
+      "options": [
+        {
+          "id": "r6_b_A",
+          "slot": "A",
+          "text": "shout for quiet and share what you know",
+          "recap": "{player} shouted for quiet and shared what they knew.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r7_a",
+          "on_success": {
+            "narration": "A hush falls for one breath. In it, something real gets said.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The roar swallows the shout. Everyone keeps arguing.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r6_b_B",
+          "slot": "B",
+          "text": "steer the panic toward one person",
+          "recap": "{player} steered the panic toward one jumper.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r7_a",
+          "on_success": {
+            "narration": "The panic finds its target. {player} watches it spread.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The panic wobbles, but the idea sticks.",
+            "effects": []
+          },
+          "sabotage": {
+            "scope": "group",
+            "effect": "mislead_group"
+          },
+          "exposure": "{player} stirred the panic against an innocent to bury the truth."
+        },
+        {
+          "id": "r6_b_C",
+          "slot": "C",
+          "text": "run every clue past the whole stack",
+          "recap": "{player} ran every clue past the whole stack.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": "k6",
+          "leads_to": "r7_b",
+          "on_success": {
+            "narration": "Clue by clue, the group tests each one against the others. Some of them bend.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The clues blur together. Nothing gets tested.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r6_b_D",
+          "slot": "D",
+          "text": "check a glove while hands are busy",
+          "recap": "{player} checked a glove while everyone's hands were busy.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r7_b",
+          "on_success": {
+            "narration": "{player} feels something in the lining and says nothing.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k2"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The glove snaps shut around {player}'s wrist. A cold stare follows.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r7_a",
+      "round": 7,
+      "intro": "The bottom canopy collapses and lines whip loose. The whole stack sags toward the ground. Someone must climb down and fix it.",
+      "options": [
+        {
+          "id": "r7_a_A",
+          "slot": "A",
+          "text": "hold the sagging canopy up together",
+          "recap": "{player} helped hold the sagging canopy up.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r8_a",
+          "on_success": {
+            "narration": "Hands on every line take the weight. The stack stops dropping.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The canopy sags a little further, but the stack holds.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r7_a_B",
+          "slot": "B",
+          "text": "stay clipped in and let others risk it",
+          "recap": "{player} stayed clipped in and let others take the risk.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r8_a",
+          "on_success": {
+            "narration": "{player} lets the others handle it and saves strength.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "{player} looks away. Somebody mutters.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r7_a_C",
+          "slot": "C",
+          "text": "tie the canopy off with spare line",
+          "recap": "{player} tied the canopy off with spare line.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r8_b",
+          "on_success": {
+            "narration": "The knot takes the strain. The stack goes from falling to gliding.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The knot slips. The stack lurches and settles.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r7_a_D",
+          "slot": "D",
+          "text": "swing down the lines past every harness",
+          "recap": "{player} swung down the lines past every harness.",
+          "tag": "solo",
+          "risk": "risky",
+          "tier": "medium",
+          "lethal_on_fail": true,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r8_b",
+          "on_success": {
+            "narration": "{player} drops past each rig and hangs on by one hand. Something in those few seconds stays secret.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k4"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The climb goes wrong at the worst second. {player} is gone from the lines.",
+            "effects": []
+          },
+          "on_death": {
+            "narration": "{player}'s grip tears free. The sky takes them without a sound."
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": [
+        {
+          "slot": "B",
+          "requires": {
+            "role": "killer"
+          },
+          "option": {
+            "id": "r7_a_B_killer",
+            "slot": "B",
+            "text": "slip the group's best clue into the cloud",
+            "recap": "{player} dug into a pocket and kept their head down.",
+            "tag": "solo",
+            "risk": "normal",
+            "tier": "medium",
+            "lethal_on_fail": false,
+            "lethal_if_stat_below": null,
+            "follows_red_herring": false,
+            "decisive": false,
+            "bonus_clue_id": null,
+            "leads_to": "r8_a",
+            "on_success": {
+              "narration": "{player} goes still, unreadable.",
+              "effects": [
+                {
+                  "type": "luck",
+                  "delta": 1
+                }
+              ]
+            },
+            "on_failure": {
+              "narration": "{player}'s breathing turns loud and quick.",
+              "effects": []
+            },
+            "sabotage": {
+              "scope": "group",
+              "effect": "destroy_party_clue"
+            },
+            "exposure": "{player} dropped the group's best clue into the cloud. Someone does not want it found."
+          }
+        }
+      ]
+    },
+    {
+      "id": "r7_b",
+      "round": 7,
+      "intro": "The bottom canopy folds like a dead leaf. The stack lurches, and the ground yawns wide below. Somebody has to go down there.",
+      "options": [
+        {
+          "id": "r7_b_A",
+          "slot": "A",
+          "text": "haul the stack back into a line",
+          "recap": "{player} hauled the stack back into a line.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r8_a",
+          "on_success": {
+            "narration": "Everyone pulls. The lines straighten and the stack rights itself.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The haul is ragged, but the stack stays together.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r7_b_B",
+          "slot": "B",
+          "text": "stay clipped in while others climb",
+          "recap": "{player} stayed clipped in while the others climbed.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r8_a",
+          "on_success": {
+            "narration": "{player} keeps both hands on the risers, safe and silent.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "{player} avoids every eye.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r7_b_C",
+          "slot": "C",
+          "text": "rig a spare line to the lower canopy",
+          "recap": "{player} rigged a spare line to the lower canopy.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r8_b",
+          "on_success": {
+            "narration": "The spare line bites. The lower canopy snaps taut and holds.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The spare line whips free. The group scrambles to catch it.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r7_b_D",
+          "slot": "D",
+          "text": "drop down the lines past every rig",
+          "recap": "{player} dropped down the lines past every rig.",
+          "tag": "solo",
+          "risk": "risky",
+          "tier": "medium",
+          "lethal_on_fail": true,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r8_b",
+          "on_success": {
+            "narration": "{player} races past every rig, eyes everywhere. What they saw stays with them.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k4"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The lines tear from {player}'s hands. The sky takes them without a sound.",
+            "effects": []
+          },
+          "on_death": {
+            "narration": "{player} loses the line in the blink of an eye. The cloud closes over them."
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": [
+        {
+          "slot": "B",
+          "requires": {
+            "role": "killer"
+          },
+          "option": {
+            "id": "r7_b_B_killer",
+            "slot": "B",
+            "text": "let the best clue vanish into the cloud",
+            "recap": "{player} slid a hand into a pocket and said nothing.",
+            "tag": "solo",
+            "risk": "normal",
+            "tier": "medium",
+            "lethal_on_fail": false,
+            "lethal_if_stat_below": null,
+            "follows_red_herring": false,
+            "decisive": false,
+            "bonus_clue_id": null,
+            "leads_to": "r8_a",
+            "on_success": {
+              "narration": "{player} stays calm as stone.",
+              "effects": [
+                {
+                  "type": "luck",
+                  "delta": 1
+                }
+              ]
+            },
+            "on_failure": {
+              "narration": "{player} swallows hard.",
+              "effects": []
+            },
+            "sabotage": {
+              "scope": "group",
+              "effect": "destroy_party_clue"
+            },
+            "exposure": "{player} let the group's best clue vanish into the cloud on purpose."
+          }
+        }
+      ]
+    },
+    {
+      "id": "r8_a",
+      "round": 8,
+      "intro": "The stack must split soon to land. This is the last moment it holds together. Whatever you know, you know now.",
+      "options": [
+        {
+          "id": "r8_a_A",
+          "slot": "A",
+          "text": "go over the evidence out loud",
+          "recap": "{player} walked the group through the evidence out loud.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "The group runs through what it has. It feels thinner than it should.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "Half the words are stolen by the wind.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r8_a_B",
+          "slot": "B",
+          "text": "study every face for one last tell",
+          "recap": "{player} studied every face for one last tell.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "{player} notes a twitch, a stare, a too-steady hand.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "Everyone's goggles hide everything.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r8_a_C",
+          "slot": "C",
+          "text": "force every pocket open for a last search",
+          "recap": "{player} demanded every pocket be opened.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "Pockets open one by one in the freezing wind. In one of them sits a small, ruinous proof.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k4"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "Gloved hands fumble every pocket. The wind steals the search.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r8_a_D",
+          "slot": "D",
+          "text": "cut loose and hold something back",
+          "recap": "{player} cut loose and held something back.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "{player} drifts a wingspan clear and keeps a secret close.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 2
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "A gust shoves {player} back into the lines. Heads turn.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r8_b",
+      "round": 8,
+      "intro": "The stack tears into two clumps on a crosswind. You grab whatever hands you can. This is the last chance to talk.",
+      "options": [
+        {
+          "id": "r8_b_A",
+          "slot": "A",
+          "text": "shout your last evidence over the wind",
+          "recap": "{player} shouted their last evidence over the wind.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "The shout carries. The group hears it and grips tighter.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The wind steals the shout and keeps it.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r8_b_B",
+          "slot": "B",
+          "text": "read each jumper's grip for a tell",
+          "recap": "{player} read each jumper's grip for a tell.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "{player} marks the grip that tightens and the one that lets go.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "Gloves reveal nothing.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r8_b_C",
+          "slot": "C",
+          "text": "empty every pocket in the open air",
+          "recap": "{player} insisted every pocket be emptied in the open air.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "Scraps tumble loose. One of them says more than a confession would.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k4"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The scraps vanish into the cloud, unread.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r8_b_D",
+          "slot": "D",
+          "text": "drift clear with a secret in hand",
+          "recap": "{player} drifted clear with a secret in hand.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "{player} slips free of the lines, richer in secrets.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 2
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The wind dumps {player} back into the stack.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r9_solved",
+      "round": 9,
+      "intro": "The ground rushes up, grey and wide. In the noise, a shape starts to make sense. One last chance to put it together.",
+      "options": [
+        {
+          "id": "r9_solved_A",
+          "slot": "A",
+          "text": "lay every clue out together",
+          "recap": "{player} laid every clue out for the whole stack.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_solved",
+          "on_success": {
+            "narration": "Findings spill out, one after another. For the first time the pieces lock together.",
+            "effects": [
+              {
+                "type": "share_private_clues"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The wind steals half the words. The group hears only pieces.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r9_solved_B",
+          "slot": "B",
+          "text": "keep your findings to yourself",
+          "recap": "{player} said nothing and kept their findings close.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_solved",
+          "on_success": {
+            "narration": "{player} holds their tongue and keeps the edge. The others glance over.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "{player}'s silence draws narrowed eyes.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r9_solved_C",
+          "slot": "C",
+          "text": "agree on the one thing you're sure of",
+          "recap": "{player} pushed the group to agree on one certainty.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_solved",
+          "on_success": {
+            "narration": "One certainty rises above the noise. The group grabs it and holds on.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "Every certainty dies in the roar. Nobody agrees on anything.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r9_solved_D",
+          "slot": "D",
+          "text": "break from the stack to land alone",
+          "recap": "{player} broke from the stack to land alone.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_solved",
+          "on_success": {
+            "narration": "{player} banks hard and peels away. The ground looks friendlier out there.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 2
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "A gust shoves {player} back into the lines.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r9_wrong",
+      "round": 9,
+      "intro": "The ground rushes up, grey and wide. One story has taken hold, and nobody dares question it. The shouting has gone quiet.",
+      "options": [
+        {
+          "id": "r9_wrong_A",
+          "slot": "A",
+          "text": "lay every clue out together",
+          "recap": "{player} laid every clue out for the whole stack.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_wrong",
+          "on_success": {
+            "narration": "Findings spill out, and every one bends toward the same name. Nobody notices the bend.",
+            "effects": [
+              {
+                "type": "share_private_clues"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The wind steals half the words. The group clings to what it already believes.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r9_wrong_B",
+          "slot": "B",
+          "text": "keep your findings to yourself",
+          "recap": "{player} said nothing and kept their findings close.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_wrong",
+          "on_success": {
+            "narration": "{player} swallows a private doubt. The others glance over.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "{player}'s silence draws narrowed eyes.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r9_wrong_C",
+          "slot": "C",
+          "text": "agree on the one thing you're sure of",
+          "recap": "{player} pushed the group to agree on one certainty.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_wrong",
+          "on_success": {
+            "narration": "The group agrees loudly, all at once. The agreement feels like relief.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The agreement frays at the edges. Nobody quite believes it.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r9_wrong_D",
+          "slot": "D",
+          "text": "break from the stack to land alone",
+          "recap": "{player} broke from the stack to land alone.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_wrong",
+          "on_success": {
+            "narration": "{player} banks hard and peels away from the crowd's certainty.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 2
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "A gust shoves {player} back into the lines.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r9_escape",
+      "round": 9,
+      "intro": "The ground rushes up, grey and wide. The pieces will not fit, and the wind keeps stealing them. Time is nearly gone.",
+      "options": [
+        {
+          "id": "r9_escape_A",
+          "slot": "A",
+          "text": "lay every clue out together",
+          "recap": "{player} laid every clue out for the whole stack.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_escape",
+          "on_success": {
+            "narration": "Findings spill out in fragments. They do not add up, and the silence afterward is heavy.",
+            "effects": [
+              {
+                "type": "share_private_clues"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The wind steals half the words. The group hears only noise.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r9_escape_B",
+          "slot": "B",
+          "text": "keep your findings to yourself",
+          "recap": "{player} said nothing and kept their findings close.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_escape",
+          "on_success": {
+            "narration": "{player} guards a scrap of a theory. The others glance over.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "{player}'s silence draws narrowed eyes.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r9_escape_C",
+          "slot": "C",
+          "text": "agree on the one thing you're sure of",
+          "recap": "{player} pushed the group to agree on one certainty.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_escape",
+          "on_success": {
+            "narration": "The group clutches at one thread. It frays the moment anyone pulls.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "Every certainty dies in the roar. Nobody agrees on anything.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r9_escape_D",
+          "slot": "D",
+          "text": "break from the stack to land alone",
+          "recap": "{player} broke from the stack to land alone.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_escape",
+          "on_success": {
+            "narration": "{player} banks hard and peels away. Nobody has the breath to stop them.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 2
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "A gust shoves {player} back into the lines.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r10_solved",
+      "round": 10,
+      "intro": "The earth rises to meet you. Flare, brace, and then there is only an instant. Say it now, and make it stick.",
+      "options": [
+        {
+          "id": "r10_solved_A",
+          "slot": "A",
+          "text": "accuse the killer and hope for the best",
+          "recap": "{player} accused the killer with nothing to back it up.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "The accusation rings out in the roar. Without proof, it is only a story.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "{player}'s voice cracks. Nobody hears the accusation.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r10_solved_B",
+          "slot": "B",
+          "text": "grab the cheque pouch and run",
+          "recap": "{player} lunged for the cheque pouch.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "{player} snatches the pouch and runs. Everyone shouts.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "{player} trips on the landing and the pouch tumbles away.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r10_solved_C",
+          "slot": "C",
+          "text": "flare together and land as one",
+          "recap": "{player} called the flare and brought the stack down as one.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "You flare together and hit the grass as one. Nobody falls.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "A last gust slams you down. You tumble, dazed but alive.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r10_solved_D",
+          "slot": "D",
+          "text": "cut away and bolt for the treeline",
+          "recap": "{player} cut away and bolted for the treeline.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "{player} hits running and vanishes into the trees.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "{player} lands hard and the ankle buckles.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": [
+        {
+          "slot": "A",
+          "requires": {
+            "items": [
+              "decisive_item"
+            ],
+            "min_stat": 4
+          },
+          "option": {
+            "id": "r10_solved_A_decisive",
+            "slot": "A",
+            "text": "play the footage and name the killer",
+            "recap": "{player} played the ramp footage and named the killer.",
+            "tag": "group",
+            "risk": "normal",
+            "tier": "medium",
+            "lethal_on_fail": false,
+            "lethal_if_stat_below": null,
+            "follows_red_herring": false,
+            "decisive": true,
+            "bonus_clue_id": null,
+            "leads_to": null,
+            "on_success": {
+              "narration": "The chest cam rolls: a gloved hand, a curl of tape, three seconds at Max's pocket. There is no argument left.",
+              "effects": []
+            },
+            "on_failure": {
+              "narration": "The footage stutters and the frame freezes. For one sick second the proof will not play.",
+              "effects": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "r10_wrong",
+      "round": 10,
+      "intro": "The earth rises to meet you. The group is certain, and certainty is loud. One name is about to be shouted.",
+      "options": [
+        {
+          "id": "r10_wrong_A",
+          "slot": "A",
+          "text": "shout the name everyone suspects",
+          "recap": "{player} shouted the name everyone suspects.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "The name rings out and an innocent face goes white. The stack closes ranks around it.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "The name comes out thin and shaky. It still lands.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r10_wrong_B",
+          "slot": "B",
+          "text": "grab the cheque pouch and run",
+          "recap": "{player} lunged for the cheque pouch.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "{player} snatches the pouch and runs. Everyone shouts.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "{player} trips on the landing and the pouch tumbles away.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r10_wrong_C",
+          "slot": "C",
+          "text": "flare together and land as one",
+          "recap": "{player} called the flare and brought the stack down as one.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "You flare together and hit the grass as one. Nobody falls.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "A last gust slams you down. You tumble, dazed but alive.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r10_wrong_D",
+          "slot": "D",
+          "text": "cut away and bolt for the treeline",
+          "recap": "{player} cut away and bolted for the treeline.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "{player} hits running and vanishes into the trees.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "{player} lands hard and the ankle buckles.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r10_escape",
+      "round": 10,
+      "intro": "The earth rises to meet you. Nothing has come together, and the ground does not wait. Somebody is going to walk away.",
+      "options": [
+        {
+          "id": "r10_escape_A",
+          "slot": "A",
+          "text": "demand answers before anyone leaves",
+          "recap": "{player} demanded answers before anyone could leave.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "Voices rise, but none of the answers agree. The ground arrives anyway.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "The demand dies in the wind. Nobody even turns.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r10_escape_B",
+          "slot": "B",
+          "text": "grab the cheque pouch and run",
+          "recap": "{player} lunged for the cheque pouch.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "{player} snatches the pouch and runs. Everyone shouts.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "{player} trips on the landing and the pouch tumbles away.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r10_escape_C",
+          "slot": "C",
+          "text": "flare together and land as one",
+          "recap": "{player} called the flare and brought the stack down as one.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "You flare together and hit the grass as one. Nobody falls.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "A last gust slams you down. You tumble, dazed but alive.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r10_escape_D",
+          "slot": "D",
+          "text": "cut away and bolt for the treeline",
+          "recap": "{player} cut away and bolted for the treeline.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "{player} hits running and vanishes into the trees.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "{player} lands hard and the ankle buckles.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    }
+  ],
+  "endings": {
+    "solved": {
+      "title": "Caught in Freefall",
+      "epilogue": "The footage plays on the drop-zone screen, frame by frame, and the officers stop smiling. {killer} stands very still, gloves still on, a curl of tape clinging inside. The ramp check, the empty team fund, and the careful lie all come out together. {survivors} walk away shaken but whole, and {victim}'s name goes on the cup."
+    },
+    "wrong_culprit": {
+      "title": "Hard Landing",
+      "epilogue": "On the ground the group names its culprit in one loud voice. An innocent jumper is led away, protesting, while {killer} walks beside the officers, calm and grieving. The prize cheque clears without a question. {survivors} will replay that day for years and only ever see what they decided to see. {victim} deserved better than a good guess."
+    },
+    "culprit_escapes": {
+      "title": "Clear Skies",
+      "epilogue": "{survivors} land in a tangle of lines and unanswered questions. The proof never comes together, and the ground crew is already calling {victim}'s fall an accident. {killer} signs for the prize cheque with a steady hand and a quiet smile. Every jump after that, you will count who is standing too close.",
+      "epilogue_if_downgraded": "The case was in your hands, and it slipped away in the wind. The footage stuttered, the words came out wrong, and {killer} stepped past you onto solid ground. {survivors} will remember that single second for the rest of their lives. {victim}'s empty spot in the stack will say the rest."
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "entries": [
+    {
+      "id": "skyfall",
+      "name": "Skyfall",
+      "premise": "A group of friends go skydiving together. One of them dies when their parachute fails to open. The rest must work out who sabotaged it before they land.",
+      "player_role": "suspects",
+      "tone": "tense, breathless, high-altitude suspense with wind and adrenaline",
+      "content_rating": "pg13",
+      "clock": { "label": "Altitude", "unit": "m", "start": 4000, "end": 0 },
+      "sample": true
+    }
+  ]
+}

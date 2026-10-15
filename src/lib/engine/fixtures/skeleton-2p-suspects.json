@@ -1,0 +1,2761 @@
+{
+  "schema": "mm-story-tree/1",
+  "meta": {
+    "title": "TODO",
+    "setting_id": "sample",
+    "difficulty": "easy",
+    "player_count": 2,
+    "player_role": "suspects",
+    "victim": {
+      "name": "Victim V",
+      "description": "Fixture victim."
+    },
+    "tone": "TODO",
+    "content_rating": "pg13",
+    "premise": "TODO"
+  },
+  "rules": {
+    "stats": [
+      "closer_to_mystery",
+      "luck"
+    ],
+    "thresholds": {
+      "easy": 5,
+      "medium": 7,
+      "hard": 9
+    },
+    "start": {
+      "luck": 3,
+      "stat": 0
+    },
+    "pivot_round": 8,
+    "rounds": 10
+  },
+  "world": {
+    "clock": {
+      "label": "TODO",
+      "unit": "TODO",
+      "values": [
+        "TODO",
+        "TODO",
+        "TODO",
+        "TODO",
+        "TODO",
+        "TODO",
+        "TODO",
+        "TODO",
+        "TODO",
+        "TODO"
+      ]
+    },
+    "suspects": [
+      {
+        "id": "s1",
+        "name": "Suspect S1",
+        "description": "TODO",
+        "public_alibi": "TODO",
+        "motive": "TODO",
+        "player_slot": 1
+      },
+      {
+        "id": "s2",
+        "name": "Suspect S2",
+        "description": "TODO",
+        "public_alibi": "TODO",
+        "motive": "TODO",
+        "player_slot": 2
+      }
+    ],
+    "killer_id": "s2",
+    "killer_method": "Cut the reserve line with a hidden blade.",
+    "clues": [
+      {
+        "id": "k1",
+        "kind": "key",
+        "clarity": "subtle",
+        "text": "Clue k1 says something only its holder may read.",
+        "points_to": "s2"
+      },
+      {
+        "id": "k2",
+        "kind": "key",
+        "clarity": "subtle",
+        "text": "Clue k2 says something only its holder may read.",
+        "points_to": "s2"
+      },
+      {
+        "id": "k3",
+        "kind": "key",
+        "clarity": "subtle",
+        "text": "Clue k3 says something only its holder may read.",
+        "points_to": "s2"
+      },
+      {
+        "id": "k4",
+        "kind": "key",
+        "clarity": "subtle",
+        "text": "Clue k4 says something only its holder may read.",
+        "points_to": "s2"
+      },
+      {
+        "id": "k5",
+        "kind": "key",
+        "clarity": "subtle",
+        "text": "Clue k5 says something only its holder may read.",
+        "points_to": "s2"
+      },
+      {
+        "id": "h1",
+        "kind": "red_herring",
+        "clarity": "obvious",
+        "text": "Clue h1 says something only its holder may read.",
+        "points_to": "s1"
+      }
+    ],
+    "items": [
+      {
+        "id": "decisive_item",
+        "name": "TODO",
+        "description": "TODO",
+        "luck_on_grant": 0,
+        "decisive": true
+      },
+      {
+        "id": "lucky_item",
+        "name": "TODO",
+        "description": "TODO",
+        "luck_on_grant": 1,
+        "decisive": false
+      }
+    ]
+  },
+  "scenes": [
+    {
+      "id": "r1_a",
+      "round": 1,
+      "intro": "TODO",
+      "options": [
+        {
+          "id": "r1_a_A",
+          "slot": "A",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r2_a",
+          "on_success": {
+            "narration": "TODO",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k1"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r1_a_B",
+          "slot": "B",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r2_a",
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r1_a_C",
+          "slot": "C",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r2_b",
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r1_a_D",
+          "slot": "D",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r2_b",
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r2_a",
+      "round": 2,
+      "intro": "TODO",
+      "options": [
+        {
+          "id": "r2_a_A",
+          "slot": "A",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r3_a",
+          "on_success": {
+            "narration": "TODO",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k2"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r2_a_B",
+          "slot": "B",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r3_a",
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r2_a_C",
+          "slot": "C",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r3_b",
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r2_a_D",
+          "slot": "D",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": true,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r3_b",
+          "on_success": {
+            "narration": "TODO",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "h1"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r2_b",
+      "round": 2,
+      "intro": "TODO",
+      "options": [
+        {
+          "id": "r2_b_A",
+          "slot": "A",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r3_a",
+          "on_success": {
+            "narration": "TODO",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k2"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r2_b_B",
+          "slot": "B",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r3_a",
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r2_b_C",
+          "slot": "C",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r3_b",
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r2_b_D",
+          "slot": "D",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": true,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r3_b",
+          "on_success": {
+            "narration": "TODO",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "h1"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r3_a",
+      "round": 3,
+      "intro": "TODO",
+      "options": [
+        {
+          "id": "r3_a_A",
+          "slot": "A",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r4_a",
+          "on_success": {
+            "narration": "TODO",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k3"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r3_a_B",
+          "slot": "B",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r4_a",
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r3_a_C",
+          "slot": "C",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r4_b",
+          "on_success": {
+            "narration": "TODO",
+            "effects": [
+              {
+                "type": "grant_item",
+                "item_id": "lucky_item"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r3_a_D",
+          "slot": "D",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": true,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r4_b",
+          "on_success": {
+            "narration": "TODO",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "h1"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": [
+        {
+          "slot": "B",
+          "requires": {
+            "role": "killer"
+          },
+          "option": {
+            "id": "r3_a_B_killer",
+            "slot": "B",
+            "text": "TODO",
+            "recap": "{player} TODO",
+            "tag": "solo",
+            "risk": "normal",
+            "tier": "medium",
+            "lethal_on_fail": false,
+            "lethal_if_stat_below": null,
+            "follows_red_herring": false,
+            "decisive": false,
+            "bonus_clue_id": null,
+            "leads_to": "r4_a",
+            "on_success": {
+              "narration": "TODO",
+              "effects": []
+            },
+            "on_failure": {
+              "narration": "TODO",
+              "effects": []
+            },
+            "sabotage": {
+              "scope": "group",
+              "effect": "destroy_party_clue"
+            },
+            "exposure": "{player} TODO"
+          }
+        }
+      ]
+    },
+    {
+      "id": "r3_b",
+      "round": 3,
+      "intro": "TODO",
+      "options": [
+        {
+          "id": "r3_b_A",
+          "slot": "A",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r4_a",
+          "on_success": {
+            "narration": "TODO",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k3"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r3_b_B",
+          "slot": "B",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r4_a",
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r3_b_C",
+          "slot": "C",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r4_b",
+          "on_success": {
+            "narration": "TODO",
+            "effects": [
+              {
+                "type": "grant_item",
+                "item_id": "lucky_item"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r3_b_D",
+          "slot": "D",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": true,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r4_b",
+          "on_success": {
+            "narration": "TODO",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "h1"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": [
+        {
+          "slot": "B",
+          "requires": {
+            "role": "killer"
+          },
+          "option": {
+            "id": "r3_b_B_killer",
+            "slot": "B",
+            "text": "TODO",
+            "recap": "{player} TODO",
+            "tag": "solo",
+            "risk": "normal",
+            "tier": "medium",
+            "lethal_on_fail": false,
+            "lethal_if_stat_below": null,
+            "follows_red_herring": false,
+            "decisive": false,
+            "bonus_clue_id": null,
+            "leads_to": "r4_a",
+            "on_success": {
+              "narration": "TODO",
+              "effects": []
+            },
+            "on_failure": {
+              "narration": "TODO",
+              "effects": []
+            },
+            "sabotage": {
+              "scope": "group",
+              "effect": "destroy_party_clue"
+            },
+            "exposure": "{player} TODO"
+          }
+        }
+      ]
+    },
+    {
+      "id": "r4_a",
+      "round": 4,
+      "intro": "TODO",
+      "options": [
+        {
+          "id": "r4_a_A",
+          "slot": "A",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r5_a",
+          "on_success": {
+            "narration": "TODO",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k4"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r4_a_B",
+          "slot": "B",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r5_a",
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "sabotage": {
+            "scope": "player",
+            "effect": "steal_private_clue"
+          },
+          "exposure": "{player} TODO"
+        },
+        {
+          "id": "r4_a_C",
+          "slot": "C",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r5_b",
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r4_a_D",
+          "slot": "D",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": true,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r5_b",
+          "on_success": {
+            "narration": "TODO",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "h1"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r4_b",
+      "round": 4,
+      "intro": "TODO",
+      "options": [
+        {
+          "id": "r4_b_A",
+          "slot": "A",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r5_a",
+          "on_success": {
+            "narration": "TODO",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k4"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r4_b_B",
+          "slot": "B",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r5_a",
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "sabotage": {
+            "scope": "player",
+            "effect": "steal_private_clue"
+          },
+          "exposure": "{player} TODO"
+        },
+        {
+          "id": "r4_b_C",
+          "slot": "C",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r5_b",
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r4_b_D",
+          "slot": "D",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": true,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r5_b",
+          "on_success": {
+            "narration": "TODO",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "h1"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r5_a",
+      "round": 5,
+      "intro": "TODO",
+      "options": [
+        {
+          "id": "r5_a_A",
+          "slot": "A",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r6_a",
+          "on_success": {
+            "narration": "TODO",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k5"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r5_a_B",
+          "slot": "B",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r6_a",
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r5_a_C",
+          "slot": "C",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r6_b",
+          "on_success": {
+            "narration": "TODO",
+            "effects": [
+              {
+                "type": "grant_item",
+                "item_id": "decisive_item"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r5_a_D",
+          "slot": "D",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": true,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r6_b",
+          "on_success": {
+            "narration": "TODO",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "h1"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": [
+        {
+          "slot": "B",
+          "requires": {
+            "role": "killer"
+          },
+          "option": {
+            "id": "r5_a_B_killer",
+            "slot": "B",
+            "text": "TODO",
+            "recap": "{player} TODO",
+            "tag": "solo",
+            "risk": "normal",
+            "tier": "medium",
+            "lethal_on_fail": false,
+            "lethal_if_stat_below": null,
+            "follows_red_herring": false,
+            "decisive": false,
+            "bonus_clue_id": null,
+            "leads_to": "r6_a",
+            "on_success": {
+              "narration": "TODO",
+              "effects": []
+            },
+            "on_failure": {
+              "narration": "TODO",
+              "effects": []
+            },
+            "sabotage": {
+              "scope": "group",
+              "effect": "destroy_party_clue"
+            },
+            "exposure": "{player} TODO"
+          }
+        }
+      ]
+    },
+    {
+      "id": "r5_b",
+      "round": 5,
+      "intro": "TODO",
+      "options": [
+        {
+          "id": "r5_b_A",
+          "slot": "A",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r6_a",
+          "on_success": {
+            "narration": "TODO",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k5"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r5_b_B",
+          "slot": "B",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r6_a",
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r5_b_C",
+          "slot": "C",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r6_b",
+          "on_success": {
+            "narration": "TODO",
+            "effects": [
+              {
+                "type": "grant_item",
+                "item_id": "decisive_item"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r5_b_D",
+          "slot": "D",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": true,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r6_b",
+          "on_success": {
+            "narration": "TODO",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "h1"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": [
+        {
+          "slot": "B",
+          "requires": {
+            "role": "killer"
+          },
+          "option": {
+            "id": "r5_b_B_killer",
+            "slot": "B",
+            "text": "TODO",
+            "recap": "{player} TODO",
+            "tag": "solo",
+            "risk": "normal",
+            "tier": "medium",
+            "lethal_on_fail": false,
+            "lethal_if_stat_below": null,
+            "follows_red_herring": false,
+            "decisive": false,
+            "bonus_clue_id": null,
+            "leads_to": "r6_a",
+            "on_success": {
+              "narration": "TODO",
+              "effects": []
+            },
+            "on_failure": {
+              "narration": "TODO",
+              "effects": []
+            },
+            "sabotage": {
+              "scope": "group",
+              "effect": "destroy_party_clue"
+            },
+            "exposure": "{player} TODO"
+          }
+        }
+      ]
+    },
+    {
+      "id": "r6_a",
+      "round": 6,
+      "intro": "TODO",
+      "options": [
+        {
+          "id": "r6_a_A",
+          "slot": "A",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r7_a",
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r6_a_B",
+          "slot": "B",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r7_a",
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "sabotage": {
+            "scope": "group",
+            "effect": "mislead_group"
+          },
+          "exposure": "{player} TODO"
+        },
+        {
+          "id": "r6_a_C",
+          "slot": "C",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r7_b",
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r6_a_D",
+          "slot": "D",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r7_b",
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r6_b",
+      "round": 6,
+      "intro": "TODO",
+      "options": [
+        {
+          "id": "r6_b_A",
+          "slot": "A",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r7_a",
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r6_b_B",
+          "slot": "B",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r7_a",
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "sabotage": {
+            "scope": "group",
+            "effect": "mislead_group"
+          },
+          "exposure": "{player} TODO"
+        },
+        {
+          "id": "r6_b_C",
+          "slot": "C",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r7_b",
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r6_b_D",
+          "slot": "D",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r7_b",
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r7_a",
+      "round": 7,
+      "intro": "TODO",
+      "options": [
+        {
+          "id": "r7_a_A",
+          "slot": "A",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r8_a",
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r7_a_B",
+          "slot": "B",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r8_a",
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r7_a_C",
+          "slot": "C",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r8_b",
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r7_a_D",
+          "slot": "D",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "solo",
+          "risk": "risky",
+          "tier": "medium",
+          "lethal_on_fail": true,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r8_b",
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_death": {
+            "narration": "TODO"
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": [
+        {
+          "slot": "B",
+          "requires": {
+            "role": "killer"
+          },
+          "option": {
+            "id": "r7_a_B_killer",
+            "slot": "B",
+            "text": "TODO",
+            "recap": "{player} TODO",
+            "tag": "solo",
+            "risk": "normal",
+            "tier": "medium",
+            "lethal_on_fail": false,
+            "lethal_if_stat_below": null,
+            "follows_red_herring": false,
+            "decisive": false,
+            "bonus_clue_id": null,
+            "leads_to": "r8_a",
+            "on_success": {
+              "narration": "TODO",
+              "effects": []
+            },
+            "on_failure": {
+              "narration": "TODO",
+              "effects": []
+            },
+            "sabotage": {
+              "scope": "group",
+              "effect": "destroy_party_clue"
+            },
+            "exposure": "{player} TODO"
+          }
+        }
+      ]
+    },
+    {
+      "id": "r7_b",
+      "round": 7,
+      "intro": "TODO",
+      "options": [
+        {
+          "id": "r7_b_A",
+          "slot": "A",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r8_a",
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r7_b_B",
+          "slot": "B",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r8_a",
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r7_b_C",
+          "slot": "C",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r8_b",
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r7_b_D",
+          "slot": "D",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "solo",
+          "risk": "risky",
+          "tier": "medium",
+          "lethal_on_fail": true,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r8_b",
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_death": {
+            "narration": "TODO"
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": [
+        {
+          "slot": "B",
+          "requires": {
+            "role": "killer"
+          },
+          "option": {
+            "id": "r7_b_B_killer",
+            "slot": "B",
+            "text": "TODO",
+            "recap": "{player} TODO",
+            "tag": "solo",
+            "risk": "normal",
+            "tier": "medium",
+            "lethal_on_fail": false,
+            "lethal_if_stat_below": null,
+            "follows_red_herring": false,
+            "decisive": false,
+            "bonus_clue_id": null,
+            "leads_to": "r8_a",
+            "on_success": {
+              "narration": "TODO",
+              "effects": []
+            },
+            "on_failure": {
+              "narration": "TODO",
+              "effects": []
+            },
+            "sabotage": {
+              "scope": "group",
+              "effect": "destroy_party_clue"
+            },
+            "exposure": "{player} TODO"
+          }
+        }
+      ]
+    },
+    {
+      "id": "r8_a",
+      "round": 8,
+      "intro": "TODO",
+      "options": [
+        {
+          "id": "r8_a_A",
+          "slot": "A",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r8_a_B",
+          "slot": "B",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r8_a_C",
+          "slot": "C",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r8_a_D",
+          "slot": "D",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r8_b",
+      "round": 8,
+      "intro": "TODO",
+      "options": [
+        {
+          "id": "r8_b_A",
+          "slot": "A",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r8_b_B",
+          "slot": "B",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r8_b_C",
+          "slot": "C",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r8_b_D",
+          "slot": "D",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r9_solved",
+      "round": 9,
+      "intro": "TODO",
+      "options": [
+        {
+          "id": "r9_solved_A",
+          "slot": "A",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_solved",
+          "on_success": {
+            "narration": "TODO",
+            "effects": [
+              {
+                "type": "share_private_clues"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r9_solved_B",
+          "slot": "B",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_solved",
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r9_solved_C",
+          "slot": "C",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_solved",
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r9_solved_D",
+          "slot": "D",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_solved",
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r9_wrong",
+      "round": 9,
+      "intro": "TODO",
+      "options": [
+        {
+          "id": "r9_wrong_A",
+          "slot": "A",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_wrong",
+          "on_success": {
+            "narration": "TODO",
+            "effects": [
+              {
+                "type": "share_private_clues"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r9_wrong_B",
+          "slot": "B",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_wrong",
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r9_wrong_C",
+          "slot": "C",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_wrong",
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r9_wrong_D",
+          "slot": "D",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_wrong",
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r9_escape",
+      "round": 9,
+      "intro": "TODO",
+      "options": [
+        {
+          "id": "r9_escape_A",
+          "slot": "A",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_escape",
+          "on_success": {
+            "narration": "TODO",
+            "effects": [
+              {
+                "type": "share_private_clues"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r9_escape_B",
+          "slot": "B",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_escape",
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r9_escape_C",
+          "slot": "C",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_escape",
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r9_escape_D",
+          "slot": "D",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_escape",
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r10_solved",
+      "round": 10,
+      "intro": "TODO",
+      "options": [
+        {
+          "id": "r10_solved_A",
+          "slot": "A",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r10_solved_B",
+          "slot": "B",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r10_solved_C",
+          "slot": "C",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r10_solved_D",
+          "slot": "D",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": [
+        {
+          "slot": "A",
+          "requires": {
+            "items": [
+              "decisive_item"
+            ],
+            "min_stat": 3
+          },
+          "option": {
+            "id": "r10_solved_A_decisive",
+            "slot": "A",
+            "text": "TODO",
+            "recap": "{player} TODO",
+            "tag": "group",
+            "risk": "normal",
+            "tier": "medium",
+            "lethal_on_fail": false,
+            "lethal_if_stat_below": null,
+            "follows_red_herring": false,
+            "decisive": true,
+            "bonus_clue_id": null,
+            "leads_to": null,
+            "on_success": {
+              "narration": "TODO",
+              "effects": []
+            },
+            "on_failure": {
+              "narration": "TODO",
+              "effects": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "r10_wrong",
+      "round": 10,
+      "intro": "TODO",
+      "options": [
+        {
+          "id": "r10_wrong_A",
+          "slot": "A",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r10_wrong_B",
+          "slot": "B",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r10_wrong_C",
+          "slot": "C",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r10_wrong_D",
+          "slot": "D",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r10_escape",
+      "round": 10,
+      "intro": "TODO",
+      "options": [
+        {
+          "id": "r10_escape_A",
+          "slot": "A",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r10_escape_B",
+          "slot": "B",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r10_escape_C",
+          "slot": "C",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        },
+        {
+          "id": "r10_escape_D",
+          "slot": "D",
+          "text": "TODO",
+          "recap": "{player} TODO",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "TODO",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "TODO",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    }
+  ],
+  "endings": {
+    "solved": {
+      "title": "TODO",
+      "epilogue": "TODO"
+    },
+    "wrong_culprit": {
+      "title": "TODO",
+      "epilogue": "TODO"
+    },
+    "culprit_escapes": {
+      "title": "TODO",
+      "epilogue": "TODO",
+      "epilogue_if_downgraded": "TODO"
+    }
+  }
+}

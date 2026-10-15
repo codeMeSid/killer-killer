@@ -1,0 +1,2917 @@
+{
+  "schema": "mm-story-tree/1",
+  "meta": {
+    "title": "Skyfall: The Birthday Jump",
+    "setting_id": "skyfall",
+    "difficulty": "easy",
+    "player_count": 2,
+    "player_role": "suspects",
+    "victim": {
+      "name": "Theo Marsh",
+      "description": "A thrill-seeking tech founder who organised the skydive for his birthday and paid for everything."
+    },
+    "tone": "tense, breathless, high-altitude suspense with wind and adrenaline",
+    "content_rating": "pg13",
+    "premise": "A group of friends go skydiving together. One of them dies when their parachute fails to open. The rest must work out who sabotaged it before they land."
+  },
+  "rules": {
+    "stats": [
+      "closer_to_mystery",
+      "luck"
+    ],
+    "thresholds": {
+      "easy": 5,
+      "medium": 7,
+      "hard": 9
+    },
+    "start": {
+      "luck": 3,
+      "stat": 0
+    },
+    "pivot_round": 8,
+    "rounds": 10
+  },
+  "world": {
+    "clock": {
+      "label": "Altitude",
+      "unit": "m",
+      "values": [
+        "4000",
+        "3600",
+        "3200",
+        "2800",
+        "2400",
+        "2000",
+        "1500",
+        "1000",
+        "500",
+        "0"
+      ]
+    },
+    "suspects": [
+      {
+        "id": "s1",
+        "name": "Lena Okafor",
+        "description": "Theo's co-founder and chief engineer. Cool, precise, and furious about the sale of their company.",
+        "public_alibi": "Says she spent last night in the hotel bar with Theo's film crew, then rode the shuttle straight to the airstrip.",
+        "motive": "Theo planned to sell their company next week, over her loud objections.",
+        "player_slot": 1
+      },
+      {
+        "id": "s2",
+        "name": "Dash Pryce",
+        "description": "Theo's oldest friend and a veteran jump coach with a big laugh and a bigger past.",
+        "public_alibi": "Says he slept at the lodge and never touched Theo's gear; the rig came packed and sealed.",
+        "motive": "His jump school survives on Theo's money, and he owes Theo a small fortune.",
+        "player_slot": 2
+      }
+    ],
+    "killer_id": "s2",
+    "killer_method": "Dash re-packed Theo's main canopy with a fouled bridle the night before, then switched off the reserve's automatic safety device with his rigger's key during the boarding check, so both layers failed.",
+    "clues": [
+      {
+        "id": "k1",
+        "kind": "key",
+        "clarity": "obvious",
+        "text": "Theo's logbook lists last night's pack job, signed by Dash. Dash swore he never touched this rig.",
+        "points_to": "s2"
+      },
+      {
+        "id": "k2",
+        "kind": "key",
+        "clarity": "obvious",
+        "text": "Only a rigger's key can switch off a rig's safety device. Dash is the only rigger aboard.",
+        "points_to": "s2"
+      },
+      {
+        "id": "k3",
+        "kind": "key",
+        "clarity": "obvious",
+        "text": "Theo found Dash's jump school accounts short by six figures. He planned to confront Dash after the jump.",
+        "points_to": "s2"
+      },
+      {
+        "id": "k4",
+        "kind": "key",
+        "clarity": "subtle",
+        "text": "At boarding, Dash waved off the ground crew's gear checker and checked Theo's reserve flap himself. He lingered there far longer than a routine check needs.",
+        "points_to": "s2"
+      },
+      {
+        "id": "k5",
+        "kind": "key",
+        "clarity": "subtle",
+        "text": "The hangar log shows Dash let himself in at 11:30 last night. He swore he was asleep at the lodge.",
+        "points_to": "s2"
+      },
+      {
+        "id": "h1",
+        "kind": "red_herring",
+        "clarity": "obvious",
+        "text": "Theo's phone holds a furious text from Lena: \"Sign that sale and you'll regret it.\" She never mentioned it.",
+        "points_to": "s1"
+      }
+    ],
+    "items": [
+      {
+        "id": "decisive_item",
+        "name": "Cabin Camera Card",
+        "description": "The memory card from the cabin camera. It recorded everything since boarding.",
+        "luck_on_grant": 0,
+        "decisive": true
+      },
+      {
+        "id": "lucky_item",
+        "name": "Birthday Carabiner",
+        "description": "Theo's scuffed carabiner charm on a ribbon. Holding it steadies shaking hands.",
+        "luck_on_grant": 1,
+        "decisive": false
+      }
+    ]
+  },
+  "scenes": [
+    {
+      "id": "r1_a",
+      "round": 1,
+      "intro": "Theo Marsh jumped first, laughing at the wind. His canopy never opened, and his reserve never fired. The pilot bolts the door and dives; the saboteur is in this cabin.",
+      "options": [
+        {
+          "id": "r1_a_A",
+          "slot": "A",
+          "text": "search Theo's gear bag together",
+          "recap": "{player} dug through Theo's gear bag.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r2_a",
+          "on_success": {
+            "narration": "A logbook slides out. Its last entry carries a signature that is not Theo's.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k1"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "A strap jams the zip as the plane lurches. The bag keeps its secrets.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r1_a_B",
+          "slot": "B",
+          "text": "slip Theo's phone into your pocket",
+          "recap": "{player} slipped Theo's phone into a pocket.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r2_a",
+          "on_success": {
+            "narration": "The screen wakes with a tap. Whatever it shows stays behind a cupped hand.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k3"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The phone is locked tight. Someone glances over, suspicious.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r1_a_C",
+          "slot": "C",
+          "text": "ask the pilot about the jump run",
+          "recap": "{player} pressed the pilot about the jump run.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": "k4",
+          "leads_to": "r2_b",
+          "on_success": {
+            "narration": "The pilot answers in short bursts, eyes on the dials. Some of it might matter.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "The pilot waves everyone back. Nobody gets a straight answer.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r1_a_D",
+          "slot": "D",
+          "text": "go through the rig pouches alone",
+          "recap": "{player} went through the rig pouches alone.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r2_b",
+          "on_success": {
+            "narration": "Fingers close on something small and hard. It vanishes into a pocket.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k2"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "A pouch zip rasps like a scream. Heads turn, and the search ends.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r2_a",
+      "round": 2,
+      "intro": "The plane groans as the spiral tightens. The gear locker rattles against its latch. Everything that touched Theo's rig is somewhere in there.",
+      "options": [
+        {
+          "id": "r2_a_A",
+          "slot": "A",
+          "text": "go through the rig pouches together",
+          "recap": "{player} turned out the rig pouches in the locker.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r3_a",
+          "on_success": {
+            "narration": "A small steel key turns up among the packing tools. Only riggers carry that kind.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k2"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The locker door slams shut on the search. Everything stays buried.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r2_a_B",
+          "slot": "B",
+          "text": "pull the pilot aside for a quiet word",
+          "recap": "{player} pulled the pilot aside for a quiet word.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r3_a",
+          "on_success": {
+            "narration": "The pilot mutters an answer over the engine noise. It stays between the two of them.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k4"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The pilot shakes his head. \"Not now,\" he snaps.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r2_a_C",
+          "slot": "C",
+          "text": "sort Theo's things into one pile",
+          "recap": "{player} sorted Theo's belongings into one pile.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": "k1",
+          "leads_to": "r3_b",
+          "on_success": {
+            "narration": "Goggles, gloves, a battered logbook. Theo's whole life fits in one small heap.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "The pile slides across the tilting floor. Half of it is lost to the dark.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r2_a_D",
+          "slot": "D",
+          "text": "chase the company-sale rumour",
+          "recap": "{player} chased the rumour about Theo's company sale.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": true,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r3_b",
+          "on_success": {
+            "narration": "A message surfaces. Its words stay hidden from everyone else.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "h1"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "Gossip and guesses, nothing solid. The altimeter keeps spinning down.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r2_b",
+      "round": 2,
+      "intro": "The cabin shakes hard, and straps whip loose. Gear spills from the locker across the floor. Somewhere in the mess lies proof.",
+      "options": [
+        {
+          "id": "r2_b_A",
+          "slot": "A",
+          "text": "sift the spilled gear for anything odd",
+          "recap": "{player} sifted through the spilled gear.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r3_a",
+          "on_success": {
+            "narration": "Among the tools, a small steel key glints. Only riggers carry that kind.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k2"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "A strap whips loose and cracks across the floor. The sifting stops.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r2_b_B",
+          "slot": "B",
+          "text": "lean in and question the pilot quietly",
+          "recap": "{player} leaned toward the pilot and spoke low.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r3_a",
+          "on_success": {
+            "narration": "The pilot answers without turning his head. Only one pair of ears catches it.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k4"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The engine drowns the reply. The question is lost in the roar.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r2_b_C",
+          "slot": "C",
+          "text": "calm each other down and think",
+          "recap": "{player} talked the cabin down from panic.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r3_b",
+          "on_success": {
+            "narration": "Breathing slows. For a moment the plane feels steadier.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "Tempers flare again as the floor tilts.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r2_b_D",
+          "slot": "D",
+          "text": "dig into the company-sale quarrel",
+          "recap": "{player} dug into the quarrel over the company sale.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": true,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r3_b",
+          "on_success": {
+            "narration": "A thread of messages scrolls past. The screen dims before anyone else can look.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "h1"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The phone locks. The thread is gone.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r3_a",
+      "round": 3,
+      "intro": "The ground crew crackles over the radio, demanding answers. The pilot's eyes flick to the mirror, to each of you in turn. He knows more than he has said.",
+      "options": [
+        {
+          "id": "r3_a_A",
+          "slot": "A",
+          "text": "ask the pilot what he overheard",
+          "recap": "{player} asked the pilot what he overheard at the hangar.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r4_a",
+          "on_success": {
+            "narration": "The pilot admits to a shouting match yesterday. Words about money carried across the hangar.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k3"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The pilot clams up as the radio barks. The answer will have to wait.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r3_a_B",
+          "slot": "B",
+          "text": "read the pilot's clipboard unseen",
+          "recap": "{player} read the pilot's clipboard behind his back.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r4_a",
+          "on_success": {
+            "narration": "A page of times and initials is read and replaced. Nobody notices.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k5"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The clipboard clatters to the floor. The pilot snarls and snatches it back.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r3_a_C",
+          "slot": "C",
+          "text": "open Theo's birthday goody bag",
+          "recap": "{player} tore open Theo's birthday goody bag.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r4_b",
+          "on_success": {
+            "narration": "Party poppers, a flask, and a scuffed carabiner charm on a ribbon. The charm steadies shaking hands.",
+            "effects": [
+              {
+                "type": "grant_item",
+                "item_id": "lucky_item"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The bag tears and party poppers scatter. Nobody laughs.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r3_a_D",
+          "slot": "D",
+          "text": "read the angry texts on Theo's phone",
+          "recap": "{player} read through the angry texts on Theo's phone.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": true,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r4_b",
+          "on_success": {
+            "narration": "A thread of messages scrolls past. The screen dims before anyone else can look.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "h1"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The phone locks, and the thread is gone.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": [
+        {
+          "slot": "B",
+          "requires": {
+            "role": "killer"
+          },
+          "option": {
+            "id": "r3_a_B_killer",
+            "slot": "B",
+            "text": "slip the newest clue out of sight",
+            "recap": "{player} slipped the group's newest clue out of sight.",
+            "tag": "solo",
+            "risk": "normal",
+            "tier": "medium",
+            "lethal_on_fail": false,
+            "lethal_if_stat_below": null,
+            "follows_red_herring": false,
+            "decisive": false,
+            "bonus_clue_id": null,
+            "leads_to": "r4_a",
+            "on_success": {
+              "narration": "A thin smile flickers and is gone.",
+              "effects": [
+                {
+                  "type": "luck",
+                  "delta": 1
+                }
+              ]
+            },
+            "on_failure": {
+              "narration": "A hand shakes, then is stilled against a knee.",
+              "effects": []
+            },
+            "sabotage": {
+              "scope": "group",
+              "effect": "destroy_party_clue"
+            },
+            "exposure": "{player} was caught slipping the group's newest clue out of sight."
+          }
+        }
+      ]
+    },
+    {
+      "id": "r3_b",
+      "round": 3,
+      "intro": "The descent steepens, and sweat runs cold down every back. Theo's phone buzzes on the bench, lit with messages. Somebody has to read them.",
+      "options": [
+        {
+          "id": "r3_b_A",
+          "slot": "A",
+          "text": "read Theo's phone together",
+          "recap": "{player} unlocked Theo's phone beside the others.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r4_a",
+          "on_success": {
+            "narration": "An unsent email to Theo's lawyer lights the screen. It talks about money, and a confrontation.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k3"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The phone demands a code nobody knows. The screen locks again.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r3_b_B",
+          "slot": "B",
+          "text": "sneak a look at the sign-in sheet",
+          "recap": "{player} sneaked a look at the hangar sign-in sheet.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r4_a",
+          "on_success": {
+            "narration": "A page of times and initials is read and put back. Nobody notices.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k5"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The sheet slides away as the plane lurches. It lands face down, out of reach.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r3_b_C",
+          "slot": "C",
+          "text": "dig through the birthday goody bag",
+          "recap": "{player} dug through Theo's birthday goody bag.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r4_b",
+          "on_success": {
+            "narration": "A flask, a party popper, and a scuffed carabiner charm. The charm steadies shaking hands.",
+            "effects": [
+              {
+                "type": "grant_item",
+                "item_id": "lucky_item"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The bag tears open. Confetti and glitter fill the air.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r3_b_D",
+          "slot": "D",
+          "text": "read Theo's last messages alone",
+          "recap": "{player} read Theo's last messages alone.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": true,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r4_b",
+          "on_success": {
+            "narration": "A message flares on the screen, then fades. Its words stay hidden.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "h1"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The phone slips from a hand and goes dark.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": [
+        {
+          "slot": "B",
+          "requires": {
+            "role": "killer"
+          },
+          "option": {
+            "id": "r3_b_B_killer",
+            "slot": "B",
+            "text": "palm the newest clue and hide it",
+            "recap": "{player} palmed the group's newest clue and hid it.",
+            "tag": "solo",
+            "risk": "normal",
+            "tier": "medium",
+            "lethal_on_fail": false,
+            "lethal_if_stat_below": null,
+            "follows_red_herring": false,
+            "decisive": false,
+            "bonus_clue_id": null,
+            "leads_to": "r4_a",
+            "on_success": {
+              "narration": "A steadier breath, a colder calm.",
+              "effects": [
+                {
+                  "type": "luck",
+                  "delta": 1
+                }
+              ]
+            },
+            "on_failure": {
+              "narration": "A bead of sweat betrays a tight jaw.",
+              "effects": []
+            },
+            "sabotage": {
+              "scope": "group",
+              "effect": "destroy_party_clue"
+            },
+            "exposure": "{player} was caught palming the group's newest clue."
+          }
+        }
+      ]
+    },
+    {
+      "id": "r4_a",
+      "round": 4,
+      "intro": "The door seals howl as the plane spirals lower. The pilot's patience is wearing thin. Every story told so far still has holes.",
+      "options": [
+        {
+          "id": "r4_a_A",
+          "slot": "A",
+          "text": "ask the pilot what he saw at boarding",
+          "recap": "{player} asked the pilot what he saw at boarding.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r5_a",
+          "on_success": {
+            "narration": "The pilot remembers a friend fussing at Theo's rig long after the check. He cannot say who.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k4"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The intercom hisses. The pilot's answer is lost in static.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r4_a_B",
+          "slot": "B",
+          "text": "snatch whatever the other jumper hides",
+          "recap": "{player} lunged to snatch what {target} was hiding.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r5_a",
+          "on_success": {
+            "narration": "The scuffle ends fast, and one jumper walks away steadier.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The scuffle ends with a bruised elbow and a hard stare.",
+            "effects": []
+          },
+          "sabotage": {
+            "scope": "player",
+            "effect": "steal_private_clue"
+          },
+          "exposure": "{player} was caught grabbing at {target}'s pockets."
+        },
+        {
+          "id": "r4_a_C",
+          "slot": "C",
+          "text": "inspect the camera above the door",
+          "recap": "{player} inspected the camera above the jump door.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r5_b",
+          "on_success": {
+            "narration": "A tiny red light blinks on the camera. It has been filming since boarding.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "The camera swings out of reach. Its light mocks the effort.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r4_a_D",
+          "slot": "D",
+          "text": "hunt for proof of Theo's company fight",
+          "recap": "{player} hunted for proof of Theo's company fight.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": true,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r5_b",
+          "on_success": {
+            "narration": "A line on a crumpled page catches the eye. It disappears into a closed fist.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "h1"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "Nothing but doodles and spilled coffee.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r4_b",
+      "round": 4,
+      "intro": "The cabin stinks of hot metal and nerves. Voices rise, and a hand slams the bulkhead. Trust is running out faster than altitude.",
+      "options": [
+        {
+          "id": "r4_b_A",
+          "slot": "A",
+          "text": "press the pilot about the boarding check",
+          "recap": "{player} pressed the pilot about the boarding check.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r5_a",
+          "on_success": {
+            "narration": "The pilot's jaw tightens. Then he remembers someone fussing over Theo's rig for too long.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k4"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The pilot bites back a reply as the radio barks over it.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r4_b_B",
+          "slot": "B",
+          "text": "grab for the other jumper's pockets",
+          "recap": "{player} grabbed at {target}'s pockets.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r5_a",
+          "on_success": {
+            "narration": "The tussle ends quickly, and one jumper walks off steadier.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The tussle ends in a bruised wrist and a cold stare.",
+            "effects": []
+          },
+          "sabotage": {
+            "scope": "player",
+            "effect": "steal_private_clue"
+          },
+          "exposure": "{player} was caught clawing at {target}'s pockets."
+        },
+        {
+          "id": "r4_b_C",
+          "slot": "C",
+          "text": "check the red light above the door",
+          "recap": "{player} checked the red light above the jump door.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r5_b",
+          "on_success": {
+            "narration": "A camera watches from the ceiling, its light steady. It has been recording the whole time.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "The light flickers and hides. The camera swings away.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r4_b_D",
+          "slot": "D",
+          "text": "follow the quarrel over the sale",
+          "recap": "{player} followed the quarrel over the company sale.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": true,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r5_b",
+          "on_success": {
+            "narration": "A phrase on a crumpled page catches the eye. It vanishes into a pocket.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "h1"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "A page tears and blows into the dark.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r5_a",
+      "round": 5,
+      "intro": "The altimeter spins faster now. Theo's camera watches from the ceiling, patient and red-eyed. The pilot's clipboard still holds more than it has shown.",
+      "options": [
+        {
+          "id": "r5_a_A",
+          "slot": "A",
+          "text": "go through the pilot's clipboard together",
+          "recap": "{player} went through the pilot's clipboard with the others.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r6_a",
+          "on_success": {
+            "narration": "The hangar sign-in sheet is the page that matters. One late arrival stands out.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k5"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The clipboard slips from the pilot's grip. The page is lost in the scramble.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r5_a_B",
+          "slot": "B",
+          "text": "take a quiet moment for yourself",
+          "recap": "{player} stayed low and steadied their breathing.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r6_a",
+          "on_success": {
+            "narration": "A slow breath, a clear head, a small calm.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The shaking will not stop. Time slides past.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r5_a_C",
+          "slot": "C",
+          "text": "pry the card from the cabin camera",
+          "recap": "{player} pried the memory card from the cabin camera.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r6_b",
+          "on_success": {
+            "narration": "The card pops free into a palm. It holds everything the camera saw since boarding.",
+            "effects": [
+              {
+                "type": "grant_item",
+                "item_id": "decisive_item"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The mount holds firm. The card stays locked inside.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r5_a_D",
+          "slot": "D",
+          "text": "chase Theo's fight with his partner",
+          "recap": "{player} chased Theo's fight with his business partner.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": true,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r6_b",
+          "on_success": {
+            "narration": "A line in a message thread snags the eye. The screen dims before anyone else sees.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "h1"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "A thumb slips, and the thread is gone.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": [
+        {
+          "slot": "B",
+          "requires": {
+            "role": "killer"
+          },
+          "option": {
+            "id": "r5_a_B_killer",
+            "slot": "B",
+            "text": "smash the group's best find underfoot",
+            "recap": "{player} stamped a heel down on the group's best find.",
+            "tag": "solo",
+            "risk": "normal",
+            "tier": "medium",
+            "lethal_on_fail": false,
+            "lethal_if_stat_below": null,
+            "follows_red_herring": false,
+            "decisive": false,
+            "bonus_clue_id": null,
+            "leads_to": "r6_a",
+            "on_success": {
+              "narration": "A cold smile, quickly hidden.",
+              "effects": [
+                {
+                  "type": "luck",
+                  "delta": 1
+                }
+              ]
+            },
+            "on_failure": {
+              "narration": "A heel slips on the tilting floor.",
+              "effects": []
+            },
+            "sabotage": {
+              "scope": "group",
+              "effect": "destroy_party_item"
+            },
+            "exposure": "{player} was caught stamping the group's best find to pieces."
+          }
+        }
+      ]
+    },
+    {
+      "id": "r5_b",
+      "round": 5,
+      "intro": "The pilot hauls the plane through a brutal bank. The camera over the door rattles on its mount. Whatever it recorded is almost within reach.",
+      "options": [
+        {
+          "id": "r5_b_A",
+          "slot": "A",
+          "text": "check the hangar log with the pilot",
+          "recap": "{player} checked the hangar log with the pilot.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r6_a",
+          "on_success": {
+            "narration": "The pilot taps a late entry on the log. \"Odd hour,\" he mutters.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "k5"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The log blurs in the shaking light. Nothing is readable.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r5_b_B",
+          "slot": "B",
+          "text": "hunker down and save your strength",
+          "recap": "{player} hunkered down and saved their strength.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r6_a",
+          "on_success": {
+            "narration": "Breath slows and nerves harden.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The plane lurches, and nerves unravel again.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r5_b_C",
+          "slot": "C",
+          "text": "wrench the camera card loose together",
+          "recap": "{player} wrenched the camera's card loose.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r6_b",
+          "on_success": {
+            "narration": "The mount cracks, and the card drops into waiting hands. It holds everything since boarding.",
+            "effects": [
+              {
+                "type": "grant_item",
+                "item_id": "decisive_item"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The mount groans but holds. The card stays locked inside.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r5_b_D",
+          "slot": "D",
+          "text": "dig for Theo's last angry message",
+          "recap": "{player} dug for Theo's last angry message.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": true,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r6_b",
+          "on_success": {
+            "narration": "One sharp line glows on the phone. It is gone before anyone else can read it.",
+            "effects": [
+              {
+                "type": "grant_clue",
+                "clue_id": "h1"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The phone goes dark. The message stays buried.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": [
+        {
+          "slot": "B",
+          "requires": {
+            "role": "killer"
+          },
+          "option": {
+            "id": "r5_b_B_killer",
+            "slot": "B",
+            "text": "grind the group's best find under a heel",
+            "recap": "{player} ground the group's best find under a boot.",
+            "tag": "solo",
+            "risk": "normal",
+            "tier": "medium",
+            "lethal_on_fail": false,
+            "lethal_if_stat_below": null,
+            "follows_red_herring": false,
+            "decisive": false,
+            "bonus_clue_id": null,
+            "leads_to": "r6_a",
+            "on_success": {
+              "narration": "A bright, empty grin crosses a face.",
+              "effects": [
+                {
+                  "type": "luck",
+                  "delta": 1
+                }
+              ]
+            },
+            "on_failure": {
+              "narration": "A boot skids, and the moment is wasted.",
+              "effects": []
+            },
+            "sabotage": {
+              "scope": "group",
+              "effect": "destroy_party_item"
+            },
+            "exposure": "{player} was caught grinding the group's best find under a boot."
+          }
+        }
+      ]
+    },
+    {
+      "id": "r6_a",
+      "round": 6,
+      "intro": "The cockpit door bangs in its frame. The pilot shouts that ground control wants one name. Time is nearly out for stories.",
+      "options": [
+        {
+          "id": "r6_a_A",
+          "slot": "A",
+          "text": "compare notes with the other jumper",
+          "recap": "{player} laid their notes out for the other jumper.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r7_a",
+          "on_success": {
+            "narration": "Notes and doubts spill across the cabin. Some pieces start to fit.",
+            "effects": [
+              {
+                "type": "share_private_clues"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "Nerves win. The notes go back into pockets, half shared.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r6_a_B",
+          "slot": "B",
+          "text": "feed the pilot a false trail",
+          "recap": "{player} fed the pilot a false trail.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r7_a",
+          "on_success": {
+            "narration": "The story lands smoothly. A small, cold calm settles in.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The pilot frowns, unconvinced, and writes nothing down.",
+            "effects": []
+          },
+          "sabotage": {
+            "scope": "group",
+            "effect": "mislead_group"
+          },
+          "exposure": "{player} was caught feeding the pilot a false trail."
+        },
+        {
+          "id": "r6_a_C",
+          "slot": "C",
+          "text": "agree who speaks to the police",
+          "recap": "{player} agreed with the cabin on who should speak to the police.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r7_b",
+          "on_success": {
+            "narration": "A plan forms, thin but shared. Eyes meet and hold.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "The plan splinters before it forms.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r6_a_D",
+          "slot": "D",
+          "text": "demand answers from the other jumper",
+          "recap": "{player} cornered the other jumper and demanded answers.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r7_b",
+          "on_success": {
+            "narration": "A hard stare breaks a long silence. Some of it lands.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The stare is returned and does not blink.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r6_b",
+      "round": 6,
+      "intro": "An alarm chimes over the cockpit, and the pilot swears. Faces look yellow in the glow of the dials. Every glance now carries an accusation.",
+      "options": [
+        {
+          "id": "r6_b_A",
+          "slot": "A",
+          "text": "lay out what you've found",
+          "recap": "{player} laid out everything found so far.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r7_a",
+          "on_success": {
+            "narration": "Facts scatter across the bench like cards. Pieces start to line up.",
+            "effects": [
+              {
+                "type": "share_private_clues"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "Voices overlap and the thread is lost.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r6_b_B",
+          "slot": "B",
+          "text": "whisper a false lead to the pilot",
+          "recap": "{player} whispered a false lead to the pilot.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r7_a",
+          "on_success": {
+            "narration": "The lie slides out easily. The pilot nods and listens.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The pilot squints, unconvinced, and turns away.",
+            "effects": []
+          },
+          "sabotage": {
+            "scope": "group",
+            "effect": "mislead_group"
+          },
+          "exposure": "{player} was caught whispering a false lead to the pilot."
+        },
+        {
+          "id": "r6_b_C",
+          "slot": "C",
+          "text": "settle your story before landing",
+          "recap": "{player} worked out a shared story before landing.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r7_b",
+          "on_success": {
+            "narration": "Two voices find the same rhythm. For once the cabin feels united.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "The story frays at the edges. Nobody trusts it.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r6_b_D",
+          "slot": "D",
+          "text": "corner the other jumper at the door",
+          "recap": "{player} cornered the other jumper by the door.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r7_b",
+          "on_success": {
+            "narration": "A flinch gives something away. It is quickly hidden.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The door shudders, and the confrontation breaks apart.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r7_a",
+      "round": 7,
+      "intro": "The floor tilts like a slide. Loose gear rattles toward the tail. Theo's film kit is back there, strapped to the locker.",
+      "options": [
+        {
+          "id": "r7_a_A",
+          "slot": "A",
+          "text": "brace together against the bulkhead",
+          "recap": "{player} braced against the bulkhead with the others.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r8_a",
+          "on_success": {
+            "narration": "Shoulders press together as the floor lurches. Trust holds, barely.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "A lurch breaks the brace and sends everyone skidding.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r7_a_B",
+          "slot": "B",
+          "text": "wedge yourself into the best seat",
+          "recap": "{player} wedged into the safest seat in the cabin.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r8_a",
+          "on_success": {
+            "narration": "A tight strap and a clear head. Nerves settle.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The seat is taken and the strap jams. A scramble follows.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r7_a_C",
+          "slot": "C",
+          "text": "ask the pilot to level out a moment",
+          "recap": "{player} begged the pilot to level out.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r8_b",
+          "on_success": {
+            "narration": "The pilot swears, then levels out for one precious breath.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "The pilot refuses, jaw set. The shaking goes on.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r7_a_D",
+          "slot": "D",
+          "text": "crawl to the tail for the film kit",
+          "recap": "{player} crawled toward the tail for Theo's film kit.",
+          "tag": "solo",
+          "risk": "risky",
+          "tier": "medium",
+          "lethal_on_fail": true,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r8_b",
+          "on_success": {
+            "narration": "A hand closes on the kit's latch. Something small slides loose and vanishes into a pocket.",
+            "effects": [
+              {
+                "type": "grant_item",
+                "item_id": "decisive_item"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The tail locker stays out of reach.",
+            "effects": []
+          },
+          "on_death": {
+            "narration": "The floor lurches and a grip slips. The tail swallows the cry."
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": [
+        {
+          "slot": "B",
+          "requires": {
+            "role": "killer"
+          },
+          "option": {
+            "id": "r7_a_B_killer",
+            "slot": "B",
+            "text": "stuff the newest clue down the vent",
+            "recap": "{player} shoved the group's newest clue into the vent.",
+            "tag": "solo",
+            "risk": "normal",
+            "tier": "medium",
+            "lethal_on_fail": false,
+            "lethal_if_stat_below": null,
+            "follows_red_herring": false,
+            "decisive": false,
+            "bonus_clue_id": null,
+            "leads_to": "r8_a",
+            "on_success": {
+              "narration": "A shaky breath, then steadiness.",
+              "effects": [
+                {
+                  "type": "luck",
+                  "delta": 1
+                }
+              ]
+            },
+            "on_failure": {
+              "narration": "A hand trembles, and the vent whistles.",
+              "effects": []
+            },
+            "sabotage": {
+              "scope": "group",
+              "effect": "destroy_party_clue"
+            },
+            "exposure": "{player} was caught shoving the group's newest clue into the vent."
+          }
+        }
+      ]
+    },
+    {
+      "id": "r7_b",
+      "round": 7,
+      "intro": "The pilot throws the plane through a hard bank. The cabin lights flicker. The tail locker bangs open and shut.",
+      "options": [
+        {
+          "id": "r7_b_A",
+          "slot": "A",
+          "text": "hold on to each other and ride it out",
+          "recap": "{player} grabbed the others and held on.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r8_a",
+          "on_success": {
+            "narration": "Arms lock tight, and the cabin settles. The shaking passes.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "The bank wrenches arms apart. Everyone slides.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r7_b_B",
+          "slot": "B",
+          "text": "strap in and let the others scramble",
+          "recap": "{player} strapped in and let the others scramble.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r8_a",
+          "on_success": {
+            "narration": "The straps bite, and calm settles.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "A strap slips, and panic bubbles up.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r7_b_C",
+          "slot": "C",
+          "text": "shout for the pilot to ease the bank",
+          "recap": "{player} shouted for the pilot to ease the bank.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r8_b",
+          "on_success": {
+            "narration": "The pilot grunts and eases the stick. The floor settles.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "The pilot ignores it. The cabin shudders harder.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r7_b_D",
+          "slot": "D",
+          "text": "inch down the cabin to the locker",
+          "recap": "{player} inched down the tilting cabin toward the locker.",
+          "tag": "solo",
+          "risk": "risky",
+          "tier": "medium",
+          "lethal_on_fail": true,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r8_b",
+          "on_success": {
+            "narration": "The locker swings open, and something small drops into a waiting hand.",
+            "effects": [
+              {
+                "type": "grant_item",
+                "item_id": "decisive_item"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The locker bangs shut, out of reach.",
+            "effects": []
+          },
+          "on_death": {
+            "narration": "The cabin tips, and a grip tears free. The roar covers everything."
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": [
+        {
+          "slot": "B",
+          "requires": {
+            "role": "killer"
+          },
+          "option": {
+            "id": "r7_b_B_killer",
+            "slot": "B",
+            "text": "toss the newest clue toward the tail",
+            "recap": "{player} flicked the group's newest clue toward the tail.",
+            "tag": "solo",
+            "risk": "normal",
+            "tier": "medium",
+            "lethal_on_fail": false,
+            "lethal_if_stat_below": null,
+            "follows_red_herring": false,
+            "decisive": false,
+            "bonus_clue_id": null,
+            "leads_to": "r8_a",
+            "on_success": {
+              "narration": "A cold calm settles over a tense face.",
+              "effects": [
+                {
+                  "type": "luck",
+                  "delta": 1
+                }
+              ]
+            },
+            "on_failure": {
+              "narration": "A flicker of panic crosses a pale face.",
+              "effects": []
+            },
+            "sabotage": {
+              "scope": "group",
+              "effect": "destroy_party_clue"
+            },
+            "exposure": "{player} was caught flinging the group's newest clue toward the tail."
+          }
+        }
+      ]
+    },
+    {
+      "id": "r8_a",
+      "round": 8,
+      "intro": "The runway lights glitter far below. The pilot counts down the minutes in a flat voice. Whatever happens next decides how this ends.",
+      "options": [
+        {
+          "id": "r8_a_A",
+          "slot": "A",
+          "text": "lay every clue out for the cabin",
+          "recap": "{player} laid every clue out for the cabin.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "Everything spills onto the bench. Even the small things look important now.",
+            "effects": [
+              {
+                "type": "share_private_clues"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "Hands fumble and the clues scatter. Some are lost in the dark.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r8_a_B",
+          "slot": "B",
+          "text": "keep your best clue close and wait",
+          "recap": "{player} kept their best clue close.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "A secret stays tucked away. A steady calm settles.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "A glance betrays something. The moment passes.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r8_a_C",
+          "slot": "C",
+          "text": "weigh every name before landing",
+          "recap": "{player} weighed every name in the cabin.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "Names are tried and tested. Nothing is settled yet.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "Names tangle with fear. Nothing is settled.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r8_a_D",
+          "slot": "D",
+          "text": "stare down the other jumper",
+          "recap": "{player} stared down the other jumper.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "The stare holds until the other flinches.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The stare breaks first, and a hand shakes.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r8_b",
+      "round": 8,
+      "intro": "Rain streaks the windshield. Red and blue lights flash on the runway ahead. Whatever happens next decides how this ends.",
+      "options": [
+        {
+          "id": "r8_b_A",
+          "slot": "A",
+          "text": "spread out everything you've found",
+          "recap": "{player} spread out everything found so far.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "Facts and doubts mix on the bench. The picture sharpens, a little.",
+            "effects": [
+              {
+                "type": "share_private_clues"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "Voices clash. Half of it never gets said.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r8_b_B",
+          "slot": "B",
+          "text": "hold your cards and watch the room",
+          "recap": "{player} held back and watched the room.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "Silence turns into a weapon. It feels like control.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "A nervous cough gives the game away.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r8_b_C",
+          "slot": "C",
+          "text": "ask each other the hard questions",
+          "recap": "{player} fired the hard questions across the cabin.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "Answers come grudgingly. Some ring true.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "The questions bounce back with no answers.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r8_b_D",
+          "slot": "D",
+          "text": "dare the other jumper to talk",
+          "recap": "{player} dared the other jumper to speak first.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "The dare lands. A silence stretches.",
+            "effects": [
+              {
+                "type": "luck",
+                "delta": 1
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "The dare falls flat, and the quiet turns brittle.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r9_solved",
+      "round": 9,
+      "intro": "The airfield sprawls below, tiny and terrible. The pilot calls the final approach in a flat voice. There is time for one last move before the wheels touch.",
+      "options": [
+        {
+          "id": "r9_solved_A",
+          "slot": "A",
+          "text": "pool everything you know",
+          "recap": "{player} pooled everything they knew.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_solved",
+          "on_success": {
+            "narration": "Every scrap goes on the table. For a moment, nobody speaks.",
+            "effects": [
+              {
+                "type": "share_private_clues"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "Voices clash, and half of it never gets said.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r9_solved_B",
+          "slot": "B",
+          "text": "keep your best clue to yourself",
+          "recap": "{player} kept their best clue to themselves.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_solved",
+          "on_success": {
+            "narration": "A secret stays tucked away as the ground rises.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "A glance gives the secret away, and the moment passes.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r9_solved_C",
+          "slot": "C",
+          "text": "agree on one story for the police",
+          "recap": "{player} pushed the cabin to agree on one story.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_solved",
+          "on_success": {
+            "narration": "A story takes shape, thin but shared.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "The story breaks apart before the wheels touch.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r9_solved_D",
+          "slot": "D",
+          "text": "bet everything on your own theory",
+          "recap": "{player} bet everything on their own theory.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_solved",
+          "on_success": {
+            "narration": "A theory is spoken aloud, certain and loud.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "The theory falters mid-sentence, and the cabin goes quiet.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r9_wrong",
+      "round": 9,
+      "intro": "The airfield sprawls below, tiny and terrible. The pilot calls the final approach in a flat voice. There is time for one last move before the wheels touch.",
+      "options": [
+        {
+          "id": "r9_wrong_A",
+          "slot": "A",
+          "text": "pool everything you know",
+          "recap": "{player} pooled everything they knew.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_wrong",
+          "on_success": {
+            "narration": "Every scrap goes on the table. For a moment, nobody speaks.",
+            "effects": [
+              {
+                "type": "share_private_clues"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "Voices clash, and half of it never gets said.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r9_wrong_B",
+          "slot": "B",
+          "text": "keep your best clue to yourself",
+          "recap": "{player} kept their best clue to themselves.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_wrong",
+          "on_success": {
+            "narration": "A secret stays tucked away as the ground rises.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "A glance gives the secret away, and the moment passes.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r9_wrong_C",
+          "slot": "C",
+          "text": "agree on one story for the police",
+          "recap": "{player} pushed the cabin to agree on one story.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_wrong",
+          "on_success": {
+            "narration": "A story takes shape, thin but shared.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "The story breaks apart before the wheels touch.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r9_wrong_D",
+          "slot": "D",
+          "text": "bet everything on your own theory",
+          "recap": "{player} bet everything on their own theory.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_wrong",
+          "on_success": {
+            "narration": "A theory is spoken aloud, certain and loud.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "The theory falters mid-sentence, and the cabin goes quiet.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r9_escape",
+      "round": 9,
+      "intro": "The airfield sprawls below, tiny and terrible. The pilot calls the final approach in a flat voice. There is time for one last move before the wheels touch.",
+      "options": [
+        {
+          "id": "r9_escape_A",
+          "slot": "A",
+          "text": "pool everything you know",
+          "recap": "{player} pooled everything they knew.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_escape",
+          "on_success": {
+            "narration": "Every scrap goes on the table. For a moment, nobody speaks.",
+            "effects": [
+              {
+                "type": "share_private_clues"
+              }
+            ]
+          },
+          "on_failure": {
+            "narration": "Voices clash, and half of it never gets said.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r9_escape_B",
+          "slot": "B",
+          "text": "keep your best clue to yourself",
+          "recap": "{player} kept their best clue to themselves.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_escape",
+          "on_success": {
+            "narration": "A secret stays tucked away as the ground rises.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "A glance gives the secret away, and the moment passes.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r9_escape_C",
+          "slot": "C",
+          "text": "agree on one story for the police",
+          "recap": "{player} pushed the cabin to agree on one story.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_escape",
+          "on_success": {
+            "narration": "A story takes shape, thin but shared.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "The story breaks apart before the wheels touch.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r9_escape_D",
+          "slot": "D",
+          "text": "bet everything on your own theory",
+          "recap": "{player} bet everything on their own theory.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": "r10_escape",
+          "on_success": {
+            "narration": "A theory is spoken aloud, certain and loud.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "The theory falters mid-sentence, and the cabin goes quiet.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r10_solved",
+      "round": 10,
+      "intro": "The wheels slam onto the runway. Sirens rise from every side. Whatever you hold, you must play it now.",
+      "options": [
+        {
+          "id": "r10_solved_A",
+          "slot": "A",
+          "text": "tell the police what you suspect",
+          "recap": "{player} told the police what they suspected.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "The words come out in a rush. A suspicion alone is not proof.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "The words tangle in the sirens. Nobody can follow them.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r10_solved_B",
+          "slot": "B",
+          "text": "slip away in the confusion",
+          "recap": "{player} slipped away in the confusion.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "A gap opens in the chaos, and a quiet exit follows.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "A hand catches a sleeve, and the escape ends there.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r10_solved_C",
+          "slot": "C",
+          "text": "back the other jumper's story",
+          "recap": "{player} backed the other jumper's story.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "Two voices line up on one story. It still needs something solid.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "The story trips over a detail. Nobody finishes it.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r10_solved_D",
+          "slot": "D",
+          "text": "blame whoever had the loudest motive",
+          "recap": "{player} blamed whoever had the loudest motive.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "Blame swings toward the loudest motive. The police note it and wait for more.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "The accusation wavers, and nobody catches it.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": [
+        {
+          "slot": "A",
+          "requires": {
+            "items": [
+              "decisive_item"
+            ],
+            "min_stat": 3
+          },
+          "option": {
+            "id": "r10_solved_A_decisive",
+            "slot": "A",
+            "text": "play the camera card for everyone",
+            "recap": "{player} played the camera card for everyone.",
+            "tag": "group",
+            "risk": "normal",
+            "tier": "medium",
+            "lethal_on_fail": false,
+            "lethal_if_stat_below": null,
+            "follows_red_herring": false,
+            "decisive": true,
+            "bonus_clue_id": null,
+            "leads_to": null,
+            "on_success": {
+              "narration": "On the screen, Dash is at Theo's rig, thumbing a switch no one else touched. The cabin goes silent.",
+              "effects": []
+            },
+            "on_failure": {
+              "narration": "The card stutters and the picture tears. The moment slips away.",
+              "effects": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "r10_wrong",
+      "round": 10,
+      "intro": "The wheels slam onto the runway. Sirens rise from every side. Whatever you hold, you must play it now.",
+      "options": [
+        {
+          "id": "r10_wrong_A",
+          "slot": "A",
+          "text": "tell the police what you suspect",
+          "recap": "{player} told the police what they suspected.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "The words come out in a rush, and the police nod. They are already writing down one name.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "The words tangle in the sirens. The police hear only the loudest voice.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r10_wrong_B",
+          "slot": "B",
+          "text": "slip away in the confusion",
+          "recap": "{player} slipped away in the confusion.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "A gap opens in the chaos, and a quiet exit follows.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "A hand catches a sleeve, and the escape ends there.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r10_wrong_C",
+          "slot": "C",
+          "text": "back the other jumper's story",
+          "recap": "{player} backed the other jumper's story.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "Two voices line up on one story. It sounds true to everyone, and it names Lena.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "The story trips over a detail, and the cabin falls back on the obvious name.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r10_wrong_D",
+          "slot": "D",
+          "text": "blame whoever had the loudest motive",
+          "recap": "{player} blamed whoever had the loudest motive.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "The loudest motive draws the loudest blame. The police believe it at once.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "The accusation wavers, but the room leans toward it anyway.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    },
+    {
+      "id": "r10_escape",
+      "round": 10,
+      "intro": "The wheels slam onto the runway. Sirens rise from every side. Whatever you hold, you must play it now.",
+      "options": [
+        {
+          "id": "r10_escape_A",
+          "slot": "A",
+          "text": "tell the police what you suspect",
+          "recap": "{player} told the police what they suspected.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "The words come out in a rush, but nothing sticks. The police look unconvinced.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "The words tangle in the sirens. The police wave everyone toward the terminal.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r10_escape_B",
+          "slot": "B",
+          "text": "slip away in the confusion",
+          "recap": "{player} slipped away in the confusion.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "easy",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "A gap opens in the chaos, and a quiet exit follows.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "A hand catches a sleeve, and the escape ends there.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r10_escape_C",
+          "slot": "C",
+          "text": "back the other jumper's story",
+          "recap": "{player} backed the other jumper's story.",
+          "tag": "group",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "Two voices line up on one story. It has holes, and nobody fills them.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "The story trips over a detail. The police lose interest.",
+            "effects": []
+          }
+        },
+        {
+          "id": "r10_escape_D",
+          "slot": "D",
+          "text": "blame whoever had the loudest motive",
+          "recap": "{player} blamed whoever had the loudest motive.",
+          "tag": "solo",
+          "risk": "normal",
+          "tier": "medium",
+          "lethal_on_fail": false,
+          "lethal_if_stat_below": null,
+          "follows_red_herring": false,
+          "decisive": false,
+          "bonus_clue_id": null,
+          "leads_to": null,
+          "on_success": {
+            "narration": "The loudest motive draws blame, but none of it holds. The police drift away.",
+            "effects": []
+          },
+          "on_failure": {
+            "narration": "The accusation wavers and dies in the noise.",
+            "effects": []
+          }
+        }
+      ],
+      "tie_break_order": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variants": []
+    }
+  ],
+  "endings": {
+    "solved": {
+      "title": "Grounded",
+      "epilogue": "The card plays on the cabin screen, and the cabin falls silent. {killer} is on the footage, thumbing a switch on Theo's rig at the door. {victim} had found the missing money and meant to expose it at his own birthday dinner. The police are waiting on the runway when the door finally opens."
+    },
+    "wrong_culprit": {
+      "title": "Blame Lands First",
+      "epilogue": "The cabin is certain, and certainty is loud. The police lead Lena away, still protesting, for a crime she never committed. {killer} watches from the back, silent and relieved. {victim}'s secret falls with him, and the truth stays buried. By sunset the case is closed."
+    },
+    "culprit_escapes": {
+      "title": "Clean Landing",
+      "epilogue": "The wheels stop turning, and the cabin has nothing solid to offer. {killer} steps onto the runway with a steady stride. The police take statements, shrug, and write the word accident. {victim}'s rig is gone, and so is the proof.",
+      "epilogue_if_downgraded": "The truth was in the cabin, within reach of everyone aboard. The final move never landed, and the moment was gone. {killer} walks away clean, and {victim} becomes a line in a file marked accident. {survivors} will replay that last minute for years."
+    }
+  }
+}
