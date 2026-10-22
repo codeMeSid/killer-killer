@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { ApiError } from "./api-error.ts";
 
 /** Standard backend envelope used by every route handler in this app. */
 export type ApiResponse<T> = {
@@ -22,14 +23,7 @@ export function fail(errorMessage: string, errorCode = 500, status = errorCode) 
   );
 }
 
-/** An expected failure whose message is safe to show the player. */
-export class ApiError extends Error {
-  readonly status: number;
-  constructor(message: string, status: number) {
-    super(message);
-    this.status = status;
-  }
-}
+export { ApiError };
 
 /** Runs a handler body: payload → ok(), ApiError → fail() with its message, anything else → logged 500. */
 export async function handle<T>(fn: () => Promise<T>) {

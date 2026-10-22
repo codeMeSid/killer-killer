@@ -1,30 +1,61 @@
-/**
- * A story's own words (`mm-lexicon/1`), written by the murder-mystery-story-tree skill next to its tree.
- * They theme statements, statuses and loaders; buttons keep plain verb + object labels.
- * Placeholders: `{n}` a count in words ("two"), `{N}` the same capitalised ("Two"), `{victim}`.
- * No digits anywhere (CLAUDE.md §13). Contract: .claude/skills/murder-mystery-story-tree/references/lexicon.md.
- */
+// Case-file contract (`mm-case-file/1`, `mm-case-solution/1`, `mm-lexicon/1`):
+// .claude/skills/murder-mystery-story-tree/references/{schema,lexicon}.md. Mirror them exactly.
+
+export type Difficulty = "easy" | "medium" | "hard";
+
+export type Item = { id: string; title: string } & (
+  | { kind: "note"; body: string }
+  | { kind: "statement"; speaker: string; lines: { q: string; a: string }[] }
+  | { kind: "report"; sections: { heading: string; body: string }[] }
+  | { kind: "photo"; svg: string; caption: string }
+  | { kind: "log"; rows: { at: string; text: string }[] }
+  | { kind: "map"; svg: string; caption: string }
+);
+
+export type FolderKind =
+  | "suspects" | "statements" | "reports" | "evidence" | "documents" | "timeline" | "map" | "extras";
+
+/** Public: every device sees it. Nothing in it names the answer. */
+export type CaseFile = {
+  schema: "mm-case-file/1";
+  slug: string;
+  title: string;
+  difficulty: Difficulty;
+  rating: "PG-13" | "mature";
+  setting: string;
+  tone: string;
+  victim: { name: string; summary: string };
+  brief: string;
+  /** Array index = suspect id. */
+  suspects: { name: string; role: string; relation: string; alibi: string; note: string }[];
+  folders: { id: string; kind: FolderKind; title: string; items: Item[] }[];
+  motives: { id: string; text: string }[];
+  methods: { id: string; text: string }[];
+};
+
+/** Secret: server-only. */
+export type Solution = {
+  schema: "mm-case-solution/1";
+  /** Suspect indexes; [] = suicide/accident. */
+  killers: number[];
+  motive: string;
+  method: string;
+  story: string[];
+  deductions: { claim: string; part: "who" | "why" | "how"; items: string[] }[];
+  herrings: { suspect: number; ruled_out_by: string[] }[];
+};
+
+/** A story's own words. No digits; at most 60 characters each. */
 export type Lexicon = {
   schema: "mm-lexicon/1";
-  /** Case-card line under the title: "{victim} never landed." */
-  hook: string;
-  /** 2–4 single glyphs, space-separated, for the rising ground field. */
-  glyphs: string;
-  lobby: {
-    /** TV header word while people join. */
-    phase: string;
-    seats: string;
-    nobody: string;
-    some: string;
-    full: [string, string];
-    /** Phone headline once seated, two lines. */
-    joined: [string, string];
-    /** Seat status for someone connected. */
-    present: string;
-    empty: string;
-    waiting: string;
-  };
-  join: { started: string; full: string; left: string; joining: string; nameTaken: string };
-  play: { resolving: string; finale: string; fallen: string; dead: string; loaders: string[] };
-  end: { cast: string; alive: string; dead: string; truth: string };
+  card: string;
+  desk: string;
+  accuse: string;
+  wrong: string;
+  solved: string;
+  defeated: string;
+  loaders: string[];
+  full: string;
+  no_room: string;
+  gone: string;
 };

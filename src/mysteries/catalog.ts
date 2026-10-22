@@ -1,22 +1,18 @@
 import type { FigureDefine } from "@/lib/hairline";
 import { capitalize, inWords } from "@/lib/words";
-import type { Lexicon } from "./types";
-import nainaKapoorLexicon from "./naina-kapoor-choomantar-3p/lexicon.json";
-import brijmohanValentineLexicon from "./brijmohan-valentine-monster-4p/lexicon.json";
+import type { Difficulty, Lexicon } from "./types";
 
-// Client-safe story data: each story's words and its Hairline figure. Never import a tree here;
-// trees hold the killer and live behind `server-only` in ./index.ts. Register a new story in both.
+// Client-safe story data: words, art and card facts. Never import a solution here; solutions live
+// behind `server-only` in ./index.ts. Register a new case in both. Folder `src/mysteries/<slug>/`.
 
-export const LEXICON: Record<string, Lexicon> = {
-  "brijmohan-valentine-monster-4p": brijmohanValentineLexicon as Lexicon,
-  "naina-kapoor-choomantar-3p": nainaKapoorLexicon as Lexicon,
-};
+export type CatalogEntry = { slug: string; title: string; difficulty: Difficulty; setting: string; victim: string };
+
+export const CATALOG: CatalogEntry[] = [];
+
+export const LEXICON: Record<string, Lexicon> = {};
 
 /** Code-split: a figure loads only on the screen that shows it. */
-export const ART: Record<string, () => Promise<{ default: FigureDefine }>> = {
-  "brijmohan-valentine-monster-4p": () => import("./brijmohan-valentine-monster-4p/art"),
-  "naina-kapoor-choomantar-3p": () => import("./naina-kapoor-choomantar-3p/art"),
-};
+export const ART: Record<string, () => Promise<{ default: FigureDefine }>> = {};
 
 export function lexiconFor(slug: string): Lexicon {
   const lexicon = LEXICON[slug];
