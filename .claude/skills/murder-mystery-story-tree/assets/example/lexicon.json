@@ -1,0 +1,17 @@
+{
+  "schema": "mm-lexicon/1",
+  "card": "The light went dark for one night.",
+  "desk": "The keeper's desk",
+  "accuse": "Name who put out the light",
+  "wrong": "The wrong hand held the knife. The rock keeps its secret.",
+  "solved": "The fog lifts. The cut rope has a name.",
+  "defeated": "The boat sails at dawn. The truth stays on the rock.",
+  "loaders": [
+    "Winding the lamp",
+    "Counting the steps",
+    "Listening to the surf"
+  ],
+  "full": "No bunk left on the rock.",
+  "no_room": "That rock is not on the chart.",
+  "gone": "That case file has washed out to sea."
+}

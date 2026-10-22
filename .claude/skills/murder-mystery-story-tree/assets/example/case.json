@@ -1,0 +1,280 @@
+{
+  "schema": "mm-case-file/1",
+  "slug": "edda-marsh-lighthouse-3s",
+  "title": "The Lamp Room",
+  "difficulty": "easy",
+  "rating": "PG-13",
+  "setting": "A lighthouse on a rock, one night before the supply boat leaves",
+  "tone": "quiet, salt-damp, watchful",
+  "victim": {
+    "name": "Edda Marsh",
+    "summary": "Head keeper, found dead at the foot of the lamp-room stairs."
+  },
+  "brief": "Edda Marsh kept the light for thirty years. At dawn she was found at the foot of the tower stairs, neck broken. The rail rope at the top hangs loose. Three people were on the rock.",
+  "suspects": [
+    {
+      "name": "Orin Vale",
+      "role": "Assistant keeper",
+      "relation": "Worked under Edda for four years",
+      "alibi": "Says he slept in the bunk room all night.",
+      "note": "Sour about night shifts."
+    },
+    {
+      "name": "Maren Pike",
+      "role": "Supply boat skipper",
+      "relation": "Brings stores to the rock each month",
+      "alibi": "Says she stayed aboard her boat until dawn.",
+      "note": "Friendly, always in a hurry."
+    },
+    {
+      "name": "Dax Holloway",
+      "role": "Board inspector",
+      "relation": "Came to audit Edda's logs",
+      "alibi": "Says he worked on his report in the guest room.",
+      "note": "Cold, exact, hard to like."
+    }
+  ],
+  "folders": [
+    {
+      "id": "f1",
+      "kind": "suspects",
+      "title": "Suspects",
+      "items": [
+        {
+          "id": "su1",
+          "title": "Who held the tower key",
+          "kind": "note",
+          "body": "Edda, Orin and the inspector each had a key. The boat crew had none, but the tower door was found unlocked."
+        }
+      ]
+    },
+    {
+      "id": "f2",
+      "kind": "statements",
+      "title": "Statements",
+      "items": [
+        {
+          "id": "st1",
+          "title": "Orin Vale",
+          "kind": "statement",
+          "speaker": "Orin Vale",
+          "lines": [
+            {
+              "q": "Where were you last night?",
+              "a": "In my bunk. The wind kept me up, but I never left."
+            },
+            {
+              "q": "Did you hear anything?",
+              "a": "A thump near midnight. I thought it was the shutters."
+            }
+          ]
+        },
+        {
+          "id": "st2",
+          "title": "Maren Pike",
+          "kind": "statement",
+          "speaker": "Maren Pike",
+          "lines": [
+            {
+              "q": "When did you leave the tower?",
+              "a": "Before ten. I only brought the stores up."
+            },
+            {
+              "q": "Did Edda seem afraid?",
+              "a": "She seemed angry. She said she had written to the Board."
+            }
+          ]
+        },
+        {
+          "id": "st3",
+          "title": "Dax Holloway",
+          "kind": "statement",
+          "speaker": "Dax Holloway",
+          "lines": [
+            {
+              "q": "Did you quarrel with Edda?",
+              "a": "We argued about her logs at supper. Nothing more."
+            },
+            {
+              "q": "Where were you at midnight?",
+              "a": "In the guest room. My lamp burned until one."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "f3",
+      "kind": "reports",
+      "title": "Reports",
+      "items": [
+        {
+          "id": "r1",
+          "title": "Coroner's note",
+          "kind": "report",
+          "sections": [
+            {
+              "heading": "Cause",
+              "body": "Broken neck from a fall of about nine metres."
+            },
+            {
+              "heading": "Hands",
+              "body": "Tarred rope fibres under the nails of both hands."
+            }
+          ]
+        },
+        {
+          "id": "r2",
+          "title": "Scene report",
+          "kind": "report",
+          "sections": [
+            {
+              "heading": "Rail",
+              "body": "The top rail rope was cut clean, not frayed."
+            },
+            {
+              "heading": "Door",
+              "body": "Tower door unlocked from outside. No force used."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "f4",
+      "kind": "evidence",
+      "title": "Evidence",
+      "items": [
+        {
+          "id": "e1",
+          "title": "Foot of the stairs",
+          "kind": "photo",
+          "svg": "<svg viewBox=\"0 0 200 120\" xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"200\" height=\"120\" fill=\"#0B1215\"/><path d=\"M20 110 L60 20 L80 20 L50 110 Z\" fill=\"none\" stroke=\"#2472C8\" stroke-width=\"2\"/><path d=\"M60 40 L100 40 M55 62 L95 62 M50 84 L90 84\" stroke=\"#2472C8\" stroke-width=\"2\"/><path d=\"M130 100 q10 -20 30 -8 q10 8 20 4\" fill=\"none\" stroke=\"#D97757\" stroke-width=\"3\"/><circle cx=\"125\" cy=\"102\" r=\"4\" fill=\"#CD3131\"/><text x=\"12\" y=\"14\" fill=\"#E5E5E5\" font-size=\"8\">STAIR FOOT</text></svg>",
+          "caption": "Edda lay at the foot of the stairs. A coil of rope lies beside her."
+        },
+        {
+          "id": "e2",
+          "title": "Cut rope end",
+          "kind": "note",
+          "body": "A short length of tarred rope, cut with a sharp blade. It matches the rail rope and smells of the boat yard."
+        }
+      ]
+    },
+    {
+      "id": "f5",
+      "kind": "documents",
+      "title": "Documents",
+      "items": [
+        {
+          "id": "d1",
+          "title": "Edda's draft letter",
+          "kind": "note",
+          "body": "To the Board: I have found crates landed at night that are not on any manifest. The skipper must answer for them before the next boat."
+        },
+        {
+          "id": "d2",
+          "title": "Supply manifest",
+          "kind": "note",
+          "body": "Eleven crates of stores logged. Dock count at the jetty: fourteen. The skipper signed for all fourteen."
+        }
+      ]
+    },
+    {
+      "id": "f6",
+      "kind": "timeline",
+      "title": "Timeline",
+      "items": [
+        {
+          "id": "t1",
+          "title": "Night log",
+          "kind": "log",
+          "rows": [
+            {
+              "at": "Nine at night",
+              "text": "Supper in the keeper's room. Edda and the inspector argue."
+            },
+            {
+              "at": "Ten at night",
+              "text": "Inspector goes to the guest room. Lamp lit until one."
+            },
+            {
+              "at": "Eleven at night",
+              "text": "Orin's bunk-room door is heard to close."
+            },
+            {
+              "at": "Midnight",
+              "text": "A thump is heard from the tower."
+            },
+            {
+              "at": "Dawn",
+              "text": "Edda found at the foot of the stairs."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "f7",
+      "kind": "map",
+      "title": "Map",
+      "items": [
+        {
+          "id": "mp1",
+          "title": "The rock",
+          "kind": "map",
+          "svg": "<svg viewBox=\"0 0 200 120\" xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"200\" height=\"120\" fill=\"#0B1215\"/><rect x=\"80\" y=\"30\" width=\"40\" height=\"60\" fill=\"none\" stroke=\"#E5E5E5\" stroke-width=\"2\"/><path d=\"M0 100 q50 -10 80 -10 M120 90 q40 0 80 10\" stroke=\"#2472C8\" stroke-width=\"2\" fill=\"none\"/><circle cx=\"170\" cy=\"96\" r=\"5\" fill=\"#00FFB3\"/><text x=\"150\" y=\"112\" fill=\"#00FFB3\" font-size=\"7\">JETTY</text><text x=\"86\" y=\"62\" fill=\"#E5E5E5\" font-size=\"7\">TOWER</text></svg>",
+          "caption": "The tower stands between the bunk room and the jetty where the boat lies."
+        }
+      ]
+    },
+    {
+      "id": "f8",
+      "kind": "extras",
+      "title": "Extras",
+      "items": [
+        {
+          "id": "x1",
+          "title": "Weather note",
+          "kind": "note",
+          "body": "Fog came in at eleven. A boat at the jetty could not be seen from the guest room window."
+        }
+      ]
+    }
+  ],
+  "motives": [
+    {
+      "id": "m1",
+      "text": "She stood to inherit Edda's pension."
+    },
+    {
+      "id": "m2",
+      "text": "Edda was about to report her smuggling."
+    },
+    {
+      "id": "m3",
+      "text": "Jealousy over a promotion."
+    },
+    {
+      "id": "m4",
+      "text": "Revenge for an old dismissal."
+    }
+  ],
+  "methods": [
+    {
+      "id": "h1",
+      "text": "Pushed her down the stairs by hand."
+    },
+    {
+      "id": "h2",
+      "text": "Cut the rail rope so it gave way."
+    },
+    {
+      "id": "h3",
+      "text": "Poisoned her evening tea."
+    },
+    {
+      "id": "h4",
+      "text": "Struck her with a lamp wrench."
+    }
+  ]
+}

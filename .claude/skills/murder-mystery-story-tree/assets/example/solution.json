@@ -1,0 +1,58 @@
+{
+  "schema": "mm-case-solution/1",
+  "killers": [
+    1
+  ],
+  "motive": "m2",
+  "method": "h2",
+  "story": [
+    "Maren landed extra crates at night and Edda found out.",
+    "Edda wrote to the Board and told Maren so.",
+    "Maren climbed the tower after ten, cut the rail rope, and left the door unlocked.",
+    "Edda leaned on the rail at midnight and fell."
+  ],
+  "deductions": [
+    {
+      "claim": "Maren was in the tower after ten, though she says she was aboard.",
+      "part": "who",
+      "items": [
+        "e2",
+        "st2",
+        "t1"
+      ]
+    },
+    {
+      "claim": "Edda was about to expose Maren's unlogged crates.",
+      "part": "why",
+      "items": [
+        "d1",
+        "d2"
+      ]
+    },
+    {
+      "claim": "The rail rope was cut, not worn, and Edda grabbed it as she fell.",
+      "part": "how",
+      "items": [
+        "r1",
+        "r2",
+        "e1"
+      ]
+    }
+  ],
+  "herrings": [
+    {
+      "suspect": 0,
+      "ruled_out_by": [
+        "st1",
+        "t1"
+      ]
+    },
+    {
+      "suspect": 2,
+      "ruled_out_by": [
+        "t1",
+        "x1"
+      ]
+    }
+  ]
+}
