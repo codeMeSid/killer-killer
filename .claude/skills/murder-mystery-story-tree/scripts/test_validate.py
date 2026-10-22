@@ -59,6 +59,27 @@ class T(unittest.TestCase):
     def test_svg_colour(self):
         self.has("svg_colour", lambda c, s: item(c, "e1").update(svg=item(c, "e1")["svg"] + '<path stroke="#FF0000"/>'))
 
+    def test_svg_colour_forms(self):
+        for bad in ('<rect fill="red"/>', '<rect fill="rgb(1,2,3)"/>', '<rect style="fill:hotpink"/>',
+                    '<style>a{}</style>', '<rect stroke="hsl(1,2%,3%)"/>'):
+            self.has("svg_unsafe" if "style" in bad or "(" in bad else "svg_colour",
+                     lambda c, s, b=bad: item(c, "e1").update(svg=item(c, "e1")["svg"] + b))
+        self.has("svg_unsafe", lambda c, s: item(c, "e1").update(svg=item(c, "e1")["svg"] + "<svg/onload=x()>"))
+        self.has("svg_unsafe", lambda c, s: item(c, "e1").update(svg=item(c, "e1")["svg"] + '<rect fill="url(http://x)"/>'))
+
+    def test_names_killer_wide(self):
+        self.has("names_killer", lambda c, s: item(c, "d1").update(body="Maren killed her."))
+        self.has("names_killer", lambda c, s: c.update(brief="Maren Pike murdered Edda."))
+        self.has("names_killer", lambda c, s: item(c, "d1").update(title="Maren is the killer"))
+        self.has("names_killer", lambda c, s: c["suspects"][0].update(note="Maren Pike killed her."))
+
+    def test_case_key(self):
+        self.has("case_key", lambda c, s: c.update(killers=[1]))
+
+    def test_bad_indexes(self):
+        self.has("herring", lambda c, s: s["herrings"].append({"suspect": 9, "ruled_out_by": ["t1"]}))
+        self.has("killers", lambda c, s: s.update(killers=[1, 1]))
+
     def test_difficulty_size(self):
         self.has("difficulty_size", lambda c, s: c.update(difficulty="hard"))
         self.has("difficulty_size", lambda c, s: c["folders"][0]["items"].append(

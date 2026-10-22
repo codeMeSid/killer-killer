@@ -17,7 +17,10 @@ FOLDERS = {"suspects", "statements", "reports", "evidence", "documents", "timeli
 PARTS = ("who", "why", "how")
 KIND_FIELDS = {"note": ["body"], "statement": ["speaker", "lines"], "report": ["sections"],
                "photo": ["svg", "caption"], "log": ["rows"], "map": ["svg", "caption"]}
-UNSAFE = re.compile(r"<script|\son\w+\s*=|foreignobject|href\s*=\s*[\"']?\s*(https?:|//|javascript)", re.I)
+UNSAFE = re.compile(r"<script|[\s/]on\w+\s*=|foreignobject|<style|\sstyle\s*=|rgb\(|hsl\(|url\(\s*[\"']?\s*(https?:|//)|href\s*=\s*[\"']?\s*(https?:|//|javascript)", re.I)
+COLOUR_ATTR = re.compile(r"\b(fill|stroke|stop-color|color)\s*=\s*[\"']([^\"']*)[\"']", re.I)
+CASE_KEYS = {"schema", "slug", "title", "difficulty", "rating", "setting", "tone", "victim", "brief",
+             "suspects", "folders", "motives", "methods"}
 LEXICON_KEYS = ["card", "desk", "accuse", "wrong", "solved", "defeated", "full", "no_room", "gone"]
 
 
@@ -55,6 +58,8 @@ def check(d):
     v = case.get("victim") or {}
     if not (v.get("name") and v.get("summary")):
         err("field", "victim needs name and summary")
+    for k in sorted(set(case) - CASE_KEYS):
+        err("case_key", f"unknown case.json key {k!r}")
     sus = case.get("suspects") or []
     for i, s in enumerate(sus):
         for k in ("name", "role", "relation", "alibi", "note"):
@@ -82,7 +87,9 @@ def check(d):
             if svg:
                 if UNSAFE.search(svg):
                     err("svg_unsafe", f"item {iid}: script, event handler, foreignObject or external href")
-                for c in set(re.findall(r"#[0-9a-fA-F]{3,8}\b", svg)):
+                cols = set(re.findall(r"#[0-9a-fA-F]{3,8}\b", svg)) | {
+                    v for _, v in COLOUR_ATTR.findall(svg) if v.lower() not in ("none", "transparent") and not v.startswith("#")}
+                for c in cols:
                     if c.lower() not in PALETTE:
                         err("svg_colour", f"item {iid}: {c} is not a palette colour")
                 if not re.search(r"<svg[^>]*viewBox", svg):
@@ -114,6 +121,8 @@ def check(d):
     if not isinstance(killers, list) or any(not isinstance(k, int) or not 0 <= k < len(sus) for k in killers):
         err("killers", "solution.killers must be suspect indexes")
         killers = []
+    if len(set(killers)) != len(killers):
+        err("killers", "duplicate killer index")
     if not sol.get("story"):
         err("field", "solution.story needs lines")
 
@@ -133,7 +142,10 @@ def check(d):
 
     ruled = {}
     for h in sol.get("herrings") or []:
-        ruled[h.get("suspect")] = h
+        if not isinstance(h.get("suspect"), int) or not 0 <= h["suspect"] < len(sus):
+            err("herring", f"herring suspect {h.get('suspect')!r} out of range")
+            continue
+        ruled[h["suspect"]] = h
         if not h.get("ruled_out_by"):
             err("herring_unruled", f"suspect {h.get('suspect')} has no rule-out items")
         for iid in h.get("ruled_out_by") or []:
@@ -145,12 +157,16 @@ def check(d):
         if i in killers and i in ruled:
             err("herring", f"{s.get('name')} is a killer and a herring")
 
+    scan = [(f"item {i}", t) for i, it in items.items() for t in [it.get("title", ""), *texts(it)]]
+    scan += [("brief", case.get("brief", "")), ("victim.summary", v.get("summary", ""))]
+    scan += [(f"suspects[{n}]", str(x)) for n, s_ in enumerate(sus) for x in s_.values()]
+    scan += [(o.get("id"), o.get("text", "")) for o in (case.get("motives") or []) + (case.get("methods") or [])]
     for k in killers:
-        n = sus[k].get("name", "")
-        pat = re.compile(re.escape(n) + r" (killed|is the killer)", re.I)
-        for iid, it in items.items():
-            if any(pat.search(t) for t in texts(it)):
-                err("names_killer", f"item {iid} says outright that {n} did it")
+        full = sus[k].get("name", "")
+        pat = re.compile(rf"\b({re.escape(full)}|{re.escape(full.split()[0])}) (killed|is the killer|murdered)", re.I)
+        for where, t in scan:
+            if pat.search(t):
+                err("names_killer", f"{where} says outright that {full} did it")
 
     if not any(it.get("kind") == "photo" for it in items.values()):
         warn("no_photo", "no photo item; a scene photo helps the room")
