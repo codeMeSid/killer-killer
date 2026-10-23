@@ -1,7 +1,7 @@
 import { CaseVideo } from "@/components/case-video";
 import type { Item } from "@/mysteries/types";
 
-// Scene art is SVG drawn into case.json; an <img> data URI can't run scripts (CLAUDE.md §12).
+// Scene art is a static p5.brush image shown via <img>, which can't run scripts (CLAUDE.md §12).
 const svgSrc = (svg: string) => `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
 
 /** The body of one file, by kind. Title and pin live in the header above it. */

@@ -1,0 +1,104 @@
+{
+ "bpm": 90,
+ "beat_s": 0.6667,
+ "key": "A minor",
+ "sr": 48000,
+ "duration_s": 30.0,
+ "cues": [
+  {
+   "t": 2.667,
+   "event": "title_in_bar2"
+  },
+  {
+   "t": 2.667,
+   "event": "vo",
+   "text": "Eight friends.",
+   "dur": 0.8
+  },
+  {
+   "t": 3.2,
+   "event": "typed_keys_start",
+   "end": 4.61
+  },
+  {
+   "t": 4.95,
+   "event": "paper_slide"
+  },
+  {
+   "t": 5.333,
+   "event": "vo",
+   "text": "One case file.",
+   "dur": 0.84
+  },
+  {
+   "t": 8.0,
+   "event": "tonal_hit_A"
+  },
+  {
+   "t": 8.0,
+   "event": "vo",
+   "text": "Someone is lying.",
+   "dur": 1.07
+  },
+  {
+   "t": 9.333,
+   "event": "camera_shutter"
+  },
+  {
+   "t": 9.8,
+   "event": "typed_keys_2",
+   "end": 10.22
+  },
+  {
+   "t": 10.667,
+   "event": "pin_clack"
+  },
+  {
+   "t": 13.333,
+   "event": "vo",
+   "text": "Two guesses.",
+   "dur": 0.71
+  },
+  {
+   "t": 14.0,
+   "event": "riser_start",
+   "end": 21.0
+  },
+  {
+   "t": 16.0,
+   "event": "stamp_thunk"
+  },
+  {
+   "t": 18.667,
+   "event": "glitch_burst",
+   "dur": 0.28
+  },
+  {
+   "t": 21.0,
+   "event": "breath_silence_start"
+  },
+  {
+   "t": 21.1,
+   "event": "breath",
+   "dur": 0.8
+  },
+  {
+   "t": 22.0,
+   "event": "drop"
+  },
+  {
+   "t": 23.333,
+   "event": "vo",
+   "text": "Killer, killer.",
+   "dur": 1.42
+  },
+  {
+   "t": 26.667,
+   "event": "outro_hit"
+  },
+  {
+   "t": 28.0,
+   "event": "end_whoosh"
+  }
+ ]
+}

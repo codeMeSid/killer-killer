@@ -19,8 +19,8 @@ KIND_FIELDS = {"note": ["body"], "statement": ["speaker", "lines"], "report": ["
                "photo": ["svg", "caption"], "log": ["rows"], "map": ["svg", "caption"],
                "video": ["src", "captions"]}
 MB = 1024 * 1024
-BUDGET = {"teaser": 1 * MB, "reveal": 10 * MB, "clip": 3 * MB, "cover": MB // 5}  # references/media.md
-MEDIA_EXT = {"teaser": (".mp4",), "cover": (".svg",), "reveal": (".mp4",), "clip": (".mp4",), "captions": (".vtt",),
+BUDGET = {"teaser": 1 * MB, "reveal": 10 * MB, "clip": 3 * MB, "cover": MB}  # references/media.md
+MEDIA_EXT = {"teaser": (".mp4",), "cover": (".svg", ".webp", ".png"), "reveal": (".mp4",), "clip": (".mp4",), "captions": (".vtt",),
              "poster": (".png", ".jpg", ".webp")}
 PATH_OK = re.compile(r"[a-z0-9][a-z0-9._-]*(/[a-z0-9._-]+)*")
 REVEAL_OK = re.compile(r"reveal-[0-9a-f]{12}\.mp4")  # unguessable: obscurity, not auth
@@ -137,7 +137,7 @@ def check(d, public=None):
         media = {}
     for k, rel in media.items():
         media_file(pub, rel, k, f"media.{k}", err)
-        if k == "cover" and (pub / str(rel)).is_file():
+        if k == "cover" and str(rel).endswith(".svg") and (pub / str(rel)).is_file():
             svg_check((pub / rel).read_text(errors="replace"), "media.cover", err)
     rv = sol.get("reveal")
     if rv is not None:

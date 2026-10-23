@@ -3,11 +3,10 @@
 import Link from "next/link";
 import { useEffect } from "react";
 import { CaseVideo } from "@/components/case-video";
-import { StoryArt } from "@/components/story-art";
 import { capitalize, inWords } from "@/lib/use-room";
 import { sfx } from "@/lib/sfx";
 import { Cover } from "@/components/cover";
-import { ART, COVERS } from "@/mysteries/catalog";
+import { COVERS } from "@/mysteries/catalog";
 import type { Lexicon } from "@/mysteries/types";
 import type { RoomView } from "@/lib/rooms";
 import { mmss } from "./clock";
@@ -35,7 +34,7 @@ export function Reveal({ view, words }: { view: RoomView & { ending: NonNullable
         </p>
       </header>
 
-      <div className="grid gap-10 lg:grid-cols-[1fr_22rem]">
+      <div className={`grid gap-10 ${COVERS[view.slug] ? "lg:grid-cols-[1fr_22rem]" : ""}`}>
         <div className="flex flex-col gap-10">
           {solution.reveal && (
             <section className="flex flex-col gap-3 border-t border-blue/30 pt-4">
@@ -83,7 +82,7 @@ export function Reveal({ view, words }: { view: RoomView & { ending: NonNullable
             </Link>
           </div>
         </div>
-        {COVERS[view.slug] ? <Cover slug={view.slug} src={COVERS[view.slug]} className="border" /> : ART[view.slug] && <StoryArt slug={view.slug} variant="end" />}
+        {COVERS[view.slug] ? <Cover slug={view.slug} src={COVERS[view.slug]} className="border" /> : null}
       </div>
     </div>
   );

@@ -1,4 +1,3 @@
-import type { FigureDefine } from "@/lib/hairline";
 import { capitalize, inWords } from "@/lib/words";
 import type { Difficulty, Lexicon } from "./types";
 import hollisLexicon from "./hollis-brandt-lighthouse-4s/lexicon.json";
@@ -18,16 +17,12 @@ export const LEXICON: Record<string, Lexicon> = { "hollis-brandt-lighthouse-4s":
   "ansel-corbin-night-train-5s": anselLexicon as Lexicon,
 };
 
-/** Code-split: a figure loads only on the screen that shows it. */
-export const ART: Record<string, () => Promise<{ default: FigureDefine }>> = {
-  "hollis-brandt-lighthouse-4s": () => import("./hollis-brandt-lighthouse-4s/art"),
-};
 
 /** Teaser file per slug under public/cases/<slug>/ (silent loop for the picker card). Register by hand; must equal case.json media.teaser. */
 export const TEASERS: Record<string, string> = { "ansel-corbin-night-train-5s": "teaser.mp4" };
 
 /** Cover SVG per slug under public/cases/<slug>/ (card art). Register by hand; must equal case.json media.cover. */
-export const COVERS: Record<string, string> = { "hollis-brandt-lighthouse-4s": "cover.svg", "ansel-corbin-night-train-5s": "cover.svg" };
+export const COVERS: Record<string, string> = { "hollis-brandt-lighthouse-4s": "cover.webp", "ansel-corbin-night-train-5s": "cover.svg" };
 
 /** Suspect portrait URL per slug, keyed by suspect index (case.json order) as string. None = monogram tile. */
 export const PORTRAITS: Record<string, Record<string, string>> = {

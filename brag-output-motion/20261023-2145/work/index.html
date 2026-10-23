@@ -1,0 +1,145 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:Silk;src:url(a/silk.woff2);font-weight:400}
+@font-face{font-family:Silk;src:url(a/silk7.woff2);font-weight:700}
+@font-face{font-family:Geist;src:url(a/geist.woff2);unicode-range:U+0000-00FF}
+@font-face{font-family:Geist;src:url(a/geistbox.woff2);unicode-range:U+2000-2001,U+2004-2008,U+200A,U+23B8-23BD,U+2500-259F}
+@font-face{font-family:Plex;src:url(a/plex.woff2);font-weight:600}
+@font-face{font-family:P2P;src:url(a/ps2p.woff2)}
+:root{--red:#E5484D;--green:#00FFB3;--white:#E5E5E5;--blue:#3B8EEA;--orange:#D97757;--obs:#0B1215}
+*{box-sizing:border-box;margin:0}
+html,body{width:1080px;height:1920px;background:var(--obs);overflow:hidden}
+#root{position:absolute;inset:0;border:6px solid var(--orange);font-family:Plex,monospace;font-weight:600;color:var(--white)}
+.px{font-family:Silk,monospace;text-shadow:0 0 .5em currentColor}
+.ar{font-family:P2P,monospace}
+.red{color:var(--red)}.green{color:var(--green)}.white{color:var(--white)}.blue{color:var(--blue)}.orange{color:var(--orange)}
+.abs{position:absolute}
+.pb{border:0;box-shadow:0 -6px 0 0 var(--pb,var(--blue)),0 6px 0 0 var(--pb,var(--blue)),-6px 0 0 0 var(--pb,var(--blue)),6px 0 0 0 var(--pb,var(--blue))}
+.pbg{--pb:var(--green)}.pbr{--pb:var(--red)}.pbo{--pb:var(--orange)}.pbd{--pb:color-mix(in srgb,var(--blue) 45%,transparent)}
+#fx{position:absolute;inset:0;pointer-events:none;z-index:9}
+#scan{position:absolute;inset:0;background:repeating-linear-gradient(to bottom,color-mix(in srgb,var(--obs) 38%,transparent) 0 2px,transparent 2px 6px)}
+#vig{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 55%,color-mix(in srgb,var(--obs) 70%,transparent) 100%)}
+#band{position:absolute;left:0;right:0;height:340px;background:linear-gradient(to bottom,transparent,color-mix(in srgb,var(--white) 4%,transparent),transparent)}
+.cap{position:absolute;left:64px;right:64px;bottom:150px;font-size:60px;line-height:1.2;text-align:left}
+pre{font-family:Geist,monospace;font-weight:400;line-height:1.25}
+.box{display:inline-flex;width:104px;height:132px;align-items:center;justify-content:center;font-size:84px;margin:0 6px}
+</style></head><body>
+<div id="root"><div id="stage"></div><div id="fx"><div id="band"></div><div id="scan"></div><div id="vig"></div></div></div>
+<script>
+const K=`██╗  ██╗██╗██╗     ██╗     ███████╗██████╗
+██║ ██╔╝██║██║     ██║     ██╔════╝██╔══██╗
+█████╔╝ ██║██║     ██║     █████╗  ██████╔╝
+██╔═██╗ ██║██║     ██║     ██╔══╝  ██╔══██╗
+██║  ██╗██║███████╗███████╗███████╗██║  ██║
+╚═╝  ╚═╝╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝`;
+const B=0.625, CODE="K7XQ2M9P";
+const cl=(x,a=0,b=1)=>Math.min(b,Math.max(a,x)), st=(t,a,b)=>cl((t-a)/(b-a));
+const hash=n=>{const s=Math.sin(n*127.1)*43758.5453;return s-Math.floor(s)};
+// hard flicker-in: choppy on/off for 0.45s then solid
+const flick=(t,t0)=>{if(t<t0)return 0;const d=t-t0;if(d>0.45)return 1;return hash(Math.floor(d*30))>0.45?1:0.15};
+const typed=(s,t,t0,cps)=>s.slice(0,Math.max(0,Math.floor((t-t0)*cps)));
+const glitchOn=(t,t0,d=0.2)=>t>=t0&&t<t0+d;
+const split=(on,k=4)=>on?`text-shadow:${k}px 0 var(--red),${-k}px 0 var(--blue);`:"";
+const jit=(on,t)=>on?`transform:translateX(${Math.round((hash(Math.floor(t*30))-.5)*36)}px);`:"";
+const cap=(t,a,b,html)=>t>=a&&t<b?`<div class="cap" style="opacity:${flick(t,a)}">${html}</div>`:"";
+const ZW=["No","One","Two","Three","Four","Five","Six","Seven","Eight"];
+
+function s1(t){ // 0-2.5 boot + KILLER
+  const L=[["CASE FILE SYSTEM",'white'],["LOADING CASE FILE ...",'blue'],["AGENTS MAX: EIGHT",'blue'],["READY.",'green']];
+  let h=`<div class="abs px" style="left:64px;top:90px;font-size:44px;line-height:1.7">`;
+  L.forEach(([s,c],i)=>{const t0=i*0.35;h+=`<div class="${c}">${i==0?s:(t>=t0?typed(s,t,t0,40)||s[0]:"")}${i==3&&t>=t0&&Math.floor(t*4)%2==0?"█":""}</div>`});
+  h+=`</div>`;
+  const g=glitchOn(t,1.55,0.2);
+  h+=`<pre class="abs orange" style="left:34px;top:560px;font-size:30px;opacity:${flick(t,0.9)};text-shadow:0 0 .6em rgba(217,119,87,.55);${g?"text-shadow:4px 0 var(--red),-4px 0 var(--blue);":""}${jit(g,t)}">${K}</pre>`;
+  h+=cap(t,1.5,2.5,`Eight friends.<br>One case file.`);
+  return h;
+}
+function s2(t){ // 2.5-6.25 code + agents
+  const t0=2.5, n=Math.min(8,Math.floor((t-t0)/(B/4)));
+  let boxes="";
+  for(let i=0;i<8;i++){const on=i<n;boxes+=`<span class="box pb ${on?'pbo':'pbd'} ar orange" style="${i==4?'margin-left:40px;':''}">${on?CODE[i]:""}</span>`}
+  const na=t<3.75?0:Math.min(4,1+Math.floor((t-3.75)/B));
+  let seats="";
+  for(let i=1;i<=na;i++)seats+=`<span class="pb pbg px green" style="display:inline-block;padding:14px 20px;margin:12px 14px;font-size:38px;opacity:${flick(t,3.75+(i-1)*B)}">Agent ${ZW[i]}</span>`;
+  let h=`<div class="abs px blue" style="left:64px;top:110px;font-size:46px">JOIN CASE</div>
+  <div class="abs px white" style="left:64px;top:190px;font-size:40px">Join code</div>
+  <div class="abs" style="left:34px;top:290px;white-space:nowrap">${boxes}</div>
+  <div class="abs px white" style="left:64px;top:700px;font-size:56px;opacity:${n>=8?1:0}">${na?ZW[na]+" agent"+(na>1?"s":"")+" online":""}</div>
+  <div class="abs" style="left:64px;top:860px;width:950px">${seats}</div>`;
+  h+=cap(t,2.5,6.25,`Open the link.<br>Enter the code.<br><span class="blue">No install. No sign-up.</span>`);
+  return h;
+}
+const img=(s,st_="")=>`<img src="a/${s}" style="${st_}">`;
+function s3(t){ // 6.25-11.25
+  if(t<8.75){
+    const a=flick(t,6.25), b=flick(t,6.25+B);
+    let h=`<div class="abs px blue" style="left:64px;top:110px;font-size:44px">PICK A CASE</div>
+    <div class="abs pb pbo" style="left:64px;top:230px;width:950px;opacity:${a}">${img("cover1.svg","display:block;width:950px;height:534px")}</div>
+    <div class="abs pb pbd" style="left:64px;top:830px;width:950px;opacity:${b}">${img("cover2.svg","display:block;width:950px;height:534px")}</div>`;
+    h+=`<div class="abs" style="left:64px;top:1440px;display:flex;gap:26px;opacity:${flick(t,6.25+2*B)}">`;
+    for(let i=1;i<=4;i++)h+=`<div class="pb pbd" style="width:170px;height:170px">${img("p"+i+".svg","display:block;width:170px;height:170px;image-rendering:pixelated")}</div>`;
+    h+=`</div>`;
+    return h+cap(t,6.25,8.75,`Two cases.<br>Zero spoilers.`);
+  }
+  // desk
+  const pinT=10.0, pinned=t>=pinT;
+  const dy=t<pinT?-(1-Math.pow(st(t,pinT-0.35,pinT),2))*300:0;
+  let h=`<div class="abs px white" style="left:64px;top:90px;font-size:44px">Keeper's desk</div>
+  <div class="abs px blue" style="left:64px;top:160px;font-size:36px">You are Agent One</div>
+  <div class="abs px blue" style="left:64px;top:240px;font-size:42px;opacity:${flick(t,8.75+B)}">Agent Two reading</div>
+  <div class="abs pb pbd" style="left:64px;top:340px;width:950px;height:560px;padding:36px;opacity:${flick(t,8.75)}">
+    <div class="px white" style="font-size:46px">Lamp log</div>
+    <div class="blue px" style="font-size:34px;margin:10px 0 24px">EVIDENCE</div>
+    <div style="font-size:42px;line-height:1.5">Lamp lit at dusk.<br>Dark by eleven.<br>Relit at dawn.</div>
+  </div>
+  <div class="abs" style="left:64px;top:980px;width:950px;border-top:3px solid color-mix(in srgb,var(--blue) 40%,transparent);padding-top:26px">
+    <span class="px blue" style="font-size:34px;margin-right:26px">Pinned</span>
+    ${pinned?`<span class="pb pbo px orange" style="display:inline-block;padding:10px 18px;font-size:38px;opacity:${flick(t,pinT)}">Lamp log</span>`:""}
+  </div>
+  <div class="abs px orange" style="left:${64+560}px;top:${860+dy}px;font-size:80px;opacity:${pinned?0:1}">&#9660;</div>`;
+  return h+cap(t,8.75,11.25,`Everyone reads<br>the same file.`);
+}
+function mono(n){return n[0]}
+function s4(t){ // 11.25-16.25
+  const names=[["Tobias Rook","Relief keeper"],["Ines Quill","Supply boat pilot"],["Hale Dunmore","Harbour clerk"]];
+  const stampT=13.1, k=st(t,stampT,stampT+0.12), sc=t<stampT?0:2.4-1.4*k;
+  let h=`<div class="abs px blue" style="left:64px;top:90px;font-size:44px">WHO</div>`;
+  names.forEach(([n,r],i)=>{
+    const x=64, y=170+i*232;
+    h+=`<div class="abs pb ${i==2&&t>=stampT?'pbr':'pbd'}" style="left:${x}px;top:${y}px;width:950px;height:190px;opacity:${flick(t,11.25+i*0.2)}">
+      <div class="abs px orange" style="left:20px;top:25px;width:140px;height:140px;border:4px solid var(--orange);font-size:86px;text-align:center;line-height:132px">${mono(n)}</div>
+      <div class="abs px white" style="left:190px;top:40px;font-size:46px">${n}</div>
+      <div class="abs px blue" style="left:190px;top:112px;font-size:36px">${r}</div></div>`;
+  });
+  // stamp
+  if(t>=stampT){
+    h+=`<div class="abs ar red" style="left:690px;top:${170+2*232+100}px;padding:12px 16px;border:8px solid var(--red);font-size:30px;background:rgba(11,18,21,.0);transform:rotate(-6deg) scale(${sc});transform-origin:center;opacity:${k<=0?0.6:1};text-shadow:0 0 .4em var(--red)">SUSPECT</div>`;
+  }
+  h+=`<div class="abs px blue" style="left:64px;top:910px;font-size:44px;opacity:${flick(t,11.9)}">WHY / HOW</div>
+  <div class="abs pb pbd px white" style="left:64px;top:1000px;width:950px;padding:22px 26px;font-size:32px;opacity:${flick(t,11.9)}"><span class="blue">SLIP ONE </span> An inheritance</div>
+  <div class="abs pb pbd px white" style="left:64px;top:1120px;width:950px;padding:22px 26px;font-size:32px;opacity:${flick(t,12.3)}"><span class="blue">SLIP TWO </span> Struck with the lamp key</div>`;
+  h+=`<div class="abs pb pbd px white" style="left:64px;top:1250px;width:950px;padding:22px 26px;font-size:32px;line-height:1.4;opacity:${flick(t,12.7)}"><span class="blue">Accusation slip: </span>${t>=stampT?"Hale Dunmore. An inheritance. Struck with the lamp key.":"nothing picked yet."}</div>`;
+  if(t>=13.5){
+    h+=`<div class="abs white" style="left:64px;top:1480px;width:950px;font-size:44px;line-height:1.35;opacity:${flick(t,13.5)}">Two guesses. This is your first. Present it?</div>
+    <div class="abs pb pbg px green" style="left:64px;top:1660px;width:420px;padding:20px;font-size:48px;text-align:center">Present</div>`;
+  }
+  return h+(t<13.4?cap(t,11.25,13.4,`Only the host<br>accuses.`):"")+(t>=13.5&&t<16.25?`<div class="cap orange" style="bottom:70px;font-size:44px">Who. Why. How. All three.</div>`:"");
+}
+function s5(t){ // 16.25-20
+  const g=glitchOn(t,16.25,0.2);
+  if(t<18.1){
+    return `<div class="abs px green" style="left:0;right:0;top:620px;text-align:center;font-size:150px;${g?split(g,8):"text-shadow:0 0 .5em rgba(0,255,179,.5);"}${jit(g,t)}">SOLVED</div>
+    <div class="abs px white" style="left:40px;right:40px;top:860px;text-align:center;font-size:56px;opacity:${flick(t,16.45)}">The light burns steady.</div>
+    <div class="abs px blue" style="left:0;right:0;top:1000px;text-align:center;font-size:40px;opacity:${flick(t,16.8)}">Guesses used: one</div>`;
+  }
+  return `<pre class="abs orange" style="left:34px;top:420px;font-size:30px;text-shadow:0 0 .6em rgba(217,119,87,.55);opacity:${flick(t,18.1)}">${K}</pre>
+  <div class="abs px white" style="left:64px;right:64px;top:800px;font-size:66px;line-height:1.35;text-align:left;opacity:${flick(t,18.1+0.1)}">Eight friends.<br>One case file.<br><span class="orange">Two guesses.</span></div>`;
+}
+window.seek=t=>{
+  const s=t<2.5?s1(t):t<6.25?s2(t):t<11.25?s3(t):t<16.25?s4(t):s5(t);
+  document.getElementById("stage").innerHTML=s;
+  document.getElementById("band").style.top=(((t*0.16)%1.4)*1920-340)+"px";
+};
+window.ready=Promise.all([document.fonts.load("40px Silk"),document.fonts.load("700 40px Silk"),document.fonts.load("40px Geist"),document.fonts.load("600 40px Plex"),document.fonts.load("40px P2P"),...["cover1","cover2","p1","p2","p3","p4"].map(n=>new Promise(r=>{const i=new Image();i.onload=i.onerror=r;i.src=`a/${n}.${n[0]=="c"?"svg":"svg"}`}))]).then(()=>{window.seek(0)});
+</script></body></html>

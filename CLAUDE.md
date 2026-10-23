@@ -99,10 +99,10 @@ Context usage hits **50%** → compact before continuing. Don't wait for 95% aut
 
 Three layers (user decision 2026-10-15: "all of the above"), one guardrail: **text being read never moves**.
 
-1. **Ambient, slow:** scanlines, tube hum (`animate-hum`), rolling band on TV glass (`animate-scan-roll`), rising ground, Hairline figures idling on tour. Faint enough narration stays legible.
+1. **Ambient, slow:** scanlines, tube hum (`animate-hum`), rolling band on TV glass (`animate-scan-roll`), rising ground. Faint enough narration stays legible.
 2. **Entrances, ominous:** `ease-ominous` (`cubic-bezier(0.7, 0, 0.3, 1)`, default for every `transition-*`), 700ms default, entrances out of dark (`animate-rise`, `animate-print` for terminal lines, `animate-power-on` + snow `animate-static-burst` on every TV screen).
 3. **Hits, sharp (≤300ms):** `animate-glitch` (red/blue split, sliced) only on events: death, exposed sabotage, reveal, all aboard, errors. `animate-flicker-in` for joins and lock-in. Loud moments = game start and ending.
-- Every animation gated `motion-safe:`; reduced motion keeps content, drops travel (Hairline kernel skips tour by itself).
+- Every animation gated `motion-safe:`; reduced motion keeps content, drops travel.
 - Flashing: never >3 flashes/sec over large area (WCAG 2.3.1); boot raster stays inside one thin bar.
 - Tokens + keyframes in `src/app/globals.css` (`@theme`).
 
@@ -123,7 +123,7 @@ Rules here; history and state there. Update same turn as change (§8). Imported 
 - **Sender refetches itself:** after its own pin or accusation the device calls `useRoom().refresh()` (`onChanged`); the doorbell is for the *other* devices. Why: in the 2026-10-23 playthrough the guest got the verdict over Realtime but the host stayed on the desk; the host never waited on its own broadcast again.
 - **Pins** = shared evidence strip, `POST /pins` toggles; only folder items pinnable (`togglePin` rejects others).
 - **Guess race:** two guesses per room. Claim by `update rooms set guesses_used = n where status='playing' and guesses_used = n-1`; one request wins, other 409. Host-only (403 otherwise). Claim, guess row, end and result run in one transaction: SQL fn `submit_guess` (migration `20261023000000_guess_tx`, service_role only) called via `adminClient().rpc`. Why: separate writes could leave a room half-finished.
-- **Scene photos/maps = SVG drawn by model, palette-only** (`#E5484D #00FFB3 #E5E5E5 #3B8EEA #D97757 #0B1215`), shown via `<img>` data URI so scripts can't run (user, 2026-10-22). Validator rejects `<script`, `on…=`, `foreignObject`, external `href`.
+- **Art = p5.brush paintings, made by Opus, always** (user 2026-10-23): case covers, suspect portraits, evidence scenes/maps, desk/home backdrops are painted with p5.brush (`p5.brush/standalone`) by a script Opus writes, rendered once to a static image committed under `public/cases/<slug>/` (never generated at runtime), shown via `<img>` so scripts can't run. Palette hues only as pigment (`#E5484D #00FFB3 #E5E5E5 #3B8EEA #D97757` on `#0B1215`); brush blending between them is fine. Evidence art never names the killer.
 - Leaderboard: single global board across all cases, `results` table, `GET /api/leaderboard` → `{board}` (top fifty, score desc then seconds asc). Rows before `BOARD_SINCE` (`rooms.ts`) are test runs: kept, hidden from board and ranks (user 2026-10-23).
 - Supabase config repo-tracked in `supabase/config.toml` (anonymous sign-ins on, 300/hour/IP). Change there + `npx supabase config push`; never click-edit dashboard. Review diff before confirming.
 - Engine-era rules (rounds, phases, personal options, votes, narrator) are gone.
@@ -137,7 +137,7 @@ Rules here; history and state there. Update same turn as change (§8). Imported 
 - **Disabled actions keep full-contrast label saying why**; only fill goes inactive. Never fade primary button with opacity. Accuse submit label says what is missing.
 - Wrong guess → `animate-glitch` + lexicon `wrong`, "One guess left". Ended → reveal (solved green / defeated red).
 - Counts in words, never digits in prose.
-- **Pixel-art frames:** `pixel-border` + `pb-*` ink, square, never rounded. Swiss underneath: 12-column grid, flush left, blue hairline rules.
+- **Pixel-art frames:** `pixel-border` + `pb-*` ink, square, never rounded. Swiss underneath: 12-column grid, flush left, thin blue rules.
 - **Accuse = interrogation board** (user 2026-10-23): WHO = suspect cards (portrait tile or monogram, red `SUSPECT` stamp), WHY/HOW = numbered `SLIP n` radio strips, recap = sticky accusation slip, submit opens a confirm step then `sfx.stamp()` + `animate-glitch`. Portraits: `public/cases/<slug>/suspects/<name-slug>.svg` (model-drawn, palette-only, same face on all, never hints the killer), `PORTRAITS[slug][String(index)]` in `catalog.ts`, keyed by suspect index (suspects have no id). New case ships portraits. Why: three plain columns read mundane.
 - **Per-story lexicon** themes statements, statuses, loaders; buttons keep plain verb + object labels.
 - Forms and routes kept alive in `<Activity>` reset via effect cleanup (join form, case picker).
@@ -146,15 +146,14 @@ Rules here; history and state there. Update same turn as change (§8). Imported 
 
 Style (user, 2026-10-15): horror + pixel-art + maximalism + Swiss + flat 2D, as old machines. UX first.
 - **Machine by role** — wrap every screen in `<Machine kind>`: `computer` = `/` (boot sequence once per session), `/start`, `/case/[code]`, `/leaderboard`, `RoomLoading`; `terminal` = `/join`. Machine sets `font-pixel` face + CSS-only glass.
-- **Home painting** — `<BrushScene>` paints the home lighthouse with p5.brush (`p5.brush/standalone`, no p5; dynamic import, once per size, never animated; palette hues only; untyped via `src/types/p5-brush.d.ts`). Why: home was an empty void; user chose p5.brush for art.
-- **Case art (user 2026-10-23: skill no longer makes Hairline)** — new cases ship `cover.svg` (model-drawn SVG, palette-only, `<Cover>` via `<img>`, `COVERS` in catalog) on picker card + reveal; evidence photos/maps already SVG. Existing `StoryArt` stays for the Hairline case already shipped (`ART`), fallback after cover. Why: Opus can draw SVG directly, no extra tool.
-- **Story art (legacy)** — `<StoryArt slug variant>` mounts the case's Hairline figure on one shared kernel `src/lib/hairline/kernel.ts` (vendored verbatim; load nowhere else). Not interactive; plays only while selected/focused, loaders + ending always play. Hairline tiers mapped to palette in `.story-art`.
+- **Home painting** — `<BrushScene>` paints the home lighthouse with p5.brush (`p5.brush/standalone`, no p5; dynamic import, once per size, never animated; palette hues only; untyped via `src/types/p5-brush.d.ts`). Same painter extends to desk/start/reveal backdrops (user 2026-10-23: use p5.brush everywhere there is art).
+- **Case art (user 2026-10-23)** — every case ships `cover.svg|png` + suspect portraits + evidence scenes, all p5.brush-painted (see §12). `<Cover>` on picker card + reveal.
+- **Always Opus (user 2026-10-23, permanent)**: mystery story, its media (teaser, clips, voices, reveal) and its art are generated by Opus only. Any agent/skill doing that work runs `model: opus`; never Sonnet/Haiku. Same for the promo trailer.
 - **Sound** — `src/lib/sfx.ts`, WebAudio-synthesized, on by default, `kk:sound`, `<SoundToggle>`. Audio unlocks on first gesture. Hook sounds to events, never idle loops. Narrator voice removed.
-- Vendored kernel + generated `art.ts` excluded from ESLint, carry `// @ts-nocheck`.
 
 @MEMORY.md
 ## 15. Start flow, media (user decision 2026-10-23)
 
 - **Start = case first, team second, one page.** Pick a card; it locks small top-right with its title ("Change case" until the room exists), team-name panel beside it. "Open case" creates the room and goes straight to the desk; join code + QR live in the desk rail only (user 2026-10-23: the separate QR step before the desk felt meaningless). Why: team name before knowing the case was backwards; friends can scan before host enters.
 - **One leaderboard**, all cases, no per-case filter (§12).
-- **Media per case** (skill "Media phase"): files in `public/cases/<slug>/` (teaser.mp4 <=1MB silent loop for the picker card, reveal-<12 hex>.mp4 <=10MB + .vtt named in `solution.json` `reveal`, sent only in ended `ending` payload, never in public case.json; obscurity not auth, upgrade = ending-gated streaming route, evidence clips = `video` items, captions .vtt burned into the video too, so `<track>` is not `default` or they show twice, user 2026-10-23). Optional: no media = old StoryArt card. Rendered with the HyperFrames plugin (project-scope); voices from VoiceStudio (MCP `voicestudio` in `.mcp.json`, needs the app open), HyperFrames TTS as fallback. Evidence media never names the killer (same fairness rule as text). Earshot skipped (dev tool, not game audio).
+- **Media per case** (skill "Media phase"): files in `public/cases/<slug>/` (teaser.mp4 <=1MB silent loop for the picker card, reveal-<12 hex>.mp4 <=10MB + .vtt named in `solution.json` `reveal`, sent only in ended `ending` payload, never in public case.json; obscurity not auth, upgrade = ending-gated streaming route, evidence clips = `video` items, captions .vtt burned into the video too, so `<track>` is not `default` or they show twice, user 2026-10-23). Optional: no media = Cover (or nothing). Rendered with the HyperFrames plugin (project-scope); voices from VoiceStudio (MCP `voicestudio` in `.mcp.json`, needs the app open), HyperFrames TTS as fallback. Evidence media never names the killer (same fairness rule as text). Earshot skipped (dev tool, not game audio).

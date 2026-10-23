@@ -6,7 +6,7 @@ import anselCase from "./ansel-corbin-night-train-5s/case.json";
 import anselSolution from "./ansel-corbin-night-train-5s/solution.json";
 
 // Every case is a folder written by the murder-mystery-story-tree skill: case.json, solution.json,
-// lexicon.json, art.ts. Solutions are imported server-only. Words/art/card data: ./catalog.ts.
+// lexicon.json. Solutions are imported server-only. Words/card data: ./catalog.ts.
 // ponytail: static maps; move to a table if cases must be added without a deploy.
 
 const CASES: Record<string, CaseFile> = { "hollis-brandt-lighthouse-4s": hollisCase as CaseFile,

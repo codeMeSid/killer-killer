@@ -5,10 +5,9 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Cover } from "@/components/cover";
 import { CaseTeaser } from "@/components/case-video";
 import { FillButton } from "@/components/fill-button";
-import { StoryArt } from "@/components/story-art";
 import { sfx } from "@/lib/sfx";
 import { capitalize, DIFFICULTY_INK, postJson } from "@/lib/use-room";
-import { ART, CATALOG, COVERS, LEXICON, TEASERS } from "@/mysteries/catalog";
+import { CATALOG, COVERS, LEXICON, TEASERS } from "@/mysteries/catalog";
 
 /**
  * Two steps on one page. 1: pick a case cartridge. 2: the card locks small at the top right and the
@@ -65,7 +64,7 @@ export function CasePicker() {
       {card ? (
         <div className="grid items-start gap-8 md:grid-cols-[minmax(0,1fr)_14rem]">
           <div className="pixel-border pb-orange flex w-40 flex-col justify-self-end md:order-2 md:w-[calc(100%-6px)] motion-safe:animate-rise">
-            {COVERS[card.slug] ? <Cover slug={card.slug} src={COVERS[card.slug]} /> : ART[card.slug] && <StoryArt slug={card.slug} variant="card" play className="border-b border-blue/30" />}
+            {COVERS[card.slug] ? <Cover slug={card.slug} src={COVERS[card.slug]} /> : null}
             <div className="flex flex-col gap-2 p-3">
               <p className="font-pixel text-ui text-orange">{card.title}</p>
               <p className={`text-body ${DIFFICULTY_INK[card.difficulty] ?? "text-white"}`}>{capitalize(card.difficulty)}</p>
@@ -125,7 +124,7 @@ export function CasePicker() {
                 aria-label={`${c.title}, ${c.difficulty}`}
                 className="pixel-border pb-dim flex w-[calc(100%-6px)] flex-col self-stretch text-left transition-[box-shadow,transform] hover:pb-orange hover:-translate-y-1 focus-visible:pb-orange focus-visible:outline-none"
               >
-                {TEASERS[c.slug] ? <CaseTeaser slug={c.slug} src={TEASERS[c.slug]} className="aspect-video w-full border-b border-blue/30 object-cover" /> : COVERS[c.slug] ? <Cover slug={c.slug} src={COVERS[c.slug]} /> : ART[c.slug] && <StoryArt slug={c.slug} variant="card" play={false} className="border-b border-blue/30" />}
+                {TEASERS[c.slug] ? <CaseTeaser slug={c.slug} src={TEASERS[c.slug]} className="aspect-video w-full border-b border-blue/30 object-cover" /> : COVERS[c.slug] ? <Cover slug={c.slug} src={COVERS[c.slug]} /> : null}
                 <span className="flex flex-1 flex-col gap-3 p-5">
                   <span className="font-pixel text-ui text-white">{c.title}</span>
                   <span className="text-body text-white">{LEXICON[c.slug]?.card ?? c.setting}</span>

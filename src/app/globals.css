@@ -360,18 +360,6 @@ body {
   color: transparent;
 }
 
-/* Story art ink (components/story-art.tsx): Hairline's four stroke tiers mapped onto the palette.
-   Plates are obsidian so nearer solids hide farther ones; the orange tier is the one highlight. */
-.story-art {
-  --hairline-plate: var(--obsidian);
-  --hairline-hi: var(--orange);
-  --hairline-edge: var(--white);
-  --hairline-mid: var(--blue);
-  --hairline-lo: color-mix(in srgb, var(--blue) 45%, transparent);
-  --hairline-stroke: 1.1;
-  filter: drop-shadow(0 0 3px color-mix(in srgb, var(--blue) 55%, transparent));
-}
-
 /* Tape-loader stripes on the home computer's boot: palette bands scrolling inside one thin bar. */
 .raster {
   background-image: repeating-linear-gradient(
