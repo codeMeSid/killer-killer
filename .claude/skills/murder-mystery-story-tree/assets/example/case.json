@@ -149,7 +149,7 @@
           "id": "e1",
           "title": "Foot of the stairs",
           "kind": "photo",
-          "svg": "<svg viewBox=\"0 0 200 120\" xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"200\" height=\"120\" fill=\"#0B1215\"/><path d=\"M20 110 L60 20 L80 20 L50 110 Z\" fill=\"none\" stroke=\"#2472C8\" stroke-width=\"2\"/><path d=\"M60 40 L100 40 M55 62 L95 62 M50 84 L90 84\" stroke=\"#2472C8\" stroke-width=\"2\"/><path d=\"M130 100 q10 -20 30 -8 q10 8 20 4\" fill=\"none\" stroke=\"#D97757\" stroke-width=\"3\"/><circle cx=\"125\" cy=\"102\" r=\"4\" fill=\"#CD3131\"/><text x=\"12\" y=\"14\" fill=\"#E5E5E5\" font-size=\"8\">STAIR FOOT</text></svg>",
+          "svg": "<svg viewBox=\"0 0 200 120\" xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"200\" height=\"120\" fill=\"#0B1215\"/><path d=\"M20 110 L60 20 L80 20 L50 110 Z\" fill=\"none\" stroke=\"#3B8EEA\" stroke-width=\"2\"/><path d=\"M60 40 L100 40 M55 62 L95 62 M50 84 L90 84\" stroke=\"#3B8EEA\" stroke-width=\"2\"/><path d=\"M130 100 q10 -20 30 -8 q10 8 20 4\" fill=\"none\" stroke=\"#D97757\" stroke-width=\"3\"/><circle cx=\"125\" cy=\"102\" r=\"4\" fill=\"#E5484D\"/><text x=\"12\" y=\"14\" fill=\"#E5E5E5\" font-size=\"8\">STAIR FOOT</text></svg>",
           "caption": "Edda lay at the foot of the stairs. A coil of rope lies beside her."
         },
         {
@@ -222,7 +222,7 @@
           "id": "mp1",
           "title": "The rock",
           "kind": "map",
-          "svg": "<svg viewBox=\"0 0 200 120\" xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"200\" height=\"120\" fill=\"#0B1215\"/><rect x=\"80\" y=\"30\" width=\"40\" height=\"60\" fill=\"none\" stroke=\"#E5E5E5\" stroke-width=\"2\"/><path d=\"M0 100 q50 -10 80 -10 M120 90 q40 0 80 10\" stroke=\"#2472C8\" stroke-width=\"2\" fill=\"none\"/><circle cx=\"170\" cy=\"96\" r=\"5\" fill=\"#00FFB3\"/><text x=\"150\" y=\"112\" fill=\"#00FFB3\" font-size=\"7\">JETTY</text><text x=\"86\" y=\"62\" fill=\"#E5E5E5\" font-size=\"7\">TOWER</text></svg>",
+          "svg": "<svg viewBox=\"0 0 200 120\" xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"200\" height=\"120\" fill=\"#0B1215\"/><rect x=\"80\" y=\"30\" width=\"40\" height=\"60\" fill=\"none\" stroke=\"#E5E5E5\" stroke-width=\"2\"/><path d=\"M0 100 q50 -10 80 -10 M120 90 q40 0 80 10\" stroke=\"#3B8EEA\" stroke-width=\"2\" fill=\"none\"/><circle cx=\"170\" cy=\"96\" r=\"5\" fill=\"#00FFB3\"/><text x=\"150\" y=\"112\" fill=\"#00FFB3\" font-size=\"7\">JETTY</text><text x=\"86\" y=\"62\" fill=\"#E5E5E5\" font-size=\"7\">TOWER</text></svg>",
           "caption": "The tower stands between the bunk room and the jetty where the boat lies."
         }
       ]

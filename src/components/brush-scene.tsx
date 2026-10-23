@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 
 const WHITE = "#E5E5E5";
-const BLUE = "#2472C8";
+const BLUE = "#3B8EEA";
 const ORANGE = "#D97757";
 const OBSIDIAN = "#0B1215";
 

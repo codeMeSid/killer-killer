@@ -42,7 +42,7 @@ export function ItemBody({ item, slug }: { item: Item; slug: string }) {
         </figure>
       );
     case "video":
-      return <CaseVideo slug={slug} src={item.src} poster={item.poster} captions={item.captions} />;
+      return <CaseVideo slug={slug} src={item.src} poster={item.poster} />;
     case "log":
       return (
         <ul className="flex flex-col text-body">

@@ -3,7 +3,7 @@ import type { RoomView } from "@/lib/rooms";
 
 // In-code demo case for /dev/screens only. Not registered in src/mysteries/index.ts.
 
-const PHOTO = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 240"><rect width="400" height="240" fill="#0B1215"/><path d="M20 200H380M60 200V90H200V200M200 140H340V200" fill="none" stroke="#2472C8" stroke-width="3"/><ellipse cx="130" cy="185" rx="42" ry="9" fill="#CD3131"/><circle cx="300" cy="110" r="14" fill="none" stroke="#D97757" stroke-width="3"/><path d="M296 110h8M300 106v8" stroke="#D97757" stroke-width="2"/></svg>`;
+const PHOTO = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 240"><rect width="400" height="240" fill="#0B1215"/><path d="M20 200H380M60 200V90H200V200M200 140H340V200" fill="none" stroke="#3B8EEA" stroke-width="3"/><ellipse cx="130" cy="185" rx="42" ry="9" fill="#E5484D"/><circle cx="300" cy="110" r="14" fill="none" stroke="#D97757" stroke-width="3"/><path d="M296 110h8M300 106v8" stroke="#D97757" stroke-width="2"/></svg>`;
 
 export const DEMO_CASE: CaseFile = {
   schema: "mm-case-file/1",

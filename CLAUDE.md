@@ -8,10 +8,10 @@ Only these five text colors allowed anywhere in UI. No other color, no Tailwind 
 
 | Token | Hex | Tailwind class | Use for |
 |---|---|---|---|
-| red | `#CD3131` | `text-red` / `bg-red` / `border-red` | errors, failed state, destructive |
+| red | `#E5484D` | `text-red` / `bg-red` / `border-red` | errors, failed state, destructive |
 | green | `#00FFB3` | `text-green` / `bg-green` / `border-green` | success, connected, confirm |
 | white | `#E5E5E5` | `text-white` / `border-white` | primary text, headings |
-| blue | `#2472C8` | `text-blue` / `bg-blue` / `border-blue` | secondary/meta text, borders, links, pending |
+| blue | `#3B8EEA` | `text-blue` / `bg-blue` / `border-blue` | secondary/meta text, borders, links, pending |
 | orange | `#D97757` | `text-orange` / `bg-orange` / `border-orange` | warnings, degraded state, highlights/accents |
 
 - Tokens in `src/app/globals.css` under `:root` and `@theme inline`. Change there, never inline.
@@ -78,7 +78,7 @@ Triggers:
 How to apply:
 1. Existing section covers it → **edit that section** — no duplicate rule elsewhere.
 2. Else add new numbered section.
-3. Append one line to Decision log in `MEMORY.md`: `YYYY-MM-DD — what changed — why`.
+3. Append one line to Decision log in `docs/DECISIONS.md`: `YYYY-MM-DD — what changed — why`.
 4. Change affects code → make code match same turn. Rules and code never drift.
 
 Record *why*, not just *what*. Rule without reason gets reverted by next person finding it inconvenient.
@@ -110,7 +110,7 @@ Three layers (user decision 2026-10-15: "all of the above"), one guardrail: **te
 
 `MEMORY.md` (repo root) holds two things this file doesn't:
 
-- **Decision log** — every decision/correction, one dated line, append-only. Supersede old entries with new line; don't rewrite history.
+- **Decision log** (`docs/DECISIONS.md`, not imported) — every decision/correction, one dated line, append-only. Supersede old entries with new line; don't rewrite history.
 - **Memory** — live project state: what exists, what's open, known gotchas, env status. Edit in place to reflect *now*; delete lines no longer true.
 
 Rules here; history and state there. Update same turn as change (§8). Imported below → loads every session.
@@ -123,7 +123,7 @@ Rules here; history and state there. Update same turn as change (§8). Imported 
 - **Sender refetches itself:** after its own pin or accusation the device calls `useRoom().refresh()` (`onChanged`); the doorbell is for the *other* devices. Why: in the 2026-10-23 playthrough the guest got the verdict over Realtime but the host stayed on the desk; the host never waited on its own broadcast again.
 - **Pins** = shared evidence strip, `POST /pins` toggles; only folder items pinnable (`togglePin` rejects others).
 - **Guess race:** two guesses per room. Claim by `update rooms set guesses_used = n where status='playing' and guesses_used = n-1`; one request wins, other 409. Host-only (403 otherwise). Claim, guess row, end and result run in one transaction: SQL fn `submit_guess` (migration `20261023000000_guess_tx`, service_role only) called via `adminClient().rpc`. Why: separate writes could leave a room half-finished.
-- **Scene photos/maps = SVG drawn by model, palette-only** (`#CD3131 #00FFB3 #E5E5E5 #2472C8 #D97757 #0B1215`), shown via `<img>` data URI so scripts can't run (user, 2026-10-22). Validator rejects `<script`, `on…=`, `foreignObject`, external `href`.
+- **Scene photos/maps = SVG drawn by model, palette-only** (`#E5484D #00FFB3 #E5E5E5 #3B8EEA #D97757 #0B1215`), shown via `<img>` data URI so scripts can't run (user, 2026-10-22). Validator rejects `<script`, `on…=`, `foreignObject`, external `href`.
 - Leaderboard: single global board across all cases, `results` table, `GET /api/leaderboard` → `{board}` (top fifty, score desc then seconds asc). Rows before `BOARD_SINCE` (`rooms.ts`) are test runs: kept, hidden from board and ranks (user 2026-10-23).
 - Supabase config repo-tracked in `supabase/config.toml` (anonymous sign-ins on, 300/hour/IP). Change there + `npx supabase config push`; never click-edit dashboard. Review diff before confirming.
 - Engine-era rules (rounds, phases, personal options, votes, narrator) are gone.
@@ -133,7 +133,7 @@ Rules here; history and state there. Update same turn as change (§8). Imported 
 
 - **Type steps** (globals.css): `text-display`, `text-statement`, `text-ui`, `text-body`, `text-meta`. No other sizes in game screens.
 - **Layout:** header = team · clock · agents online · agent seat · sound. Join code lives only in the rail: everyone sees the code, host also the QR, at the top, always open, never in the header or a `<details>` (user 2026-10-23: code showed twice, collapsible hid it). ≥768px folders left, item window right, pinned strip; 375px folder list → full-screen item with back. Brief opens first.
-- **Information in white** (`text-body`+); blue `text-meta` decoration only. Why: blue 3.9:1 on obsidian, palette fixed → contrast from size + ink.
+- **Information in white** (`text-body`+); blue `text-meta` decoration only. Why: blue now 5.6:1 (lifted 2026-10-23 from 3.9:1 to pass AA); keep info in white anyway, blue = decoration.
 - **Disabled actions keep full-contrast label saying why**; only fill goes inactive. Never fade primary button with opacity. Accuse submit label says what is missing.
 - Wrong guess → `animate-glitch` + lexicon `wrong`, "One guess left". Ended → reveal (solved green / defeated red).
 - Counts in words, never digits in prose.

@@ -22,7 +22,7 @@ Ask in one short message for whatever is missing, then generate.
 2. **Seed at least two clues per part** (who / why / how), in different item kinds where you can (a statement slip, a document, a report detail). Back each part with different item kinds where possible.
 3. **Herrings + rule-outs**: every innocent suspect looks guilty somewhere and is cleared by items you name. Suicide/accident: every suspect needs one.
 4. **Write the folders**: statements as Q and A, reports with headed sections, logs, notes. Respect the rating ceiling. Keep sentences under 30 words, concrete nouns, no item may say who did it.
-5. **Draw SVG photos and map** (at least one photo): viewBox only, flat strokes and fills, palette only (`#CD3131 #00FFB3 #E5E5E5 #2472C8 #D97757`, background `#0B1215`), no scripts, no external links. A detail the deductions use must be visible in it.
+5. **Draw SVG photos and map** (at least one photo): viewBox only, flat strokes and fills, palette only (`#E5484D #00FFB3 #E5E5E5 #3B8EEA #D97757`, background `#0B1215`), no scripts, no external links. A detail the deductions use must be visible in it.
 6. **Lexicon**: `lexicon.json` per `references/lexicon.md`.
 7. **Cover**: draw `public/cases/<slug>/cover.svg` yourself (Opus writes the SVG; no raster generator, no Hairline). 16:9 `viewBox="0 0 640 360"`, flat strokes and fills, palette only, no scripts/external links/text digits, must not show or hint the killer. Set `media.cover = "cover.svg"` in `case.json`. Draw each photo/map item the same way (step 5): that is the evidence art.
 8. **Validate to 0 errors, 0 warnings**: `python3 -I scripts/validate_case.py <dir>` and `... --lexicon <dir>/lexicon.json`.

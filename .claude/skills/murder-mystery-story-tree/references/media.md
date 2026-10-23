@@ -28,7 +28,7 @@ npx hyperframes render --quality looks --output out.mp4   # also --quality draft
 Read plugin skills `/hyperframes-cli`, `/hyperframes-core`, `/hyperframes-audio`, `/media-use`, `/captions-overlay` before authoring. Never render until `check` passes. Size over budget: lower `--quality`, shorten, drop fps (e.g. `--fps 24`), check with `ls -l` then `ffprobe`.
 
 ## Look (palette only)
-Canvas 1280x720 (`data-width`/`data-height`). Background `#0B1215`. Ink `#E5E5E5` (text), `#2472C8` (rules, meta), `#D97757` (accent), `#00FFB3` (ok), `#CD3131` (alert). Square borders: `border: 4px solid`, `border-radius: 0`, hard 4px offset shadows only in palette hue. No gradients, no blur, no other colours. Fonts: Pixelify Sans / VT323 (headings), IBM Plex Mono 600 (anything read). Captions in Plex Mono, white on obsidian bar, bottom third, max two lines, >= 36px.
+Canvas 1280x720 (`data-width`/`data-height`). Background `#0B1215`. Ink `#E5E5E5` (text), `#3B8EEA` (rules, meta), `#D97757` (accent), `#00FFB3` (ok), `#E5484D` (alert). Square borders: `border: 4px solid`, `border-radius: 0`, hard 4px offset shadows only in palette hue. No gradients, no blur, no other colours. Fonts: Pixelify Sans / VT323 (headings), IBM Plex Mono 600 (anything read). Captions in Plex Mono, white on obsidian bar, bottom third, max two lines, >= 36px.
 Motion: GSAP, hard `steps()` or `power3` ease, no flashing over 3/sec. Teaser may use scanline drift; nothing moves under text being read.
 
 ## Composition skeleton

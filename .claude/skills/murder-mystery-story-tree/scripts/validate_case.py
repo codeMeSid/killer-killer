@@ -11,7 +11,7 @@ import re
 import sys
 from pathlib import Path
 
-PALETTE = {"#cd3131", "#00ffb3", "#e5e5e5", "#2472c8", "#d97757", "#0b1215"}
+PALETTE = {"#E5484D", "#00ffb3", "#e5e5e5", "#3B8EEA", "#d97757", "#0b1215"}
 SIZES = {"easy": ((3, 4), (10, 16)), "medium": ((4, 5), (16, 24)), "hard": ((5, 7), (24, 34))}
 FOLDERS = {"suspects", "statements", "reports", "evidence", "documents", "timeline", "map", "extras"}
 PARTS = ("who", "why", "how")

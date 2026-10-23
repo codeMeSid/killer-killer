@@ -40,7 +40,7 @@ export function Reveal({ view, words }: { view: RoomView & { ending: NonNullable
           {solution.reveal && (
             <section className="flex flex-col gap-3 border-t border-blue/30 pt-4">
               <h2 className="font-pixel text-ui text-white">Watch it unfold</h2>
-              <CaseVideo slug={view.slug} src={solution.reveal} captions={solution.reveal.replace(/\.mp4$/, ".vtt")} />
+              <CaseVideo slug={view.slug} src={solution.reveal} />
             </section>
           )}
           <section className="flex flex-col gap-3 border-t border-blue/30 pt-4">

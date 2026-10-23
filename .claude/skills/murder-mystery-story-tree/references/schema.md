@@ -42,7 +42,7 @@ The host accuses who (a suspect, or nobody) + why (motive) + how (method).
 | `names_killer` | no item text says "<killer> killed" or "<killer> is the killer" |
 | `herring_unruled` | every non-killer suspect has a `herrings` entry with rule-out items (suicide: every suspect) |
 | `svg_unsafe` | SVG has no `<script`, `on...=`, `foreignObject`, or external `href` |
-| `svg_colour` | SVG hex colours only `#CD3131 #00FFB3 #E5E5E5 #2472C8 #D97757 #0B1215` |
+| `svg_colour` | SVG hex colours only `#E5484D #00FFB3 #E5E5E5 #3B8EEA #D97757 #0B1215` |
 | `difficulty_size` | easy 3-4 suspects, 10-16 items; medium 4-5, 16-24; hard 5-7, 24-34 |
 | `option_count` | 4-6 motives and methods, ids in order, answer id present, no duplicate text |
 | `unknown_item` | deductions and herrings cite only existing item ids |
