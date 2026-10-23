@@ -27,7 +27,7 @@ export function AccusePanel({
   c: CaseFile;
   guessesLeft: number;
   onClose: () => void;
-  onSent?: () => void;
+  onSent?: () => Promise<unknown> | void;
   d: Draft;
   setD: Dispatch<SetStateAction<Draft>>;
 }) {
@@ -65,7 +65,7 @@ export function AccusePanel({
     sfx.stamp();
     const res = await postJson<{ correct: boolean }>(`/api/rooms/${code}/guesses`, { who: d.who, nobody: d.nobody, motive: d.motive, method: d.method });
     if (res.success) {
-      onSent?.(); // sender refetches itself; the doorbell brings the verdict to the other devices
+      await onSent?.(); // sender refetches itself (panel stays up till the verdict lands, no blank desk); the doorbell brings it to the others
       onClose();
     }
     else {
@@ -155,6 +155,7 @@ export function AccusePanel({
       </div>
 
       <div className="sticky bottom-0 flex flex-col gap-3 border-t border-blue/30 bg-background pt-3 pb-[env(safe-area-inset-bottom)] lg:static lg:max-w-lg lg:border-t-0 lg:pt-0">
+        {busy && <p role="status" className="text-body text-orange motion-safe:animate-flicker-in">Checking the accusation…</p>}
         <p key={recap} className="pixel-border pb-blue w-[calc(100%-6px)] p-3 text-body text-white motion-safe:animate-print">
           <span className="text-blue">Accusation slip: </span>
           {recap || "nothing picked yet."}

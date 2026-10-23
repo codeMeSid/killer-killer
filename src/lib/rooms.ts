@@ -1,4 +1,5 @@
 import "server-only";
+import { after } from "next/server";
 import { ApiError } from "@/lib/api";
 import { adminClient } from "@/lib/supabase/admin";
 import { judge, validateGuess } from "@/lib/case/judge";
@@ -85,6 +86,7 @@ async function agentOf(room: RoomRow, userId: string): Promise<number> {
  * Doorbell only: an empty broadcast on the private `room:<CODE>` channel, sent over HTTP with the
  * secret key. Nothing secret can ride it; a failed ping just means clients refetch on reconnect.
  */
+// Runs after the response (`after`): the sender never waits on the broadcast round trip.
 async function ring(code: string) {
   const db = adminClient();
   const channel = db.channel(`room:${code}`, { config: { private: true } });
@@ -148,7 +150,7 @@ export async function joinRoom(rawCode: string, userId: string): Promise<{ code:
   const { error: iErr } = await db.from("members").insert({ room_id: room.id, user_id: userId, agent });
   if (iErr?.code === UNIQUE_VIOLATION) throw new ApiError("Someone took that seat a moment ago. Try again.", 409);
   if (iErr) throw iErr;
-  await ring(room.code);
+  after(() => ring(room.code));
   return { code: room.code };
 }
 
@@ -235,7 +237,7 @@ export async function togglePin(rawCode: string, userId: string, itemId: unknown
     const { error: iErr } = await db.from("pins").insert({ room_id: room.id, item_id: itemId, agent });
     if (iErr && iErr.code !== UNIQUE_VIOLATION) throw iErr; // a racing pin already did the job
   }
-  await ring(room.code);
+  after(() => ring(room.code));
   return { pinned: !removed?.length };
 }
 
@@ -268,7 +270,7 @@ export async function submitGuess(rawCode: string, userId: string, raw: unknown)
   });
   if (error) throw error;
   if (!claimed) throw new ApiError("Already answered", 409);
-  await ring(room.code);
+  after(() => ring(room.code));
   return { correct, guessesUsed: n };
 }
 

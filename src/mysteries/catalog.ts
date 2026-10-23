@@ -26,8 +26,8 @@ export const COVERS: Record<string, string> = { "hollis-brandt-lighthouse-4s": "
 
 /** Suspect portrait URL per slug, keyed by suspect index (case.json order) as string. None = monogram tile. */
 export const PORTRAITS: Record<string, Record<string, string>> = {
-  "hollis-brandt-lighthouse-4s": { "0": "/cases/hollis-brandt-lighthouse-4s/suspects/wren-doyle.svg", "1": "/cases/hollis-brandt-lighthouse-4s/suspects/iris-venn.svg", "2": "/cases/hollis-brandt-lighthouse-4s/suspects/callum-pryce.svg", "3": "/cases/hollis-brandt-lighthouse-4s/suspects/marta-quill.svg" },
-  "ansel-corbin-night-train-5s": { "0": "/cases/ansel-corbin-night-train-5s/suspects/tilda-reeve.svg", "1": "/cases/ansel-corbin-night-train-5s/suspects/dr-osric-pell.svg", "2": "/cases/ansel-corbin-night-train-5s/suspects/ivo-sandre.svg", "3": "/cases/ansel-corbin-night-train-5s/suspects/calla-wren.svg", "4": "/cases/ansel-corbin-night-train-5s/suspects/bram-okafor.svg" },
+  "hollis-brandt-lighthouse-4s": { "0": "/cases/hollis-brandt-lighthouse-4s/suspects/wren-doyle.webp", "1": "/cases/hollis-brandt-lighthouse-4s/suspects/iris-venn.webp", "2": "/cases/hollis-brandt-lighthouse-4s/suspects/callum-pryce.webp", "3": "/cases/hollis-brandt-lighthouse-4s/suspects/marta-quill.webp" },
+  "ansel-corbin-night-train-5s": { "0": "/cases/ansel-corbin-night-train-5s/suspects/tilda-reeve.webp", "1": "/cases/ansel-corbin-night-train-5s/suspects/dr-osric-pell.webp", "2": "/cases/ansel-corbin-night-train-5s/suspects/ivo-sandre.webp", "3": "/cases/ansel-corbin-night-train-5s/suspects/calla-wren.webp", "4": "/cases/ansel-corbin-night-train-5s/suspects/bram-okafor.webp" },
 };
 
 export function lexiconFor(slug: string): Lexicon {

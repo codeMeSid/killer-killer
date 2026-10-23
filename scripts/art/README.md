@@ -6,7 +6,7 @@ Every image is a p5.brush painting rendered once in headless Chromium and commit
 node scripts/art/render.mjs scripts/art/paintings/<name>.mjs public/cases/<slug>/<out>.webp [w h]
 ```
 
-Default size 1280x720 (16:9, what `<Cover>` shows). Takes about 40s (software GL). Needs `playwright-core` (devDependency) and a cached Chromium (`npx playwright-core install chromium` if missing).
+Default size 1280x720 (16:9, what `<Cover>` shows). Takes 1-7 minutes with many large washes (software GL); run in background. Needs `playwright-core` (devDependency) and a cached Chromium (`npx playwright-core install chromium` if missing).
 
 ## New painting
 
@@ -24,7 +24,7 @@ export default async function paint(brush, { W, H }) {
 
 Look at the output (open the image), iterate. Reference: `paintings/lighthouse-cover.mjs`.
 
-- Kit: `begin wash ink hatchRect stars sea glow beam bust frame vignette rng`. Add helpers there, not in paintings.
-- `bust` uses one face for everyone; vary hair, clothes, accessory, accent only. Never hint the killer.
+- Kit: `begin wash blob ink hatchRect stars sea glow beam bust frame grain vignette rng`. Prefer filled `wash` masses over outlines (painterly look). Add helpers there, not in paintings.
+- `bust` uses one face for everyone; vary hair, clothes, collar, accessory, age, tilt, accent only. Never hint the killer. Suspects: `scripts/art/paintings/suspects-<slug>.mjs` (specs list) + `node scripts/art/render-suspects.mjs <slug> [index]` -> `suspects/<name-slug>.webp` 512x512.
 - Wash alpha is scaled x2.6 in `wash`; glow x3 (p5.brush fills read faint).
 - Portraits: `suspects/<name-slug>.webp`. Evidence: `evidence/<item-id>.webp`. Cover: `cover.webp`. Register in `src/mysteries/catalog.ts`.

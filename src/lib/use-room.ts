@@ -44,11 +44,12 @@ export function useRoom(code: string) {
   const [reading, setReading_] = useState<Map<string, number[]>>(() => new Map());
   const chan = useRef<RealtimeChannel | null>(null);
   const mine = useRef<Presence>({ agent: 0, itemId: null });
-  const refetch = useRef<() => void>(() => {});
+  const refetch = useRef<() => Promise<unknown>>(async () => {});
 
   useEffect(() => {
     let live = true;
     let client: ReturnType<typeof createClient> | null = null;
+    let beat: ReturnType<typeof setInterval> | undefined;
     // State is only ever set in these promise callbacks, never synchronously in the effect.
     const refresh = () =>
       fetchView(code).then((res) => {
@@ -62,7 +63,7 @@ export function useRoom(code: string) {
         return null;
       });
 
-    refetch.current = () => void refresh();
+    refetch.current = refresh;
     void refresh().then(async (first) => {
       if (!live || !first) return;
       client = createClient();
@@ -88,11 +89,15 @@ export function useRoom(code: string) {
       // Re-read presence on every doorbell too: a late presence_diff once left a guest on "one agent online".
       ch.on("broadcast", { event: "state" }, () => {
         void refresh();
+        // Re-assert our own presence too: a reordered leave/join once left a guest on "three agents" for minutes.
+        void ch.track(mine.current);
         sync();
       }).on("presence", { event: "sync" }, sync);
       ch.subscribe((status) => {
         if (status !== "SUBSCRIBED") return;
         void ch.track(mine.current);
+        clearInterval(beat);
+        beat = setInterval(() => void ch.track(mine.current), 10_000); // heals any lost presence diff
         // Missed pings while offline are caught up on every (re)subscribe.
         void refresh();
       });
@@ -100,6 +105,7 @@ export function useRoom(code: string) {
 
     return () => {
       live = false;
+      clearInterval(beat);
       if (client && chan.current) void client.removeChannel(chan.current);
       chan.current = null;
       // Next keeps hidden routes mounted in <Activity>; wipe so the next visit starts clean.

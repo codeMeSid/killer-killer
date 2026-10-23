@@ -52,7 +52,7 @@ export function Desk({
   reading: Record<string, number[]>;
   onReading?: (itemId: string | null) => void;
   /** Called after this device changes the room (pin, accusation) so it refetches without waiting for its own doorbell. */
-  onChanged?: () => void;
+  onChanged?: () => Promise<unknown> | void;
   lexicon?: Lexicon;
   initial?: DeskInitial;
 }) {

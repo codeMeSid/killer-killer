@@ -28,6 +28,7 @@ window.__done = true;
 
 const browser = await chromium.launch({ args: ["--use-gl=angle", "--use-angle=swiftshader", "--enable-unsafe-swiftshader", "--ignore-gpu-blocklist"] });
 const page = await browser.newPage({ viewport: { width: W, height: H } });
+await page.addInitScript(`window.__spec = ${JSON.stringify(process.env.KK_SPEC ?? null)};`); // painting modules can read which spec to paint
 page.on("console", (m) => m.type() === "error" && console.error("page:", m.text()));
 await page.route("http://art.local/**", async (route) => {
   const p = decodeURIComponent(new URL(route.request().url()).pathname);
