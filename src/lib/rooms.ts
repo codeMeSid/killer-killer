@@ -152,11 +152,15 @@ export async function joinRoom(rawCode: string, userId: string): Promise<{ code:
   return { code: room.code };
 }
 
+/** Results older than this are 2026-10-23 test runs, kept in the table but hidden from the board and ranks (user: don't delete, just don't show). */
+const BOARD_SINCE = "2026-10-24T00:00:00Z";
+
 /** Place on the one board: higher score first, then faster. Rank = 1 + rows strictly ahead (same order as `leaderboard()`). */
 async function rankOf(r: { score: number; seconds: number }) {
   const { count, error } = await adminClient()
     .from("results")
     .select("room_id", { count: "exact", head: true })
+    .gte("created_at", BOARD_SINCE)
     .or(`score.gt.${r.score},and(score.eq.${r.score},seconds.lt.${r.seconds})`);
   if (error) throw error;
   return (count ?? 0) + 1;
@@ -294,6 +298,7 @@ export async function leaderboard() {
   const { data, error } = await adminClient()
     .from("results")
     .select("team, case_slug, guesses, seconds, score")
+    .gte("created_at", BOARD_SINCE)
     .order("score", { ascending: false })
     .order("seconds")
     .limit(50)

@@ -83,6 +83,10 @@ How to apply:
 
 Record *why*, not just *what*. Rule without reason gets reverted by next person finding it inconvenient.
 
+## 8a. Branches
+
+**Work on `main` only** (user 2026-10-23). No feature branches; `feat/case-file` merged into main. Commit on main when asked; push only on ask. Why: solo project, one line of history.
+
 ## 9. Compact at 50% context
 
 Context usage hits **50%** → compact before continuing. Don't wait for 95% auto-compact — forced compact at ceiling drops detail mid-task.
@@ -119,7 +123,7 @@ Rules here; history and state there. Update same turn as change (§8). Imported 
 - **Pins** = shared evidence strip, `POST /pins` toggles; only folder items pinnable (`togglePin` rejects others).
 - **Guess race:** two guesses per room. Claim by `update rooms set guesses_used = n where status='playing' and guesses_used = n-1`; one request wins, other 409. Host-only (403 otherwise). Known gap: later writes (guess row, end, result) are separate, not one transaction.
 - **Scene photos/maps = SVG drawn by model, palette-only** (`#CD3131 #00FFB3 #E5E5E5 #2472C8 #D97757 #0B1215`), shown via `<img>` data URI so scripts can't run (user, 2026-10-22). Validator rejects `<script`, `on…=`, `foreignObject`, external `href`.
-- Leaderboard: single global board across all cases, `results` table, `GET /api/leaderboard` → `{board}` (top fifty, score desc then seconds asc).
+- Leaderboard: single global board across all cases, `results` table, `GET /api/leaderboard` → `{board}` (top fifty, score desc then seconds asc). Rows before `BOARD_SINCE` (`rooms.ts`) are test runs: kept, hidden from board and ranks (user 2026-10-23).
 - Supabase config repo-tracked in `supabase/config.toml` (anonymous sign-ins on, 300/hour/IP). Change there + `npx supabase config push`; never click-edit dashboard. Review diff before confirming.
 - Engine-era rules (rounds, phases, personal options, votes, narrator) are gone.
 - `/dev/screens?s=desk|desk-item|accuse|wrong|solved|defeated` renders desk screens from in-code demo case (`src/components/dev/demo-case.ts`), no DB; 404 in production.
