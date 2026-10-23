@@ -72,7 +72,7 @@ export function useRoom(code: string) {
       mine.current = { agent: first.me, itemId: mine.current.itemId };
       const ch = client.channel(`room:${code}`, { config: { private: true, presence: { key: String(first.me) } } });
       chan.current = ch;
-      ch.on("broadcast", { event: "state" }, () => void refresh()).on("presence", { event: "sync" }, () => {
+      const sync = () => {
         if (!live) return;
         const on = new Set<number>();
         const map = new Map<string, number[]>();
@@ -84,7 +84,12 @@ export function useRoom(code: string) {
         }
         setOnline(on);
         setReading_(map);
-      });
+      };
+      // Re-read presence on every doorbell too: a late presence_diff once left a guest on "one agent online".
+      ch.on("broadcast", { event: "state" }, () => {
+        void refresh();
+        sync();
+      }).on("presence", { event: "sync" }, sync);
       ch.subscribe((status) => {
         if (status !== "SUBSCRIBED") return;
         void ch.track(mine.current);

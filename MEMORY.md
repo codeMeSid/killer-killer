@@ -107,3 +107,4 @@ Project memory + decision log. Rules in `CLAUDE.md`; this file = state + history
 - 2026-10-23 — Start flow: dropped the post-create QR/code step, Open case → desk directly (rail shows code + QR) — user: that screen looked meaningless; supersedes 2026-10-23 start-flow QR panel. Room-on-pick (QR on team screen) offered, not chosen.
 - 2026-10-23 — Case video `<track>` no longer `default` — burned-in captions + vtt showed twice (user screenshot); vtt kept selectable.
 - 2026-10-23 — Accuse screen → interrogation board (suspect portrait cards, SLIP strips, sticky slip, confirm + stamp sfx); `PORTRAITS` keyed by suspect index — user chose board + model-drawn portraits + confirm ceremony.
+- 2026-10-23 — Presence re-read on every `state` doorbell (`use-room.ts`) — guest once stuck on "one agent online" after a late presence_diff; 3 fresh rooms did not repro, so hardening not proven root cause.
