@@ -1,0 +1,319 @@
+{
+  "schema": "mm-case-file/1",
+  "slug": "hollis-brandt-lighthouse-4s",
+  "title": "The Dark Panel",
+  "difficulty": "easy",
+  "rating": "PG-13",
+  "setting": "A lighthouse on a rock, one night before the inspection is signed",
+  "tone": "salt-damp, watchful, cold",
+  "victim": {
+    "name": "Hollis Brandt",
+    "summary": "Head keeper of Gannet Rock, found dead on the lamp-room floor."
+  },
+  "brief": "Hollis Brandt kept the Gannet Rock light for twenty-two years. At eleven that night the lamp went dark. The assistant keeper and the inspector climbed the tower and found him on the lamp-room floor. Four others had been on the rock that night.",
+  "suspects": [
+    {
+      "name": "Wren Doyle",
+      "role": "Assistant keeper",
+      "relation": "Worked beside Hollis for six years",
+      "alibi": "Says she was in the kitchen all night with the inspector.",
+      "note": "Tired, tied to the log book."
+    },
+    {
+      "name": "Iris Venn",
+      "role": "Lens engineer",
+      "relation": "Came out two weeks ago to service the lens",
+      "alibi": "Says she was in the workshop until the lamp went dark.",
+      "note": "Precise. Dislikes being watched."
+    },
+    {
+      "name": "Callum Pryce",
+      "role": "Supply skipper",
+      "relation": "Brings the stores each month",
+      "alibi": "Says he was aboard his boat from nine.",
+      "note": "Loud. Owes money in every port."
+    },
+    {
+      "name": "Marta Quill",
+      "role": "Board inspector",
+      "relation": "Here to sign off the yearly inspection",
+      "alibi": "Says she played cards with Wren.",
+      "note": "Dry, exact, takes notes."
+    }
+  ],
+  "folders": [
+    {
+      "id": "f1",
+      "kind": "suspects",
+      "title": "Suspects",
+      "items": [
+        {
+          "id": "su1",
+          "title": "Who held the keys",
+          "kind": "note",
+          "body": "Hollis, Wren and Iris each held a tower key. Callum and Marta held none. The tower door was found on the latch."
+        }
+      ]
+    },
+    {
+      "id": "f2",
+      "kind": "statements",
+      "title": "Statements",
+      "items": [
+        {
+          "id": "st1",
+          "title": "Wren Doyle",
+          "kind": "statement",
+          "speaker": "Wren Doyle",
+          "lines": [
+            {
+              "q": "Where were you at ten?",
+              "a": "In the kitchen with Marta, playing cards. We did not leave until the lamp went dark."
+            },
+            {
+              "q": "Did you hear anything?",
+              "a": "Steps came down the tower stairs not long after ten. Quick and light. Then the workshop door shut. I thought it was Hollis."
+            }
+          ]
+        },
+        {
+          "id": "st2",
+          "title": "Iris Venn",
+          "kind": "statement",
+          "speaker": "Iris Venn",
+          "lines": [
+            {
+              "q": "Where were you last night?",
+              "a": "In the workshop from half past nine, cleaning prisms. I never left the ground floor."
+            },
+            {
+              "q": "Did you see Hollis?",
+              "a": "At supper. He said he would check the lens at ten. Nothing more."
+            }
+          ]
+        },
+        {
+          "id": "st3",
+          "title": "Callum Pryce",
+          "kind": "statement",
+          "speaker": "Callum Pryce",
+          "lines": [
+            {
+              "q": "When did you leave the rock?",
+              "a": "Nine. I crossed the causeway to my boat and stayed aboard."
+            },
+            {
+              "q": "Did Hollis owe you anything?",
+              "a": "He paid me last month. We were square."
+            }
+          ]
+        },
+        {
+          "id": "st4",
+          "title": "Marta Quill",
+          "kind": "statement",
+          "speaker": "Marta Quill",
+          "lines": [
+            {
+              "q": "Who were you with at ten?",
+              "a": "Wren, at cards, in the kitchen. I wrote down the hands from habit."
+            },
+            {
+              "q": "Did Hollis seem troubled?",
+              "a": "He was short with everyone. He said the lens needed a hard look."
+            },
+            {
+              "q": "Did you hear anything?",
+              "a": "Someone came quick down the tower stairs, then the workshop door shut. Wren heard it too."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "f3",
+      "kind": "reports",
+      "title": "Reports",
+      "items": [
+        {
+          "id": "r1",
+          "title": "Coroner's note",
+          "kind": "report",
+          "sections": [
+            {
+              "heading": "Cause",
+              "body": "One blow to the back of the head from a heavy narrow bar."
+            },
+            {
+              "heading": "Time",
+              "body": "Between ten and eleven at night."
+            },
+            {
+              "heading": "Stomach",
+              "body": "Supper only. Nothing else."
+            }
+          ]
+        },
+        {
+          "id": "r2",
+          "title": "Scene report",
+          "kind": "report",
+          "sections": [
+            {
+              "heading": "Stairs and gallery rail",
+              "body": "Both sound. No marks of a fall."
+            },
+            {
+              "heading": "Lamp room",
+              "body": "The lens still turns. A damp rag lies by the door, with a grey paste that smells of spirit. The wick is burnt dry. No one trimmed it after ten."
+            },
+            {
+              "heading": "Door",
+              "body": "Tower door on the latch. No force used."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "f4",
+      "kind": "evidence",
+      "title": "Evidence",
+      "items": [
+        {
+          "id": "e1",
+          "title": "The lamp room",
+          "kind": "photo",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 320 200\"><rect width=\"320\" height=\"200\" fill=\"#0B1215\"/><line x1=\"0\" y1=\"170\" x2=\"320\" y2=\"170\" stroke=\"#2472C8\" stroke-width=\"2\"/><rect x=\"170\" y=\"30\" width=\"120\" height=\"140\" fill=\"none\" stroke=\"#D97757\" stroke-width=\"3\"/><line x1=\"210\" y1=\"30\" x2=\"210\" y2=\"170\" stroke=\"#D97757\" stroke-width=\"2\"/><line x1=\"250\" y1=\"30\" x2=\"250\" y2=\"170\" stroke=\"#D97757\" stroke-width=\"2\"/><line x1=\"174\" y1=\"50\" x2=\"206\" y2=\"50\" stroke=\"#E5E5E5\" stroke-width=\"2\"/><line x1=\"174\" y1=\"70\" x2=\"206\" y2=\"70\" stroke=\"#E5E5E5\" stroke-width=\"2\"/><line x1=\"174\" y1=\"90\" x2=\"206\" y2=\"90\" stroke=\"#E5E5E5\" stroke-width=\"2\"/><line x1=\"174\" y1=\"110\" x2=\"206\" y2=\"110\" stroke=\"#E5E5E5\" stroke-width=\"2\"/><line x1=\"174\" y1=\"130\" x2=\"206\" y2=\"130\" stroke=\"#E5E5E5\" stroke-width=\"2\"/><line x1=\"174\" y1=\"150\" x2=\"206\" y2=\"150\" stroke=\"#E5E5E5\" stroke-width=\"2\"/><line x1=\"254\" y1=\"50\" x2=\"286\" y2=\"50\" stroke=\"#E5E5E5\" stroke-width=\"2\"/><line x1=\"254\" y1=\"70\" x2=\"286\" y2=\"70\" stroke=\"#E5E5E5\" stroke-width=\"2\"/><line x1=\"254\" y1=\"90\" x2=\"286\" y2=\"90\" stroke=\"#E5E5E5\" stroke-width=\"2\"/><line x1=\"254\" y1=\"110\" x2=\"286\" y2=\"110\" stroke=\"#E5E5E5\" stroke-width=\"2\"/><line x1=\"254\" y1=\"130\" x2=\"286\" y2=\"130\" stroke=\"#E5E5E5\" stroke-width=\"2\"/><line x1=\"254\" y1=\"150\" x2=\"286\" y2=\"150\" stroke=\"#E5E5E5\" stroke-width=\"2\"/><rect x=\"214\" y=\"36\" width=\"32\" height=\"128\" fill=\"none\" stroke=\"#2472C8\" stroke-width=\"2\" stroke-dasharray=\"6 4\"/><circle cx=\"70\" cy=\"152\" r=\"12\" fill=\"none\" stroke=\"#E5E5E5\" stroke-width=\"3\"/><rect x=\"82\" y=\"142\" width=\"64\" height=\"20\" fill=\"none\" stroke=\"#E5E5E5\" stroke-width=\"3\"/><line x1=\"40\" y1=\"170\" x2=\"40\" y2=\"30\" stroke=\"#2472C8\" stroke-width=\"2\"/></svg>",
+          "caption": "Hollis lay beside the lens. The middle panel of the lens is plain flat glass, with no prism cut."
+        },
+        {
+          "id": "e2",
+          "title": "Brass bar",
+          "kind": "note",
+          "body": "A heavy brass bar was pushed behind the lamp-room oil drum and wiped. Its grip is wound with blue cloth tape, the same tape that hangs in the workshop."
+        }
+      ]
+    },
+    {
+      "id": "f5",
+      "kind": "documents",
+      "title": "Documents",
+      "items": [
+        {
+          "id": "d1",
+          "title": "Hollis's log page",
+          "kind": "note",
+          "body": "Counted the lens again by glass. The middle panel rings dull. It is plain glass, not a prism. Someone has swapped it. I will ask the engineer in the lamp room at ten."
+        },
+        {
+          "id": "d2",
+          "title": "Dealer's letter",
+          "kind": "note",
+          "body": "Dear Ms Venn: we accept the cut prisms at the price agreed. Lens grade, no chips. Payment on collection at Harbour Salvage."
+        }
+      ]
+    },
+    {
+      "id": "f6",
+      "kind": "timeline",
+      "title": "Timeline",
+      "items": [
+        {
+          "id": "t1",
+          "title": "Night log",
+          "kind": "log",
+          "rows": [
+            {
+              "at": "Eight at night",
+              "text": "Supper in the kitchen. All five sit down. Hollis says he will check the lens at ten."
+            },
+            {
+              "at": "Nine at night",
+              "text": "Callum crosses the causeway to his boat."
+            },
+            {
+              "at": "Half past nine",
+              "text": "Iris goes to the workshop."
+            },
+            {
+              "at": "Ten at night",
+              "text": "Hollis climbs the tower. Wren and Marta start cards in the kitchen."
+            },
+            {
+              "at": "Half past ten",
+              "text": "Callum radios from his boat. Marta answers."
+            },
+            {
+              "at": "Eleven at night",
+              "text": "The lamp goes dark. Wren and Marta climb together and find Hollis."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "f7",
+      "kind": "map",
+      "title": "Map",
+      "items": [
+        {
+          "id": "mp1",
+          "title": "The rock",
+          "kind": "map",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 320 200\"><rect width=\"320\" height=\"200\" fill=\"#0B1215\"/><path d=\"M10 120 Q60 60 160 70 Q250 80 300 120\" fill=\"none\" stroke=\"#2472C8\" stroke-width=\"2\"/><circle cx=\"120\" cy=\"60\" r=\"18\" fill=\"none\" stroke=\"#D97757\" stroke-width=\"3\"/><text x=\"96\" y=\"30\" fill=\"#E5E5E5\" font-size=\"12\">Tower</text><rect x=\"40\" y=\"78\" width=\"46\" height=\"26\" fill=\"none\" stroke=\"#E5E5E5\" stroke-width=\"2\"/><text x=\"40\" y=\"118\" fill=\"#E5E5E5\" font-size=\"12\">Kitchen</text><rect x=\"150\" y=\"78\" width=\"46\" height=\"26\" fill=\"none\" stroke=\"#E5E5E5\" stroke-width=\"2\"/><text x=\"150\" y=\"118\" fill=\"#E5E5E5\" font-size=\"12\">Workshop</text><line x1=\"200\" y1=\"92\" x2=\"300\" y2=\"92\" stroke=\"#2472C8\" stroke-width=\"3\" stroke-dasharray=\"6 4\"/><text x=\"214\" y=\"82\" fill=\"#2472C8\" font-size=\"12\">Causeway</text><rect x=\"292\" y=\"82\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"#E5E5E5\" stroke-width=\"2\"/><text x=\"256\" y=\"124\" fill=\"#E5E5E5\" font-size=\"12\">Jetty, boat</text></svg>",
+          "caption": "The tower stands between the kitchen and the workshop. The causeway runs from the workshop side to the jetty."
+        }
+      ]
+    },
+    {
+      "id": "f8",
+      "kind": "extras",
+      "title": "Extras",
+      "items": [
+        {
+          "id": "x1",
+          "title": "Tide table",
+          "kind": "note",
+          "body": "The tide covers the causeway from ten at night until midnight. No one crosses in either direction."
+        }
+      ]
+    }
+  ],
+  "motives": [
+    {
+      "id": "m1",
+      "text": "Hollis refused a place on the new lens contract."
+    },
+    {
+      "id": "m2",
+      "text": "The lens prisms were sold, and Hollis found out."
+    },
+    {
+      "id": "m3",
+      "text": "Hollis would not lend any more money."
+    },
+    {
+      "id": "m4",
+      "text": "Hollis meant to report someone to the board."
+    }
+  ],
+  "methods": [
+    {
+      "id": "h1",
+      "text": "Pushed him down the tower stairs."
+    },
+    {
+      "id": "h2",
+      "text": "One blow to the back of the head."
+    },
+    {
+      "id": "h3",
+      "text": "Poisoned his night cocoa."
+    },
+    {
+      "id": "h4",
+      "text": "Cut the gallery rail so he fell."
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "schema": "mm-case-solution/1",
+  "killers": [
+    1
+  ],
+  "motive": "m2",
+  "method": "h2",
+  "story": [
+    "Iris sold the real lens prisms and set plain glass in their place.",
+    "Hollis counted the lens and found the fake panel. He told her he would ask her at ten.",
+    "Iris followed him up at ten and struck him with the brass bar from her workshop.",
+    "She hid the bar, took the stairs down soon after, and went back to the workshop."
+  ],
+  "deductions": [
+    {
+      "claim": "Iris was in the tower, though she says she never left the ground floor.",
+      "part": "who",
+      "items": [
+        "e2",
+        "st1",
+        "st4",
+        "st2"
+      ]
+    },
+    {
+      "claim": "Hollis found the swapped prism and Iris had sold the real ones.",
+      "part": "why",
+      "items": [
+        "d1",
+        "d2",
+        "e1"
+      ]
+    },
+    {
+      "claim": "One blow with a narrow bar, no fall and no poison.",
+      "part": "how",
+      "items": [
+        "r1",
+        "r2",
+        "e2"
+      ]
+    }
+  ],
+  "herrings": [
+    {
+      "suspect": 0,
+      "ruled_out_by": [
+        "st1",
+        "t1",
+        "st4"
+      ]
+    },
+    {
+      "suspect": 2,
+      "ruled_out_by": [
+        "st3",
+        "t1",
+        "x1"
+      ]
+    },
+    {
+      "suspect": 3,
+      "ruled_out_by": [
+        "st4",
+        "t1"
+      ]
+    }
+  ]
+}

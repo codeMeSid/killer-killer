@@ -1,0 +1,17 @@
+{
+  "schema": "mm-lexicon/1",
+  "card": "The beam stopped turning.",
+  "desk": "The keeper's desk",
+  "accuse": "Name who killed the keeper",
+  "wrong": "A wrong name rings off the stone. The tower keeps quiet.",
+  "solved": "The fog lifts. The false prisms have an owner.",
+  "defeated": "Dawn comes grey. The tower keeps its secret.",
+  "loaders": [
+    "Trimming the wick",
+    "Counting the stairs",
+    "Listening to the tide"
+  ],
+  "full": "Every bunk on Gannet Rock is taken.",
+  "no_room": "That rock is not on the chart.",
+  "gone": "That case file was lost to the tide."
+}

@@ -1,18 +1,23 @@
 import type { FigureDefine } from "@/lib/hairline";
 import { capitalize, inWords } from "@/lib/words";
 import type { Difficulty, Lexicon } from "./types";
+import hollisLexicon from "./hollis-brandt-lighthouse-4s/lexicon.json";
 
 // Client-safe story data: words, art and card facts. Never import a solution here; solutions live
 // behind `server-only` in ./index.ts. Register a new case in both. Folder `src/mysteries/<slug>/`.
 
 export type CatalogEntry = { slug: string; title: string; difficulty: Difficulty; setting: string; victim: string };
 
-export const CATALOG: CatalogEntry[] = [];
+export const CATALOG: CatalogEntry[] = [
+  { slug: "hollis-brandt-lighthouse-4s", title: "The Dark Panel", difficulty: "easy", setting: "A lighthouse on a rock, one night before the inspection is signed", victim: "Hollis Brandt" },
+];
 
-export const LEXICON: Record<string, Lexicon> = {};
+export const LEXICON: Record<string, Lexicon> = { "hollis-brandt-lighthouse-4s": hollisLexicon as Lexicon };
 
 /** Code-split: a figure loads only on the screen that shows it. */
-export const ART: Record<string, () => Promise<{ default: FigureDefine }>> = {};
+export const ART: Record<string, () => Promise<{ default: FigureDefine }>> = {
+  "hollis-brandt-lighthouse-4s": () => import("./hollis-brandt-lighthouse-4s/art"),
+};
 
 export function lexiconFor(slug: string): Lexicon {
   const lexicon = LEXICON[slug];
