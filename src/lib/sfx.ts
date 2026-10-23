@@ -112,6 +112,15 @@ export const sfx = {
     src.connect(hp).connect(envelope(a, gain, 0.002, 0.035));
     src.start();
   },
+  /** Rubber stamp thud: an accusation is presented. */
+  stamp() {
+    const a = audio();
+    if (!a) return;
+    tone(a, "sine", 140, 45, 0.18, envelope(a, 0.25, 0.003, 0.18));
+    const src = noise(a, 0.06);
+    src.connect(envelope(a, 0.1, 0.002, 0.05));
+    src.start();
+  },
   /** A soft beep: selection moves. */
   blip() {
     const a = audio();

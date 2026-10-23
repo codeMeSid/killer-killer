@@ -1,41 +1,32 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState, useSyncExternalStore, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Cover } from "@/components/cover";
 import { CaseTeaser } from "@/components/case-video";
 import { FillButton } from "@/components/fill-button";
-import { JoinQr } from "@/components/join-qr";
 import { StoryArt } from "@/components/story-art";
 import { sfx } from "@/lib/sfx";
-import { capitalize, DIFFICULTY_INK, formatCode, postJson } from "@/lib/use-room";
+import { capitalize, DIFFICULTY_INK, postJson } from "@/lib/use-room";
 import { ART, CATALOG, COVERS, LEXICON, TEASERS } from "@/mysteries/catalog";
-
-const noop = () => () => {};
 
 /**
  * Two steps on one page. 1: pick a case cartridge. 2: the card locks small at the top right and the
- * team name opens the room; then the join QR + code show here before the host goes to the desk.
+ * team name opens the room and goes straight to the desk, where the rail shows the join code + QR.
  */
 export function CasePicker() {
   const router = useRouter();
   const [locked, setLocked] = useState<number | null>(null);
   const [team, setTeam] = useState("");
   const [opening, setOpening] = useState(false);
-  const [code, setCode] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const input = useRef<HTMLInputElement>(null);
-  const go = useRef<HTMLDivElement>(null);
-  const opened = useRef(false);
-  const origin = useSyncExternalStore(noop, () => location.origin, () => "");
   const card = locked === null ? undefined : CATALOG[locked];
   const ready = !!card && team.trim().length > 0 && !opening;
 
   // Hidden routes stay mounted (<Activity>); wipe on hide so Back starts fresh.
-  // Once the room exists keep the panel: the code is the only way back to it (ponytail: stays until reload).
   useEffect(
     () => () => {
-      if (opened.current) return;
       setLocked(null);
       setTeam("");
       setOpening(false);
@@ -49,11 +40,6 @@ export function CasePicker() {
     if (locked !== null) input.current?.focus();
   }, [locked]);
 
-  // Room opened: the form is gone, so put focus on the way forward.
-  useEffect(() => {
-    if (code) go.current?.focus();
-  }, [code]);
-
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!ready || !card) return;
@@ -62,10 +48,10 @@ export function CasePicker() {
     sfx.clack();
     const res = await postJson<{ code: string }>("/api/rooms", { slug: card.slug, team: team.trim() });
     if (res.success && res.payload) {
-      opened.current = true;
-      setCode(res.payload.code);
+      router.push(`/case/${res.payload.code}`);
+      return;
     }
-    else setError(res.errorMessage);
+    setError(res.errorMessage);
     setOpening(false);
   };
 
@@ -83,65 +69,46 @@ export function CasePicker() {
             <div className="flex flex-col gap-2 p-3">
               <p className="font-pixel text-ui text-orange">{card.title}</p>
               <p className={`text-body ${DIFFICULTY_INK[card.difficulty] ?? "text-white"}`}>{capitalize(card.difficulty)}</p>
-              {!code && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    sfx.blip();
-                    setLocked(null);
-                    setError(null);
-                  }}
-                  className="min-h-11 self-start text-body text-white underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-orange"
-                >
-                  Change case
-                </button>
-              )}
+              <button
+                type="button"
+                onClick={() => {
+                  sfx.blip();
+                  setLocked(null);
+                  setError(null);
+                }}
+                className="min-h-11 self-start text-body text-white underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-orange"
+              >
+                Change case
+              </button>
             </div>
           </div>
 
-          {code ? (
-            <section className="flex min-w-0 flex-col gap-6 motion-safe:animate-rise">
-              <div className="flex items-center gap-4">
-                {origin && <JoinQr url={`${origin}/join?code=${code}`} className="w-32 shrink-0 sm:w-40" />}
-                <div ref={go} tabIndex={-1} className="flex min-w-0 flex-col gap-1 outline-none">
-                  <p className="text-body text-white">Join with this code</p>
-                  <p className="whitespace-nowrap font-pixel text-statement text-orange">{formatCode(code)}</p>
-                </div>
-              </div>
-              <div className="w-full max-w-lg">
-                <FillButton type="button" onClick={() => router.push(`/case/${code}`)}>
-                  Go to the desk
-                </FillButton>
-              </div>
-            </section>
-          ) : (
-            <form onSubmit={onSubmit} className="flex min-w-0 flex-col gap-6 motion-safe:animate-rise">
-              <label className="flex w-full max-w-lg flex-col gap-2 text-orange">
-                <span className="font-pixel text-ui">
-                  <span aria-hidden>&gt; </span>Team name
-                </span>
-                <input
-                  ref={input}
-                  value={team}
-                  onChange={(e) => setTeam(e.target.value)}
-                  maxLength={24}
-                  autoComplete="off"
-                  placeholder="who is on the case?"
-                  className="w-full border-b border-orange/40 bg-background py-2 text-body text-orange caret-orange outline-none transition-colors [caret-shape:block] placeholder:text-white/60 focus:border-orange"
-                />
-              </label>
-              <div className="flex w-full max-w-lg flex-col gap-3">
-                <FillButton type="submit" disabled={!ready}>
-                  {opening ? "Opening the file…" : !team.trim() ? "Name your team" : "Open case"}
-                </FillButton>
-                {error && (
-                  <p role="alert" className="text-body text-red motion-safe:animate-glitch">
-                    {error}
-                  </p>
-                )}
-              </div>
-            </form>
-          )}
+          <form onSubmit={onSubmit} className="flex min-w-0 flex-col gap-6 motion-safe:animate-rise">
+            <label className="flex w-full max-w-lg flex-col gap-2 text-orange">
+              <span className="font-pixel text-ui">
+                <span aria-hidden>&gt; </span>Team name
+              </span>
+              <input
+                ref={input}
+                value={team}
+                onChange={(e) => setTeam(e.target.value)}
+                maxLength={24}
+                autoComplete="off"
+                placeholder="who is on the case?"
+                className="w-full border-b border-orange/40 bg-background py-2 text-body text-orange caret-orange outline-none transition-colors [caret-shape:block] placeholder:text-white/60 focus:border-orange"
+              />
+            </label>
+            <div className="flex w-full max-w-lg flex-col gap-3">
+              <FillButton type="submit" disabled={!ready}>
+                {opening ? "Opening the file…" : !team.trim() ? "Name your team" : "Open case"}
+              </FillButton>
+              {error && (
+                <p role="alert" className="text-body text-red motion-safe:animate-glitch">
+                  {error}
+                </p>
+              )}
+            </div>
+          </form>
         </div>
       ) : CATALOG.length === 0 ? (
         <p className="text-body text-white">No case files on the shelf yet.</p>

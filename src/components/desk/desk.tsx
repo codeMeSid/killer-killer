@@ -8,7 +8,7 @@ import { sfx } from "@/lib/sfx";
 import { capitalize, formatCode, inWords, postJson, type RoomView } from "@/lib/use-room";
 import { LEXICON } from "@/mysteries/catalog";
 import type { Item, Lexicon } from "@/mysteries/types";
-import { AccusePanel } from "./accuse-panel";
+import { AccusePanel, type Draft } from "./accuse-panel";
 import { Clock } from "./clock";
 import { BRIEF, FolderWindow } from "./folder-window";
 import { ItemBody } from "./item-view";
@@ -61,6 +61,8 @@ export function Desk({
   const [sel, setSel] = useState(initial?.sel ?? BRIEF);
   const [open, setOpen] = useState(initial?.open ?? true); // phone: file open (true) or folder list
   const [accusing, setAccusing] = useState(initial?.accuse ?? false);
+  // Draft lives here so a wrong guess (panel closes) keeps the host's picks.
+  const [draft, setDraft] = useState<Draft>({ who: [], nobody: false, motive: "", method: "", ...initial?.draft });
   const origin = useSyncExternalStore(noop, () => location.origin, () => "");
 
   // Tell the team which file this agent has open.
@@ -174,7 +176,7 @@ export function Desk({
             &lt; Back to the folders
           </button>
           {accusing && view.isHost ? (
-            <AccusePanel code={view.code} c={c} guessesLeft={left} onClose={() => setAccusing(false)} onSent={onChanged} initial={initial?.draft} />
+            <AccusePanel code={view.code} c={c} guessesLeft={left} onClose={() => setAccusing(false)} onSent={onChanged} d={draft} setD={setDraft} />
           ) : (
             <>
               <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
