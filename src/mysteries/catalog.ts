@@ -19,6 +19,12 @@ export const ART: Record<string, () => Promise<{ default: FigureDefine }>> = {
   "hollis-brandt-lighthouse-4s": () => import("./hollis-brandt-lighthouse-4s/art"),
 };
 
+/** Teaser file per slug under public/cases/<slug>/ (silent loop for the picker card). Register by hand; must equal case.json media.teaser. */
+export const TEASERS: Record<string, string> = {};
+
+/** Cover SVG per slug under public/cases/<slug>/ (card art). Register by hand; must equal case.json media.cover. */
+export const COVERS: Record<string, string> = { "hollis-brandt-lighthouse-4s": "cover.svg" };
+
 export function lexiconFor(slug: string): Lexicon {
   const lexicon = LEXICON[slug];
   if (!lexicon) throw new Error(`No lexicon for mystery "${slug}"`);

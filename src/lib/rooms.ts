@@ -38,7 +38,7 @@ export type RoomView = {
   startedAt: string;
   endedAt: string | null;
   case: CaseFile;
-  ending: null | { solution: Solution; seconds: number; caseRank: number | null; globalRank: number | null };
+  ending: null | { solution: Solution; seconds: number; rank: number | null };
 };
 
 const CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // no 0/O/1/I: read off a screen across a room
@@ -152,18 +152,12 @@ export async function joinRoom(rawCode: string, userId: string): Promise<{ code:
   return { code: room.code };
 }
 
-async function rankOf(column: "caseBoard" | "globalBoard", r: { room_id: string; case_slug: string; guesses: number; seconds: number; score: number }) {
-  const db = adminClient();
-  // Case board: fewer guesses, then faster. Global board: higher score. Rank = 1 + rows strictly ahead.
-  const q =
-    column === "caseBoard"
-      ? db
-          .from("results")
-          .select("room_id", { count: "exact", head: true })
-          .eq("case_slug", r.case_slug)
-          .or(`guesses.lt.${r.guesses},and(guesses.eq.${r.guesses},seconds.lt.${r.seconds})`)
-      : db.from("results").select("room_id", { count: "exact", head: true }).gt("score", r.score);
-  const { count, error } = await q;
+/** Place on the one board: higher score first, then faster. Rank = 1 + rows strictly ahead (same order as `leaderboard()`). */
+async function rankOf(r: { score: number; seconds: number }) {
+  const { count, error } = await adminClient()
+    .from("results")
+    .select("room_id", { count: "exact", head: true })
+    .or(`score.gt.${r.score},and(score.eq.${r.score},seconds.lt.${r.seconds})`);
   if (error) throw error;
   return (count ?? 0) + 1;
 }
@@ -186,18 +180,17 @@ export async function roomView(rawCode: string, userId: string | null): Promise<
     const solution = getSolution(room.case_slug);
     if (!solution) throw new ApiError("That case file is gone.", 404);
     const seconds = Math.round((Date.parse(room.ended_at ?? room.started_at) - Date.parse(room.started_at)) / 1000);
-    let caseRank: number | null = null;
-    let globalRank: number | null = null;
+    let rank: number | null = null;
     if (room.status === "solved") {
       const { data: r, error } = await db
         .from("results")
-        .select("room_id, case_slug, guesses, seconds, score")
+        .select("seconds, score")
         .eq("room_id", room.id)
-        .maybeSingle<{ room_id: string; case_slug: string; guesses: number; seconds: number; score: number }>();
+        .maybeSingle<{ seconds: number; score: number }>();
       if (error) throw error;
-      if (r) [caseRank, globalRank] = await Promise.all([rankOf("caseBoard", r), rankOf("globalBoard", r)]);
+      if (r) rank = await rankOf(r);
     }
-    ending = { solution, seconds, caseRank, globalRank };
+    ending = { solution, seconds, rank };
   }
 
   return {
@@ -296,23 +289,15 @@ export async function submitGuess(rawCode: string, userId: string, raw: unknown)
 
 type Row = { team: string; case_slug: string; guesses: number; seconds: number; score: number };
 
-/** Top 20 for one case (fewest guesses, then fastest) and overall (highest score). */
-export async function leaderboard(slug: string | null) {
-  const db = adminClient();
-  const cols = "team, case_slug, guesses, seconds, score";
-  const globalQ = db.from("results").select(cols).order("score", { ascending: false }).limit(20).returns<Row[]>();
-  const caseQ = slug
-    ? db
-        .from("results")
-        .select(cols)
-        .eq("case_slug", slug)
-        .order("guesses")
-        .order("seconds")
-        .limit(20)
-        .returns<Row[]>()
-    : null;
-  const [g, c] = await Promise.all([globalQ, caseQ]);
-  if (g.error) throw g.error;
-  if (c?.error) throw c.error;
-  return { caseBoard: c?.data ?? [], globalBoard: g.data ?? [] };
+/** Top 50 results across all cases: highest score, then fastest. */
+export async function leaderboard() {
+  const { data, error } = await adminClient()
+    .from("results")
+    .select("team, case_slug, guesses, seconds, score")
+    .order("score", { ascending: false })
+    .order("seconds")
+    .limit(50)
+    .returns<Row[]>();
+  if (error) throw error;
+  return { board: data ?? [] };
 }

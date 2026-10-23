@@ -1,10 +1,11 @@
+import { CaseVideo } from "@/components/case-video";
 import type { Item } from "@/mysteries/types";
 
 // Scene art is SVG drawn into case.json; an <img> data URI can't run scripts (CLAUDE.md §12).
 const svgSrc = (svg: string) => `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
 
 /** The body of one file, by kind. Title and pin live in the header above it. */
-export function ItemBody({ item }: { item: Item }) {
+export function ItemBody({ item, slug }: { item: Item; slug: string }) {
   switch (item.kind) {
     case "note":
       return <p className="whitespace-pre-line text-body text-white">{item.body}</p>;
@@ -40,6 +41,8 @@ export function ItemBody({ item }: { item: Item }) {
           <figcaption className="text-body text-white">{item.caption}</figcaption>
         </figure>
       );
+    case "video":
+      return <CaseVideo slug={slug} src={item.src} poster={item.poster} captions={item.captions} />;
     case "log":
       return (
         <ul className="flex flex-col text-body">

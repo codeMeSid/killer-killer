@@ -94,6 +94,47 @@ class T(unittest.TestCase):
         self.has("unknown_item", lambda c, s: s["deductions"][0]["items"].append("nope"))
         self.has("unknown_item", lambda c, s: s["herrings"][0]["ruled_out_by"].append("nope"))
 
+    def media(self, mutate, files):
+        """Run with a temp public dir holding `files` {relpath: bytes}; return errors."""
+        case, sol = copy.deepcopy(BASE)
+        mutate(case, sol)
+        with tempfile.TemporaryDirectory() as t, tempfile.TemporaryDirectory() as p:
+            Path(t, "case.json").write_text(json.dumps(case))
+            Path(t, "solution.json").write_text(json.dumps(sol))
+            for rel, data in files.items():
+                Path(p, rel).write_bytes(data)
+            # extra video item may push item count past the difficulty band; not under test here
+            return [e for e in V.check(t, public=p)[0] if not e.startswith("[difficulty_size]")]
+
+    def test_media(self):
+        vid = {"id": "v1", "title": "Voicemail", "kind": "video", "src": "v1.mp4", "captions": "v1.vtt"}
+        add = lambda c, s: c["folders"][0]["items"].append(dict(vid))  # noqa: E731
+        ok = {"v1.mp4": b"x", "v1.vtt": b"WEBVTT\n\n00:00.000 --> 00:02.000\nCall me back."}
+        self.assertEqual(self.media(add, ok), [])
+        codes = lambda e: " ".join(e)  # noqa: E731
+        self.assertIn("[media_missing]", codes(self.media(add, {})))
+        self.assertIn("[media_size]", codes(self.media(add, {**ok, "v1.mp4": b"x" * (3 * 1024 * 1024 + 1)})))
+        self.assertIn("[names_killer]", codes(self.media(
+            add, {**ok, "v1.vtt": b"WEBVTT\n\n00:00.000 --> 00:02.000\nMaren Pike killed her."})))
+        self.assertIn("[media_path]", codes(self.media(
+            lambda c, s: c.update(media={"teaser": "../x.mp4"}), {})))
+        self.assertIn("[media_size]", codes(self.media(
+            lambda c, s: c.update(media={"teaser": "t.mp4"}), {"t.mp4": b"x" * (1024 * 1024 + 1)})))
+        self.assertIn("[media]", codes(self.media(lambda c, s: c.update(media={"reveal": "r.mp4"}), {"r.mp4": b"x"})))
+        cv = lambda c, s: c.update(media={"cover": "cover.svg"})  # noqa: E731
+        self.assertEqual(self.media(cv, {"cover.svg": b'<svg viewBox="0 0 640 360"><rect fill="#0B1215" width="640" height="360"/></svg>'}), [])
+        self.assertIn("[svg_colour]", codes(self.media(cv, {"cover.svg": b'<svg viewBox="0 0 1 1"><rect fill="#FF00FF"/></svg>'})))
+        self.assertIn("[svg_unsafe]", codes(self.media(cv, {"cover.svg": b'<svg viewBox="0 0 1 1"><script>x</script></svg>'})))
+        self.assertIn("[media]", codes(self.media(lambda c, s: c.update(media={"trailer": "t.mp4"}), {})))
+        for bad in ("%2e%2e/x.mp4", "a\\b.mp4", "t.mp4?x", "t.mp4#x", "a/../b.mp4", "../x.mp4", "/x.mp4", "A.mp4"):
+            self.assertIn("[media_path]", codes(self.media(lambda c, s, b=bad: c.update(media={"teaser": b}), {})), bad)
+        rv, rvv = "reveal-0123456789ab.mp4", "reveal-0123456789ab.vtt"
+        both = {rv: b"x", rvv: b"WEBVTT\n\n00:00.000 --> 00:02.000\nMaren Pike killed her."}
+        self.assertEqual(self.media(lambda c, s: s.update(reveal=rv), both), [])
+        self.assertIn("[media_path]", codes(self.media(lambda c, s: s.update(reveal="reveal.mp4"), {"reveal.mp4": b"x"})))
+        self.assertIn("[media_missing]", codes(self.media(lambda c, s: s.update(reveal=rv), {rv: b"x"})))
+        self.assertIn("[media_size]", codes(self.media(lambda c, s: s.update(reveal=rv), {**both, rv: b"x" * (10 * 1024 * 1024 + 1)})))
+
     def test_lexicon(self):
         lx = json.loads((EX / "lexicon.json").read_text())
         self.assertEqual(V.check_lexicon(lx), [])

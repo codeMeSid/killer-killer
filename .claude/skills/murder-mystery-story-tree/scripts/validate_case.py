@@ -16,11 +16,18 @@ SIZES = {"easy": ((3, 4), (10, 16)), "medium": ((4, 5), (16, 24)), "hard": ((5, 
 FOLDERS = {"suspects", "statements", "reports", "evidence", "documents", "timeline", "map", "extras"}
 PARTS = ("who", "why", "how")
 KIND_FIELDS = {"note": ["body"], "statement": ["speaker", "lines"], "report": ["sections"],
-               "photo": ["svg", "caption"], "log": ["rows"], "map": ["svg", "caption"]}
+               "photo": ["svg", "caption"], "log": ["rows"], "map": ["svg", "caption"],
+               "video": ["src", "captions"]}
+MB = 1024 * 1024
+BUDGET = {"teaser": 1 * MB, "reveal": 10 * MB, "clip": 3 * MB, "cover": MB // 5}  # references/media.md
+MEDIA_EXT = {"teaser": (".mp4",), "cover": (".svg",), "reveal": (".mp4",), "clip": (".mp4",), "captions": (".vtt",),
+             "poster": (".png", ".jpg", ".webp")}
+PATH_OK = re.compile(r"[a-z0-9][a-z0-9._-]*(/[a-z0-9._-]+)*")
+REVEAL_OK = re.compile(r"reveal-[0-9a-f]{12}\.mp4")  # unguessable: obscurity, not auth
 UNSAFE = re.compile(r"<script|[\s/]on\w+\s*=|foreignobject|<style|\sstyle\s*=|rgb\(|hsl\(|url\(\s*[\"']?\s*(https?:|//)|href\s*=\s*[\"']?\s*(https?:|//|javascript)", re.I)
 COLOUR_ATTR = re.compile(r"\b(fill|stroke|stop-color|color)\s*=\s*[\"']([^\"']*)[\"']", re.I)
 CASE_KEYS = {"schema", "slug", "title", "difficulty", "rating", "setting", "tone", "victim", "brief",
-             "suspects", "folders", "motives", "methods"}
+             "suspects", "folders", "motives", "methods", "media"}
 LEXICON_KEYS = ["card", "desk", "accuse", "wrong", "solved", "defeated", "full", "no_room", "gone"]
 
 
@@ -38,8 +45,44 @@ def texts(it):
     return [it.get("caption", "")]
 
 
-def check(d):
-    """Return (errors, warnings) as lists of strings starting with the [code]."""
+def svg_check(svg, label, err):
+    """Drawn SVG rules shared by photo/map items and the cover: safe, palette-only, has viewBox."""
+    if not svg:
+        return
+    if UNSAFE.search(svg):
+        err("svg_unsafe", f"{label}: script, event handler, foreignObject or external href")
+    cols = set(re.findall(r"#[0-9a-fA-F]{3,8}\b", svg)) | {
+        v for _, v in COLOUR_ATTR.findall(svg) if v.lower() not in ("none", "transparent") and not v.startswith("#")}
+    for c in cols:
+        if c.lower() not in PALETTE:
+            err("svg_colour", f"{label}: {c} is not a palette colour")
+    if not re.search(r"<svg[^>]*viewBox", svg):
+        err("svg", f"{label}: needs <svg viewBox=...>")
+
+
+def media_file(pub, rel, kind, label, err):
+    """Check one media path (relative to /cases/<slug>/): safe, right type, exists, within budget.
+    Returns its text if it is a .vtt, else ''."""
+    if (not isinstance(rel, str) or not PATH_OK.fullmatch(rel)
+            or {".", ".."} & set(rel.split("/"))
+            or not (pub / rel).resolve().is_relative_to(pub.resolve())):
+        err("media_path", f"{label}: {rel!r} must match [a-z0-9][a-z0-9._-]*(/[a-z0-9._-]+)* and stay inside public/cases/<slug>/")
+        return ""
+    if not rel.lower().endswith(MEDIA_EXT[kind]):
+        err("media_path", f"{label}: {rel!r} must end {'/'.join(MEDIA_EXT[kind])}")
+        return ""
+    f = pub / rel
+    if not f.is_file():
+        err("media_missing", f"{label}: {f} does not exist")
+        return ""
+    if kind in BUDGET and f.stat().st_size > BUDGET[kind]:
+        err("media_size", f"{label}: {f.stat().st_size / MB:.1f} MB, budget {BUDGET[kind] // MB} MB")
+    return f.read_text(errors="replace") if kind == "captions" else ""
+
+
+def check(d, public=None):
+    """Return (errors, warnings) as lists of strings starting with the [code].
+    `public` = public/cases/<slug>/; default <repo>/public/cases/<slug> from src/mysteries/<slug>."""
     d = Path(d)
     E, W = [], []
     err = lambda c, m: E.append(f"[{c}] {m}")
@@ -83,17 +126,33 @@ def check(d):
             for k in KIND_FIELDS[it["kind"]]:
                 if not it.get(k):
                     err("item", f"item {iid} ({it['kind']}) needs {k}")
-            svg = it.get("svg")
-            if svg:
-                if UNSAFE.search(svg):
-                    err("svg_unsafe", f"item {iid}: script, event handler, foreignObject or external href")
-                cols = set(re.findall(r"#[0-9a-fA-F]{3,8}\b", svg)) | {
-                    v for _, v in COLOUR_ATTR.findall(svg) if v.lower() not in ("none", "transparent") and not v.startswith("#")}
-                for c in cols:
-                    if c.lower() not in PALETTE:
-                        err("svg_colour", f"item {iid}: {c} is not a palette colour")
-                if not re.search(r"<svg[^>]*viewBox", svg):
-                    err("svg", f"item {iid}: needs <svg viewBox=...>")
+            svg_check(it.get("svg"), f"item {iid}", err)
+
+    root = d.resolve().parents[2] if len(d.resolve().parents) > 2 else Path("/nonexistent")
+    pub = Path(public) if public else root / "public" / "cases" / str(case.get("slug"))
+    vtt = []  # (where, text) of evidence captions, scanned for the killer below
+    media = case.get("media", {})
+    if not isinstance(media, dict) or set(media) - {"teaser", "cover"}:
+        err("media", "case.media must be an object with only teaser, cover (reveal lives in solution.json)")
+        media = {}
+    for k, rel in media.items():
+        media_file(pub, rel, k, f"media.{k}", err)
+        if k == "cover" and (pub / str(rel)).is_file():
+            svg_check((pub / rel).read_text(errors="replace"), "media.cover", err)
+    rv = sol.get("reveal")
+    if rv is not None:
+        if not isinstance(rv, str) or not REVEAL_OK.fullmatch(rv):
+            err("media_path", f"solution.reveal {rv!r} must be reveal-<12 hex>.mp4 (unguessable name)")
+        else:
+            media_file(pub, rv, "reveal", "solution.reveal", err)
+            media_file(pub, rv[:-4] + ".vtt", "captions", "solution.reveal captions", err)  # not scanned: reveal may name the killer
+    for iid, it in items.items():
+        if it.get("kind") != "video":
+            continue
+        media_file(pub, it.get("src"), "clip", f"item {iid} src", err)
+        if it.get("poster"):
+            media_file(pub, it["poster"], "poster", f"item {iid} poster", err)
+        vtt.append((f"item {iid} captions", media_file(pub, it.get("captions"), "captions", f"item {iid} captions", err)))
 
     diff = case.get("difficulty")
     if diff not in SIZES:
@@ -161,6 +220,7 @@ def check(d):
     scan += [("brief", case.get("brief", "")), ("victim.summary", v.get("summary", ""))]
     scan += [(f"suspects[{n}]", str(x)) for n, s_ in enumerate(sus) for x in s_.values()]
     scan += [(o.get("id"), o.get("text", "")) for o in (case.get("motives") or []) + (case.get("methods") or [])]
+    scan += vtt  # evidence captions follow the same fairness rule; the reveal may name the killer
     for k in killers:
         full = sus[k].get("name", "")
         pat = re.compile(rf"\b({re.escape(full)}|{re.escape(full.split()[0])}) (killed|is the killer|murdered)", re.I)
@@ -211,6 +271,10 @@ def main(argv):
     else:
         print(__doc__)
         return 2
+    if len(argv) == 2:
+        c = json.loads((Path(argv[1]) / "case.json").read_text())
+        if not c.get("media") and not any(i.get("kind") == "video" for f in c.get("folders", []) for i in f.get("items", [])):
+            print("INFO [media] no cover, teaser, reveal or video items; optional, see SKILL.md Media phase")
     for w in W:
         print("WARN", w)
     for e in E:

@@ -10,6 +10,8 @@ export type Item = { id: string; title: string } & (
   | { kind: "photo"; svg: string; caption: string }
   | { kind: "log"; rows: { at: string; text: string }[] }
   | { kind: "map"; svg: string; caption: string }
+  /** Paths relative to /cases/<slug>/ (public/cases/<slug>/). `captions` = .vtt file. */
+  | { kind: "video"; src: string; poster?: string; captions: string }
 );
 
 export type FolderKind =
@@ -31,6 +33,8 @@ export type CaseFile = {
   folders: { id: string; kind: FolderKind; title: string; items: Item[] }[];
   motives: { id: string; text: string }[];
   methods: { id: string; text: string }[];
+  /** Optional rendered media, paths relative to /cases/<slug>/. */
+  media?: { teaser?: string };
 };
 
 /** Secret: server-only. */
@@ -40,6 +44,8 @@ export type Solution = {
   killers: number[];
   motive: string;
   method: string;
+  /** Reveal video file in public/cases/<slug>/ (`reveal-<12 hex>.mp4` + .vtt). Secret until ended. */
+  reveal?: string;
   story: string[];
   deductions: { claim: string; part: "who" | "why" | "how"; items: string[] }[];
   herrings: { suspect: number; ruled_out_by: string[] }[];

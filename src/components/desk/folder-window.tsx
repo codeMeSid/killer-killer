@@ -25,14 +25,18 @@ export function FolderWindow({
         type="button"
         onClick={() => onSelect(id)}
         aria-current={selected === id}
-        className={`flex min-h-11 w-full items-center gap-2 py-1 pl-3 text-left text-body transition-colors hover:text-orange focus-visible:text-orange focus-visible:outline-none ${
+        className={`grid min-h-11 w-full grid-cols-[1.25ch_minmax(0,1fr)] gap-x-2 py-1.5 pl-3 text-left text-body transition-colors hover:text-orange focus-visible:text-orange focus-visible:outline-none ${
           selected === id ? "text-orange" : "text-white"
         }`}
       >
-        <span aria-hidden>{selected === id ? ">" : " "}</span>
-        <span className="min-w-0 flex-1">{label}</span>
-        {reading[id]?.length ? <span className="text-meta text-blue">Agent {reading[id].join(", ")}</span> : null}
-        {pinned.has(id) && <span className="text-meta text-orange">Pinned</span>}
+        <span aria-hidden>{selected === id ? ">" : ""}</span>
+        <span className="min-w-0">{label}</span>
+        {(reading[id]?.length || pinned.has(id)) && (
+          <span className="col-start-2 flex gap-3 text-meta">
+            {reading[id]?.length ? <span className="text-blue">Agent {reading[id].join(", ")} reading</span> : null}
+            {pinned.has(id) && <span className="text-orange">Pinned</span>}
+          </span>
+        )}
       </button>
     </li>
   );

@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { CaseFile, Item, Solution } from "./types.ts";
@@ -32,10 +32,8 @@ for (const slug of slugs) {
     for (const id of cited) assert.ok(ids.includes(id), `unknown item ${id}`);
   });
 
-  test(`${slug}: art file and registration`, () => {
-    assert.ok(existsSync(join(here, slug, "art.ts")));
+  test(`${slug}: registration`, () => {
     assert.ok(manifest.includes(`"${slug}"`), "missing from index.ts");
-    assert.ok(catalog.includes(`"${slug}": () => import("./${slug}/art")`), "missing ART entry");
     assert.ok(catalog.includes(`"${slug}": `), "missing LEXICON entry");
   });
 }

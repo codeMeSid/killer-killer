@@ -140,7 +140,7 @@ export function JoinForm({ initialCode = "" }: { initialCode?: string }) {
                   if (!raw) setDigits((ds) => ds.map((c, k) => (k === i ? "" : c)));
                   else fill(i, raw);
                 }}
-                className="pixel-border pb-dim h-14 w-7 bg-background text-center font-pixel text-statement text-orange caret-orange outline-none transition-[box-shadow] [caret-shape:block] focus:pb-orange sm:h-20 sm:w-12"
+                className="pixel-border pb-orange h-16 w-0 min-w-0 flex-1 bg-background text-center font-pixel text-statement text-orange caret-orange outline-none transition-[box-shadow] [caret-shape:block] focus:pb-orange sm:h-20 sm:w-12"
               />
             </Fragment>
           ))}
@@ -157,8 +157,9 @@ export function JoinForm({ initialCode = "" }: { initialCode?: string }) {
 
       <div className="flex flex-col gap-3">
         <FillButton type="submit" disabled={!ready}>
-          {joining ? "Joining…" : found?.ok === false ? "Check the code" : "Join Case"}
+          {joining ? "Joining…" : found?.ok === false ? "Check the code" : complete ? "Join Case" : "Enter the eight-letter code"}
         </FillButton>
+        <p className="text-body text-white">Ask the host for the code on their screen.</p>
         {error && (
           <p role="alert" className="text-body text-red motion-safe:animate-glitch">
             {error}

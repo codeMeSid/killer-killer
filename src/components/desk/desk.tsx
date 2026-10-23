@@ -104,7 +104,6 @@ export function Desk({
     <Machine kind="computer">
       <header className="flex flex-wrap items-center gap-x-6 gap-y-1 border-b border-blue/30 px-4 py-2 sm:px-8">
         <h1 className="font-pixel text-ui text-orange">{view.team}</h1>
-        <span className="text-body text-white">{formatCode(view.code)}</span>
         <Clock startedAt={view.startedAt} endedAt={view.endedAt} />
         <span className="text-body text-white">
           {capitalize(inWords(online.length))} {online.length === 1 ? "agent" : "agents"} online
@@ -113,15 +112,6 @@ export function Desk({
         <SoundToggle className="ml-auto" />
       </header>
 
-      {view.isHost && (
-        <details className="border-b border-blue/30 px-4 py-1 sm:px-8">
-          <summary className="min-h-11 cursor-pointer py-2 text-body text-white">Show the join code</summary>
-          <div className="flex flex-wrap items-center gap-6 pb-4">
-            {origin && <JoinQr url={joinUrl} className="w-40" />}
-            <p className="font-pixel text-statement text-orange">{formatCode(view.code)}</p>
-          </div>
-        </details>
-      )}
 
       {view.lastWrong && (
         <p key={view.guessesUsed} role="alert" className="border-b border-red/40 px-4 py-2 text-ui text-red motion-safe:animate-glitch sm:px-8">
@@ -142,9 +132,21 @@ export function Desk({
 
       <main className="grid flex-1 gap-0 md:grid-cols-[18rem_minmax(0,1fr)]">
         <div className={`border-blue/30 px-4 py-4 sm:px-8 md:border-r md:px-4 ${open ? "hidden md:block" : "block"}`}>
+          <div className="mb-6 flex items-center gap-4 border-b border-blue/30 pb-6 md:flex-col md:items-start">
+            {view.isHost && origin && <JoinQr url={joinUrl} className="w-24 shrink-0 sm:w-32 md:w-40" />}
+            <div className="flex min-w-0 flex-col gap-1">
+              <p className="text-body text-white">Join with this code</p>
+              <p className="whitespace-nowrap font-pixel text-ui text-orange">{formatCode(view.code)}</p>
+            </div>
+          </div>
           <FolderWindow c={c} selected={sel} onSelect={pickItem} pinned={pinned} reading={othersReading} />
           <div className="mt-6 border-t border-blue/30 pt-4">
             {view.isHost ? (
+              accusing ? (
+                <button type="button" onClick={() => setAccusing(false)} className="min-h-11 text-body text-white underline-offset-4 hover:underline focus-visible:underline focus-visible:outline-none">
+                  Back to the file
+                </button>
+              ) : (
               <button
                 type="button"
                 onClick={() => {
@@ -156,6 +158,7 @@ export function Desk({
               >
                 {words.accuse}
               </button>
+              )
             ) : (
               <p className="text-body text-white">Agent 1 makes the accusation.</p>
             )}
@@ -194,7 +197,7 @@ export function Desk({
               ) : suspectIdx >= 0 && c.suspects[suspectIdx] ? (
                 <SuspectCard suspect={c.suspects[suspectIdx]} />
               ) : item ? (
-                <ItemBody item={item} />
+                <ItemBody item={item} slug={view.slug} />
               ) : null}
             </>
           )}

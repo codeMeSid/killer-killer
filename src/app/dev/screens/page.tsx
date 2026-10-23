@@ -20,7 +20,7 @@ async function Scene({ searchParams }: PageProps<"/dev/screens">) {
     status,
     guessesUsed: status === "solved" ? 1 : 2,
     endedAt: new Date(Date.parse(base.startedAt) + 14 * 60_000).toISOString(),
-    ending: { solution: DEMO_SOLUTION, seconds: 14 * 60, caseRank: status === "solved" ? 2 : null, globalRank: status === "solved" ? 5 : null },
+    ending: { solution: DEMO_SOLUTION, seconds: 14 * 60, rank: status === "solved" ? 5 : null },
   });
 
   const scenes: Record<Scene, { view: RoomView; initial?: DeskInitial }> = {

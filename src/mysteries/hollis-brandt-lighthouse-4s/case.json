@@ -315,5 +315,8 @@
       "id": "h4",
       "text": "Cut the gallery rail so he fell."
     }
-  ]
+  ],
+  "media": {
+    "cover": "cover.svg"
+  }
 }

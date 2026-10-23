@@ -114,12 +114,12 @@ Rules here; history and state there. Update same turn as change (§8). Imported 
 ## 12. Game architecture (co-op case file, user decision 2026-10-22)
 
 - **Server-authoritative.** Whole case file open at once, same on every device; friends (up to 8 agents) read together, host accuses. Logic in `src/lib/rooms.ts` + `src/lib/case/{judge,score}.ts`, runs only in route handlers. Clients never judge.
-- **Case = repo folder** `src/mysteries/<slug>/`, written by `murder-mystery-story-tree` skill: `case.json` (`mm-case-file/1`, public), `solution.json` (`mm-case-solution/1`, secret), `lexicon.json`, `art.ts`; `validate_case.py` = 0 errors **and 0 warnings**. Solutions only in `src/mysteries/index.ts` (`server-only`); words/art/card in `catalog.ts`. New case registered in **both**. Item text never names the killer.
+- **Case = repo folder** `src/mysteries/<slug>/`, written by `murder-mystery-story-tree` skill: `case.json` (`mm-case-file/1`, public), `solution.json` (`mm-case-solution/1`, secret), `lexicon.json`, optional `public/cases/<slug>/cover.svg`; `validate_case.py` = 0 errors **and 0 warnings**. Solutions only in `src/mysteries/index.ts` (`server-only`); words/covers/card in `catalog.ts` (`LEXICON`, `COVERS`). New case registered in **both**. Item text never names the killer.
 - **Realtime = doorbell, not pipe.** After each mutation server sends payload-free `state` broadcast on private channel `room:<CODE>`; clients refetch `GET /api/rooms/[code]`. Presence key = agent, payload `{agent, itemId}` shows who reads what (`useRoom().reading`). Why: nothing secret can leak over a channel carrying nothing; reconnect = refetch.
 - **Pins** = shared evidence strip, `POST /pins` toggles; only folder items pinnable (`togglePin` rejects others).
 - **Guess race:** two guesses per room. Claim by `update rooms set guesses_used = n where status='playing' and guesses_used = n-1`; one request wins, other 409. Host-only (403 otherwise). Known gap: later writes (guess row, end, result) are separate, not one transaction.
 - **Scene photos/maps = SVG drawn by model, palette-only** (`#CD3131 #00FFB3 #E5E5E5 #2472C8 #D97757 #0B1215`), shown via `<img>` data URI so scripts can't run (user, 2026-10-22). Validator rejects `<script`, `on…=`, `foreignObject`, external `href`.
-- Leaderboards: per case + global, `results` table, `GET /api/leaderboard?slug=`.
+- Leaderboard: single global board across all cases, `results` table, `GET /api/leaderboard` → `{board}` (top fifty, score desc then seconds asc).
 - Supabase config repo-tracked in `supabase/config.toml` (anonymous sign-ins on, 300/hour/IP). Change there + `npx supabase config push`; never click-edit dashboard. Review diff before confirming.
 - Engine-era rules (rounds, phases, personal options, votes, narrator) are gone.
 - `/dev/screens?s=desk|desk-item|accuse|wrong|solved|defeated` renders desk screens from in-code demo case (`src/components/dev/demo-case.ts`), no DB; 404 in production.
@@ -127,7 +127,7 @@ Rules here; history and state there. Update same turn as change (§8). Imported 
 ## 13. Game UI language
 
 - **Type steps** (globals.css): `text-display`, `text-statement`, `text-ui`, `text-body`, `text-meta`. No other sizes in game screens.
-- **Layout:** header = team · code (+QR for host, collapsible) · clock · agents online. ≥768px folders left, item window right, pinned strip; 375px folder list → full-screen item with back. Brief opens first.
+- **Layout:** header = team · clock · agents online · agent seat · sound. Join code lives only in the rail: everyone sees the code, host also the QR, at the top, always open, never in the header or a `<details>` (user 2026-10-23: code showed twice, collapsible hid it). ≥768px folders left, item window right, pinned strip; 375px folder list → full-screen item with back. Brief opens first.
 - **Information in white** (`text-body`+); blue `text-meta` decoration only. Why: blue 3.9:1 on obsidian, palette fixed → contrast from size + ink.
 - **Disabled actions keep full-contrast label saying why**; only fill goes inactive. Never fade primary button with opacity. Accuse submit label says what is missing.
 - Wrong guess → `animate-glitch` + lexicon `wrong`, "One guess left". Ended → reveal (solved green / defeated red).
@@ -140,8 +140,15 @@ Rules here; history and state there. Update same turn as change (§8). Imported 
 
 Style (user, 2026-10-15): horror + pixel-art + maximalism + Swiss + flat 2D, as old machines. UX first.
 - **Machine by role** — wrap every screen in `<Machine kind>`: `computer` = `/` (boot sequence once per session), `/start`, `/case/[code]`, `/leaderboard`, `RoomLoading`; `terminal` = `/join`. Machine sets `font-pixel` face + CSS-only glass.
-- **Story art** — `<StoryArt slug variant>` mounts the case's Hairline figure on one shared kernel `src/lib/hairline/kernel.ts` (vendored verbatim; load nowhere else). Not interactive; plays only while selected/focused, loaders + ending always play. Hairline tiers mapped to palette in `.story-art`.
+- **Home painting** — `<BrushScene>` paints the home lighthouse with p5.brush (`p5.brush/standalone`, no p5; dynamic import, once per size, never animated; palette hues only; untyped via `src/types/p5-brush.d.ts`). Why: home was an empty void; user chose p5.brush for art.
+- **Case art (user 2026-10-23: skill no longer makes Hairline)** — new cases ship `cover.svg` (model-drawn SVG, palette-only, `<Cover>` via `<img>`, `COVERS` in catalog) on picker card + reveal; evidence photos/maps already SVG. Existing `StoryArt` stays for the Hairline case already shipped (`ART`), fallback after cover. Why: Opus can draw SVG directly, no extra tool.
+- **Story art (legacy)** — `<StoryArt slug variant>` mounts the case's Hairline figure on one shared kernel `src/lib/hairline/kernel.ts` (vendored verbatim; load nowhere else). Not interactive; plays only while selected/focused, loaders + ending always play. Hairline tiers mapped to palette in `.story-art`.
 - **Sound** — `src/lib/sfx.ts`, WebAudio-synthesized, on by default, `kk:sound`, `<SoundToggle>`. Audio unlocks on first gesture. Hook sounds to events, never idle loops. Narrator voice removed.
 - Vendored kernel + generated `art.ts` excluded from ESLint, carry `// @ts-nocheck`.
 
 @MEMORY.md
+## 15. Start flow, media (user decision 2026-10-23)
+
+- **Start = case first, team second, one page.** Pick a card; it locks small top-right with its title ("Change case" until the room exists), team-name panel beside it. "Open case" creates the room, then the same panel shows join QR + code and "Go to the desk". Why: team name before knowing the case was backwards; friends can scan before host enters.
+- **One leaderboard**, all cases, no per-case filter (§12).
+- **Media per case** (skill "Media phase"): files in `public/cases/<slug>/` (teaser.mp4 <=1MB silent loop for the picker card, reveal-<12 hex>.mp4 <=10MB + .vtt named in `solution.json` `reveal`, sent only in ended `ending` payload, never in public case.json; obscurity not auth, upgrade = ending-gated streaming route, evidence clips = `video` items, captions .vtt). Optional: no media = old StoryArt card. Rendered with the HyperFrames plugin (project-scope); voices from VoiceStudio (MCP `voicestudio` in `.mcp.json`, needs the app open), HyperFrames TTS as fallback. Evidence media never names the killer (same fairness rule as text). Earshot skipped (dev tool, not game audio).

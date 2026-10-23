@@ -2,10 +2,12 @@
 
 import Link from "next/link";
 import { useEffect } from "react";
+import { CaseVideo } from "@/components/case-video";
 import { StoryArt } from "@/components/story-art";
 import { capitalize, inWords } from "@/lib/use-room";
 import { sfx } from "@/lib/sfx";
-import { ART } from "@/mysteries/catalog";
+import { Cover } from "@/components/cover";
+import { ART, COVERS } from "@/mysteries/catalog";
 import type { Lexicon } from "@/mysteries/types";
 import type { RoomView } from "@/lib/rooms";
 import { mmss } from "./clock";
@@ -35,6 +37,12 @@ export function Reveal({ view, words }: { view: RoomView & { ending: NonNullable
 
       <div className="grid gap-10 lg:grid-cols-[1fr_22rem]">
         <div className="flex flex-col gap-10">
+          {solution.reveal && (
+            <section className="flex flex-col gap-3 border-t border-blue/30 pt-4">
+              <h2 className="font-pixel text-ui text-white">Watch it unfold</h2>
+              <CaseVideo slug={view.slug} src={solution.reveal} captions={solution.reveal.replace(/\.mp4$/, ".vtt")} />
+            </section>
+          )}
           <section className="flex flex-col gap-3 border-t border-blue/30 pt-4">
             <h2 className="font-pixel text-ui text-blue">What happened</h2>
             {solution.story.map((p, i) => (
@@ -63,12 +71,11 @@ export function Reveal({ view, words }: { view: RoomView & { ending: NonNullable
           {solved && (
             <section className="flex flex-col gap-2 border-t border-blue/30 pt-4 text-body text-white">
               <h2 className="font-pixel text-ui text-blue">Your place</h2>
-              {ending.caseRank != null && <p className="text-green">Place {inWords(ending.caseRank)} for this case.</p>}
-              {ending.globalRank != null && <p className="text-green">Place {inWords(ending.globalRank)} overall.</p>}
+              {ending.rank != null && <p className="text-green">Place {inWords(ending.rank)} on the leaderboard.</p>}
             </section>
           )}
           <div className="flex flex-wrap gap-6 text-body">
-            <Link href={`/leaderboard?slug=${view.slug}`} className="min-h-11 text-orange underline underline-offset-4">
+            <Link href="/leaderboard" className="min-h-11 text-orange underline underline-offset-4">
               See the leaderboard
             </Link>
             <Link href="/" className="min-h-11 text-white underline-offset-4 hover:underline focus-visible:underline">
@@ -76,7 +83,7 @@ export function Reveal({ view, words }: { view: RoomView & { ending: NonNullable
             </Link>
           </div>
         </div>
-        {ART[view.slug] && <StoryArt slug={view.slug} variant="end" />}
+        {COVERS[view.slug] ? <Cover slug={view.slug} src={COVERS[view.slug]} className="border" /> : ART[view.slug] && <StoryArt slug={view.slug} variant="end" />}
       </div>
     </div>
   );
