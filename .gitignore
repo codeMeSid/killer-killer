@@ -45,4 +45,5 @@ next-env.d.ts
 /.playwright-mcp/
 /.taste-skill/
 __pycache__/
-brag-output/
+brag-output*/
+trailer/work/
