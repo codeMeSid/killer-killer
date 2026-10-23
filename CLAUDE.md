@@ -1,10 +1,10 @@
 # killer-killer — codebase patterns
 
-Rules below are mandatory. They override general defaults. Add new rules here, never in scattered comments.
+Rules mandatory. Override general defaults. Add new rules here, never in scattered comments.
 
 ## 1. Color palette (strict)
 
-Only these five text colors are allowed anywhere in the UI. No other color, no Tailwind default color names, no hex outside this list.
+Only these five text colors allowed anywhere in UI. No other color, no Tailwind default color names, no hex outside list.
 
 | Token | Hex | Tailwind class | Use for |
 |---|---|---|---|
@@ -14,27 +14,27 @@ Only these five text colors are allowed anywhere in the UI. No other color, no T
 | blue | `#2472C8` | `text-blue` / `bg-blue` / `border-blue` | secondary/meta text, borders, links, pending |
 | orange | `#D97757` | `text-orange` / `bg-orange` / `border-orange` | warnings, degraded state, highlights/accents |
 
-- Tokens live in `src/app/globals.css` under `:root` and `@theme inline`. Change them there, never inline.
-- **Background is always obsidian black** (`--obsidian: #0B1215`), on every page, panel, card, input, and modal. No surface tints, no elevated greys, no `bg-white`, no gradients. Surfaces are separated by `border-blue/30..40`, never by a different background.
-  - Use `bg-background` (or leave it unset and inherit from `body`). Both resolve to obsidian.
-  - This is the only non-palette value in the app and it is not a text color.
-- Banned: `text-gray-*`, `text-neutral-*`, `emerald`, `slate`, arbitrary `text-[#...]`, and `dark:` variants (the app is single-theme dark).
-- Opacity modifiers on a palette token (`border-blue/40`) are allowed — it is still the same hue.
-- **Site frame:** `<body>` in `src/app/layout.tsx` carries `border border-orange` — one orange box around every page. Set it there only; inner surfaces still use `border-blue/30..40`.
+- Tokens in `src/app/globals.css` under `:root` and `@theme inline`. Change there, never inline.
+- **Background always obsidian black** (`--obsidian: #0B1215`): every page, panel, card, input, modal. No surface tints, no elevated greys, no `bg-white`, no gradients. Surfaces separated by `border-blue/30..40`, never different background.
+  - Use `bg-background` (or unset, inherit from `body`). Both = obsidian.
+  - Only non-palette value in app; not a text color.
+- Banned: `text-gray-*`, `text-neutral-*`, `emerald`, `slate`, arbitrary `text-[#...]`, `dark:` variants (app single-theme dark).
+- Opacity modifiers on palette token (`border-blue/40`) allowed — same hue.
+- **Site frame:** `<body>` in `src/app/layout.tsx` carries `border border-orange` — one orange box around every page. Set there only; inner surfaces still `border-blue/30..40`.
 
-- **Glow and RGB split are allowed, in palette hues only** (user decision 2026-10-15, retro CRT look): phosphor `text-shadow` in the text's own colour (`.font-pixel` gets it automatically), red/blue split in the `glitch` hit, obsidian scanlines/vignette, white snow. No other hue enters through an effect.
+- **Glow and RGB split allowed, palette hues only** (user decision 2026-10-15, retro CRT look): phosphor `text-shadow` in text's own colour (`.font-pixel` gets it automatically), red/blue split in `glitch` hit, obsidian scanlines/vignette, white snow. No other hue via effect.
 - **Fonts** (all via `next/font/google` in `src/app/layout.tsx`):
-  - Body: IBM Plex Mono 600 (default on `body`) / 700. `font-sans`/`font-mono` resolve to it. Anything read closely stays in Plex: phone options, clues, character card, premise, epilogue.
-  - Display: `font-pixel`, one pixel face per machine (§14): Pixelify Sans (TV), VT323 (phone terminal), Silkscreen (home computer). `font-arcade` = Press Start 2P for labels of three words or fewer (menu items, wordmark). Pixel faces get `font-synthesis: none` (no faux bold; VT323/Press Start ship one weight) and `font-size-adjust` so machines swap without reflow.
-  - ASCII art uses `font-art` (Geist Mono): Plex Mono lacks box-drawing glyphs, so the KILLER art would misalign.
+  - Body: IBM Plex Mono 600 (default on `body`) / 700. `font-sans`/`font-mono` resolve to it. Anything read closely stays Plex: phone options, clues, character card, premise, epilogue.
+  - Display: `font-pixel`, one pixel face per machine (§14): Pixelify Sans (TV), VT323 (phone terminal), Silkscreen (home computer). `font-arcade` = Press Start 2P for labels ≤3 words (menu items, wordmark). Pixel faces get `font-synthesis: none` (no faux bold; VT323/Press Start ship one weight) and `font-size-adjust` so machines swap without reflow.
+  - ASCII art uses `font-art` (Geist Mono): Plex Mono lacks box-drawing glyphs → KILLER art misaligns.
 
 ## 2. Stack
 
-Next.js (App Router) + TypeScript + Tailwind v4. Supabase for data, auth and realtime (Supabase project `killer-killer`, ref `clymvaueusidcxaqezjz`, ap-south-1).  Realtime is Supabase Realtime only (Ably removed 2026-10-15). One project holds both frontend and backend — no separate API service.
+Next.js (App Router) + TypeScript + Tailwind v4. Supabase for data, auth, realtime (Supabase project `killer-killer`, ref `clymvaueusidcxaqezjz`, ap-south-1). Realtime = Supabase Realtime only (Ably removed 2026-10-15). One project holds frontend + backend — no separate API service.
 
 ## 3. Backend responses
 
-Every route handler returns the envelope from `src/lib/api.ts`:
+Every route handler returns envelope from `src/lib/api.ts`:
 
 ```ts
 { success: boolean; errorMessage: string; errorCode: number; payload: T | null }
@@ -44,110 +44,104 @@ Use `ok(payload)` / `fail(message, code)`. No exceptions.
 
 ## 4. Secrets
 
-- `SUPABASE_SECRET_KEY`, `SUPABASE_DB_PASSWORD` are server-only. Never prefix with `NEXT_PUBLIC_`, never import `src/lib/supabase/admin.ts` from a Client Component.
-- The browser joins Realtime with its own anonymous-session JWT; private `room:<CODE>` channels are authorized by RLS on `realtime.messages` (members only, presence only, never broadcast).
-- `.env.local` is gitignored; keep `.env.example` in sync when adding a variable.
+- `SUPABASE_SECRET_KEY`, `SUPABASE_DB_PASSWORD` server-only. Never prefix `NEXT_PUBLIC_`, never import `src/lib/supabase/admin.ts` from Client Component.
+- Browser joins Realtime with own anonymous-session JWT; private `room:<CODE>` channels authorized by RLS on `realtime.messages` (members only, presence only, never broadcast).
+- `.env.local` gitignored; keep `.env.example` in sync when adding variable.
 
 ## 5. Supabase clients
 
 - Client Component → `createClient()` from `src/lib/supabase/client.ts`.
 - Server Component / route handler → `await createClient()` from `src/lib/supabase/server.ts` (session / auth only).
-- Game tables (`rooms`, `players`, `picks`, `votes`) → `adminClient()` from `src/lib/supabase/admin.ts` (secret key, `server-only`). Why: the engine writes other players' rows (sabotage, deaths), which per-user RLS can't express. Those tables have RLS **on with no policies** and no grants to `anon`/`authenticated`; route handlers authorize by user id before every query.
-- Identity is Supabase **anonymous auth**: `ensureUserId()` (`src/lib/auth.ts`) signs in on first join/create; the cookie keeps a refreshed phone in its seat.
+- Game tables (`rooms`, `players`, `picks`, `votes`) → `adminClient()` from `src/lib/supabase/admin.ts` (secret key, `server-only`). Why: engine writes other players' rows (sabotage, deaths), per-user RLS can't express. Those tables have RLS **on with no policies**, no grants to `anon`/`authenticated`; route handlers authorize by user id before every query.
+- Identity = Supabase **anonymous auth**: `ensureUserId()` (`src/lib/auth.ts`) signs in on first join/create; cookie keeps refreshed phone in its seat.
 - Enable RLS on every table in `public`. Never read authorization data from `user_metadata`.
-- Schema changes = new file in `supabase/migrations/` only.
+- Schema changes = new file in `supabase/migrations/` only. Never delete or edit an applied migration (drop tables in a new one): `db push` refuses when remote history has versions missing locally.
 
 ## 6. Responsive
 
-Mobile-first. Every screen must hold at 375px, 768px, and 1280px. No horizontal scroll. Verify new UI at all three widths before calling it done.
+Mobile-first. Every screen holds at 375px, 768px, 1280px. No horizontal scroll. Verify new UI at all three widths before done.
 
 ## 7. Before done
 
-`npm run typecheck && npm run lint && npm run build` must pass. Show the output.
+`npm run typecheck && npm run lint && npm run build` must pass. Show output.
 
 ## 8. Keep this file current (mandatory)
 
-Whenever a decision is made or a correction is given, update this file **in the same turn**, before reporting the work as done. No asking first — just do it.
+Decision made or correction given → update this file **same turn**, before reporting done. No asking — just do it.
 
 Triggers:
-- The user corrects something ("use X not Y", "always/never do Z", "change this to …").
-- The user states a preference, constraint, or convention.
-- A non-obvious technical choice gets made (a library, a pattern, a workaround for a framework rule).
-- A rule here turns out to be wrong or outdated.
+- User corrects something ("use X not Y", "always/never do Z", "change this to …").
+- User states preference, constraint, convention.
+- Non-obvious technical choice made (library, pattern, workaround for framework rule).
+- Rule here wrong or outdated.
 
 How to apply:
-1. If an existing section covers it, **edit that section** — do not append a duplicate rule elsewhere.
-2. Otherwise add a new numbered section.
-3. Append one line to the Decision log in `MEMORY.md`: `YYYY-MM-DD — what changed — why`.
-4. If the change affects code, make the code match in the same turn. Rules and code never drift apart.
+1. Existing section covers it → **edit that section** — no duplicate rule elsewhere.
+2. Else add new numbered section.
+3. Append one line to Decision log in `MEMORY.md`: `YYYY-MM-DD — what changed — why`.
+4. Change affects code → make code match same turn. Rules and code never drift.
 
-Record the *why*, not just the *what*. A rule without its reason gets reverted by the next person who finds it inconvenient.
+Record *why*, not just *what*. Rule without reason gets reverted by next person finding it inconvenient.
 
 ## 9. Compact at 50% context
 
-When context usage reaches **50%**, compact before continuing. Do not wait for the 95% auto-compact — a forced compact at the ceiling drops detail mid-task.
+Context usage hits **50%** → compact before continuing. Don't wait for 95% auto-compact — forced compact at ceiling drops detail mid-task.
 
-- At 50%: finish the current tool call, then run `/compact` (or ask for it if the turn can't be interrupted). Say that you're compacting and why.
-- Carry forward: files modified this session, failing tests with exact error text, DB migration state, architecture decisions and their *why*, the current task.
-- Anything already written to this file or `MEMORY.md` survives compaction — that's the point of §8 and §11. Write it down *before* compacting, not after.
+- At 50%: finish current tool call, run `/compact` (or ask if turn can't be interrupted). Say compacting and why.
+- Carry forward: files modified this session, failing tests with exact error text, DB migration state, architecture decisions + *why*, current task.
+- Anything already in this file or `MEMORY.md` survives compaction — point of §8 and §11. Write *before* compacting, not after.
 
 ## 10. Motion — layered, ominous base
 
 Three layers (user decision 2026-10-15: "all of the above"), one guardrail: **text being read never moves**.
 
-1. **Ambient, slow:** scanlines, tube hum (`animate-hum`), a rolling band on TV glass (`animate-scan-roll`), the rising ground, Hairline figures idling on their tour. Faint enough that narration stays legible.
-2. **Entrances, ominous:** `ease-ominous` (`cubic-bezier(0.7, 0, 0.3, 1)`, default for every `transition-*`), 700ms default, entrances out of the dark (`animate-rise`, `animate-print` for terminal lines, `animate-power-on` + snow `animate-static-burst` on every TV screen).
-3. **Hits, sharp (≤300ms):** `animate-glitch` (red/blue split, sliced) only on events: death, exposed sabotage, the reveal, all aboard, errors. `animate-flicker-in` for joins and lock-in. Loud moments = game start and the ending.
-- Every animation is gated `motion-safe:`; reduced motion keeps the content and drops the travel (the Hairline kernel skips its tour by itself).
-- Flashing: never more than three flashes a second over a large area (WCAG 2.3.1); the boot raster stays inside one thin bar.
-- Tokens + keyframes live in `src/app/globals.css` (`@theme`).
+1. **Ambient, slow:** scanlines, tube hum (`animate-hum`), rolling band on TV glass (`animate-scan-roll`), rising ground, Hairline figures idling on tour. Faint enough narration stays legible.
+2. **Entrances, ominous:** `ease-ominous` (`cubic-bezier(0.7, 0, 0.3, 1)`, default for every `transition-*`), 700ms default, entrances out of dark (`animate-rise`, `animate-print` for terminal lines, `animate-power-on` + snow `animate-static-burst` on every TV screen).
+3. **Hits, sharp (≤300ms):** `animate-glitch` (red/blue split, sliced) only on events: death, exposed sabotage, reveal, all aboard, errors. `animate-flicker-in` for joins and lock-in. Loud moments = game start and ending.
+- Every animation gated `motion-safe:`; reduced motion keeps content, drops travel (Hairline kernel skips tour by itself).
+- Flashing: never >3 flashes/sec over large area (WCAG 2.3.1); boot raster stays inside one thin bar.
+- Tokens + keyframes in `src/app/globals.css` (`@theme`).
 
 ## 11. MEMORY.md — decision log + project memory
 
-`MEMORY.md` (repo root) holds two things this file does not:
+`MEMORY.md` (repo root) holds two things this file doesn't:
 
-- **Decision log** — every decision/correction, one dated line, append-only. Supersede old entries with a new line; don't rewrite history.
-- **Memory** — live project state: what exists, what's open, known gotchas, env status. Edit in place so it reflects *now*; delete lines that stop being true.
+- **Decision log** — every decision/correction, one dated line, append-only. Supersede old entries with new line; don't rewrite history.
+- **Memory** — live project state: what exists, what's open, known gotchas, env status. Edit in place to reflect *now*; delete lines no longer true.
 
-Rules stay here; history and state go there. Update it in the same turn as the change (§8). It is imported below so it loads every session.
+Rules here; history and state there. Update same turn as change (§8). Imported below → loads every session.
 
-## 12. Game architecture
+## 12. Game architecture (co-op case file, user decision 2026-10-22)
 
-- **Server-authoritative.** All game logic lives in `src/lib/engine/` (pure TS port of the story-tree skill's `references/engine-rules.md`) and runs only in route handlers via `src/lib/rooms.ts`. Clients never compute outcomes.
-- **Realtime is a doorbell, not a pipe.** After each mutation the server sends a payload-free `state` broadcast (`httpSend`, secret key) on the private channel `room:<CODE>`; clients refetch `GET /api/rooms/[code]`. Clients may only listen and track presence (`supabase/migrations/*_realtime_rooms.sql`). Why: secrets can't leak over a channel that carries nothing, and reconnect = refetch.
-- **Views are the only data that leaves the server** (`src/lib/engine/view.ts`). Never send `killer_id`, `killer_method`, `points_to`, clue/item/scene/option ids, clue kinds or the track; phones submit picks by slot `A–D` and votes by suspect index. A character's `secret` and round result go only to that player's phone; `history` (the story so far) is public narration. The fuzz test in `engine.test.ts` enforces this (games run through the vote) — keep it passing.
-- **Race-safety by conditional update:** state transitions are `update … where phase = <expected>`; only one request wins a resolve (or a vote count).
-- **Phases:** `narrating → choosing → resolving → narrating …`; after round 10, `narrating → voting → finale`. The host TV calls `advance` **by itself** when the narration finishes (no host button; user decision 2026-10-15), and phones buzz + chime the moment their choices or ballot open. The vote: every living player names one suspect (never their own character) in `votes` (one row per player, primary key = vote once); the last ballot claims the count with `where phase = 'voting'`. Most votes on the killer = solved, on an innocent = wrong culprit, a tie = escape. The round-8 track only decides the evidence the TV reads before the vote (proof / frame / none).
-- **Mysteries are repo folders** `src/mysteries/<slug>/` written by the `murder-mystery-story-tree` skill: `tree.json` (schema `mm-story-tree/2`, `validate_tree.py` = 0 errors **and 0 warnings**, read through with `transcript.py`), `lexicon.json` (`validate_tree.py --lexicon`) and `art.ts` (its Hairline figure, wrapped by the skill's `scripts/art.py`). Option text must complete "You will …".
-  - **v2 story rules** (user, 2026-10-15: the old stories "didn't make sense"): each character has its own four options per scene (`personal[player_slot]`) and a private `secret`; every line names its actor (`{player}`) and only says what that actor did, because all players act at once and the TV reads every line in a row; every option changes something. Narration uses **character names** (`short_name`), never the names people typed, so the story stays in fiction and every line is known before the game (ready for pre-recorded AI voice later).
-  - Trees are secret → `src/mysteries/index.ts` (`server-only`). Words and art are public → `src/mysteries/catalog.ts` (`LEXICON`, code-split `ART`, `fill()`). A new story is registered in **both**. Views already carry `mystery.slug`; screens look words and art up by it.
-  - **The lexicon themes statements, statuses and loaders** (ship → decks and tides, space → hatches and oxygen); buttons keep plain verb + object labels. No setting words hard-coded in components or `rooms.ts`. Contract: the skill's `references/lexicon.md`, type in `src/mysteries/types.ts`.
-- Engine files use relative `.ts` imports so `npm test` (`node --test`) runs them natively.
-- `/dev/screens?s=<scene>` renders every game screen from engine-built views without DB/Realtime; 404 in production.
-- Supabase config is repo-tracked in `supabase/config.toml` (anonymous sign-ins on, 300/hour/IP — friends share one Wi-Fi). Change it there and `npx supabase config push`; never click-edit the dashboard. Review the diff before confirming: a blind `yes |` pushes every local default.
+- **Server-authoritative.** Whole case file open at once, same on every device; friends (up to 8 agents) read together, host accuses. Logic in `src/lib/rooms.ts` + `src/lib/case/{judge,score}.ts`, runs only in route handlers. Clients never judge.
+- **Case = repo folder** `src/mysteries/<slug>/`, written by `murder-mystery-story-tree` skill: `case.json` (`mm-case-file/1`, public), `solution.json` (`mm-case-solution/1`, secret), `lexicon.json`, `art.ts`; `validate_case.py` = 0 errors **and 0 warnings**. Solutions only in `src/mysteries/index.ts` (`server-only`); words/art/card in `catalog.ts`. New case registered in **both**. Item text never names the killer.
+- **Realtime = doorbell, not pipe.** After each mutation server sends payload-free `state` broadcast on private channel `room:<CODE>`; clients refetch `GET /api/rooms/[code]`. Presence key = agent, payload `{agent, itemId}` shows who reads what (`useRoom().reading`). Why: nothing secret can leak over a channel carrying nothing; reconnect = refetch.
+- **Pins** = shared evidence strip, `POST /pins` toggles; only folder items pinnable (`togglePin` rejects others).
+- **Guess race:** two guesses per room. Claim by `update rooms set guesses_used = n where status='playing' and guesses_used = n-1`; one request wins, other 409. Host-only (403 otherwise). Known gap: later writes (guess row, end, result) are separate, not one transaction.
+- **Scene photos/maps = SVG drawn by model, palette-only** (`#CD3131 #00FFB3 #E5E5E5 #2472C8 #D97757 #0B1215`), shown via `<img>` data URI so scripts can't run (user, 2026-10-22). Validator rejects `<script`, `on…=`, `foreignObject`, external `href`.
+- Leaderboards: per case + global, `results` table, `GET /api/leaderboard?slug=`.
+- Supabase config repo-tracked in `supabase/config.toml` (anonymous sign-ins on, 300/hour/IP). Change there + `npx supabase config push`; never click-edit dashboard. Review diff before confirming.
+- Engine-era rules (rounds, phases, personal options, votes, narrator) are gone.
+- `/dev/screens?s=desk|desk-item|accuse|wrong|solved|defeated` renders desk screens from in-code demo case (`src/components/dev/demo-case.ts`), no DB; 404 in production.
 
 ## 13. Game UI language
 
-Art direction from the `design-taste-frontend` skill: direction `sentence-as-layout`, seed 563288058, with `--keep palette,type` (§1 always wins over the skill).
-- **Narration is a page that builds up** on the TV (user correction 2026-10-15: one poster-scale sentence at a time with a typewriter was hard to follow): each sentence fades in and stays, current lit, earlier ones dimmed, in Plex `text-ui`; no typewriter, no seam ink on reading text. Headlines (statements, verdicts) stay poster scale, ≤ 2 lines at every width. Phones carry the whole narration as a folded **Story so far** (current scene pinned, rounds newest first, labelled by clock value) plus a private **What happened to you** card each round; the TV keeps **What everyone knows** (shared clues, party items, finale evidence).
 - **Type steps** (globals.css): `text-display`, `text-statement`, `text-ui`, `text-body`, `text-meta`. No other sizes in game screens.
-- **No round numbers anywhere** — the setting's clock (altitude) is the progress; the rising glyph ground (`ground.tsx`, glyphs from the lexicon) shows it. No option letters, no 01/02 numbering, no eyebrow labels.
-- **Ink by phase** on the `PhaseBar`: narrating white, choosing orange, ended/recap red, solved green. Nothing else recolours.
-- **Seam ink** (`seam-ink` utility): text above the ground line in its ink, below it blue. Two flat inks with a hard edge, the one sanctioned use of a CSS gradient — never a visible gradient.
-- **TV legibility:** anything read from the sofa (players, characters, status, join instructions, seat labels, buttons) is `text-body` or larger in white; blue `text-meta` is decoration only, never information. Why: blue is 3.9:1 on obsidian and the palette is fixed, so contrast has to come from size and ink choice.
-- **Disabled actions keep a full-contrast label that says why** ("Pick what you will do", "Waiting for two more aboard"); only the fill goes inactive. Never fade a primary button with opacity.
-- Counts in words ("Two of four locked in"), never digits in prose. Dice/rolls never appear.
-- Secrets on phones sit behind a tap-to-show toggle (`Identity` in `story-screen.tsx`) that hides itself after ten seconds and when the phone is put away. Never press-and-hold: a hidden gesture, hard one-handed, invisible to screen readers (user correction 2026-10-15).
-- **Pixel-art frames:** surfaces and controls use `pixel-border` + `pb-*` ink (square, corner pixel knocked out), never rounded corners. Swiss underneath: 12-column grid, flush left, blue hairline rules between sections.
+- **Layout:** header = team · code (+QR for host, collapsible) · clock · agents online. ≥768px folders left, item window right, pinned strip; 375px folder list → full-screen item with back. Brief opens first.
+- **Information in white** (`text-body`+); blue `text-meta` decoration only. Why: blue 3.9:1 on obsidian, palette fixed → contrast from size + ink.
+- **Disabled actions keep full-contrast label saying why**; only fill goes inactive. Never fade primary button with opacity. Accuse submit label says what is missing.
+- Wrong guess → `animate-glitch` + lexicon `wrong`, "One guess left". Ended → reveal (solved green / defeated red).
+- Counts in words, never digits in prose.
+- **Pixel-art frames:** `pixel-border` + `pb-*` ink, square, never rounded. Swiss underneath: 12-column grid, flush left, blue hairline rules.
+- **Per-story lexicon** themes statements, statuses, loaders; buttons keep plain verb + object labels.
+- Forms and routes kept alive in `<Activity>` reset via effect cleanup (join form, case picker).
 
-## 14. Retro machines, story art, sound
+## 14. Retro machines, art, sound
 
-Style (user, 2026-10-15): horror + pixel-art + maximalism + Swiss + flat 2D, as old machines. UX first; don't over-complicate.
-- **Machine by role** — wrap every screen in `<Machine kind>` (`src/components/machine.tsx`): `tv` = host lobby, `/mystery`, host `/end`, `RoomLoading`; `terminal` = `/join`, phone lobby, `/story`, phone `/end`; `computer` = `/` (boot sequence, once per session, any key skips) and `/start`. The machine sets the `font-pixel` face and lays CSS-only glass (scanlines, vignette, snow) over the screen.
-- **Story art** — `<StoryArt slug variant="card|hero|loader|end">` mounts the story's Hairline figure (`src/mysteries/<slug>/art.ts`) on the one shared kernel `src/lib/hairline/kernel.ts` (vendored verbatim; load it nowhere else — two instances duplicate the frame loop and mask ids). Figures are **not interactive** (`pointer-events-none`, read-out discarded, no caption): the figure loops its own tour only while `play` is true and otherwise rests on its composed pose (user correction 2026-10-15): the case card plays while it is the selected/focused one, the TV lobby hero plays while the mouse hovers it, loaders and the ending always play. A tour must read as a complete story with no hand on the screen. Hairline tiers are mapped to the palette in `.story-art` (hi orange, edge white, mid blue, lo dim blue, plates obsidian). Art must be ominous; figures never set colours or text.
-- **Loaders are the story's own lines** (`<LoaderLine lines={lexicon.play.loaders}>` + a `loader` figure). Only the very first `RoomLoading`, before the story is known, is generic ("Tuning in" over snow).
-- **Narrator voice** — browser `speechSynthesis`, **on by default** (`kk:voice` = `off` only when someone turned it off; `V` toggles). Effects key on the beat index and text, never the beat object (a refetch must not restart speech); the utterance is held in a module ref (Chrome GC drops `onend`); cancel only what is live and speak a tick later; a watchdog moves on if `onend` never fires. A refreshed TV has no user activation, so speech starts blocked: text timing plus "Click anywhere to hear the narrator". AI TTS (pre-recorded per line, cached in Supabase Storage) is deferred by the user; character-name narration keeps it possible.
-- **Sound** — `src/lib/sfx.ts`, WebAudio-synthesized (no files): `static`, `clack`, `blip`, `sting`, `thump`, `chime` (your move). On by default, toggle stored in `kk:sound`, `<SoundToggle>` on every game screen (TV also binds `S`). Audio unlocks on the first tap/key (autoplay rules). Hook sounds to events, never to idle loops.
-- The vendored kernel and the generated `art.ts` files are excluded from ESLint and carry `// @ts-nocheck` (they are verbatim skill output).
+Style (user, 2026-10-15): horror + pixel-art + maximalism + Swiss + flat 2D, as old machines. UX first.
+- **Machine by role** — wrap every screen in `<Machine kind>`: `computer` = `/` (boot sequence once per session), `/start`, `/case/[code]`, `/leaderboard`, `RoomLoading`; `terminal` = `/join`. Machine sets `font-pixel` face + CSS-only glass.
+- **Story art** — `<StoryArt slug variant>` mounts the case's Hairline figure on one shared kernel `src/lib/hairline/kernel.ts` (vendored verbatim; load nowhere else). Not interactive; plays only while selected/focused, loaders + ending always play. Hairline tiers mapped to palette in `.story-art`.
+- **Sound** — `src/lib/sfx.ts`, WebAudio-synthesized, on by default, `kk:sound`, `<SoundToggle>`. Audio unlocks on first gesture. Hook sounds to events, never idle loops. Narrator voice removed.
+- Vendored kernel + generated `art.ts` excluded from ESLint, carry `// @ts-nocheck`.
 
 @MEMORY.md
