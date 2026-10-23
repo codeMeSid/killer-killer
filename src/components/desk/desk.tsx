@@ -43,6 +43,7 @@ export function Desk({
   online,
   reading,
   onReading,
+  onChanged,
   lexicon,
   initial,
 }: {
@@ -50,6 +51,8 @@ export function Desk({
   online: number[];
   reading: Record<string, number[]>;
   onReading?: (itemId: string | null) => void;
+  /** Called after this device changes the room (pin, accusation) so it refetches without waiting for its own doorbell. */
+  onChanged?: () => void;
   lexicon?: Lexicon;
   initial?: DeskInitial;
 }) {
@@ -94,7 +97,7 @@ export function Desk({
     setOpen(true);
     setAccusing(false);
   };
-  const pin = (id: string) => void postJson(`/api/rooms/${view.code}/pins`, { itemId: id });
+  const pin = (id: string) => void postJson(`/api/rooms/${view.code}/pins`, { itemId: id }).then(() => onChanged?.());
   const joinUrl = `${origin}/join?code=${view.code}`;
   const pins = view.pins.filter((p, i, a) => a.findIndex((q) => q.itemId === p.itemId) === i);
   const labelOf = (id: string) => items.find((i) => i.id === id)?.title ?? id;
@@ -171,7 +174,7 @@ export function Desk({
             &lt; Back to the folders
           </button>
           {accusing && view.isHost ? (
-            <AccusePanel code={view.code} c={c} guessesLeft={left} onClose={() => setAccusing(false)} initial={initial?.draft} />
+            <AccusePanel code={view.code} c={c} guessesLeft={left} onClose={() => setAccusing(false)} onSent={onChanged} initial={initial?.draft} />
           ) : (
             <>
               <div className="flex flex-wrap items-center gap-x-4 gap-y-1">

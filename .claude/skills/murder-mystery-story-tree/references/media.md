@@ -77,3 +77,11 @@ Do not write the suspect's guilt or innocence into a voice prompt. Voice must no
 
 ## Checks before wiring
 `ffprobe -v error -show_format -show_streams <file>`: duration within target, audio stream present (evidence/reveal) or absent (teaser). `ls -l` vs budget. Read each `.vtt` for the killer's name (validator also checks). View one `snapshot` frame per clip for palette and square borders.
+
+## Learned in practice (first full run, ansel-corbin-night-train-5s)
+- **VoiceStudio over HTTP:** if the `voicestudio` MCP tools are not loaded (server added mid-session), POST JSON-RPC to `http://127.0.0.1:3900/mcp/` (`initialize`, then `tools/call`, header `Accept: application/json, text/event-stream`, echo `Mcp-Session-Id`). `open -a VoiceStudio` first; first launch installs its Python env (minutes), then returns 503 until ready.
+- **Tools that exist:** `generate_speech`, `list_voices`, `list_personalities`, `list_languages`, `transcribe`, `check_health`, `clone_voice`. There is no `design_voice`: voices come from `instruct` on `generate_speech`. `instruct` only accepts plain attributes (`middle-aged, low pitch, british accent`); extra mood words give HTTP 400. `clone_voice` needs a reference recording. Output is `wav_base64` (decode to .wav). One call per clip keeps one voice per clip; first call is slow (about 150 s), later calls fast.
+- **`transcribe`** returned 409 (ASR model missing). Captions were timed from the script by sentence length over the speech span (silence-trimmed). Fix: install the ASR model, or `brew install whisper-cpp` and `npx hyperframes transcribe`.
+- **HyperFrames needs `ffmpeg`** (`brew install ffmpeg`). Kokoro TTS fallback failed on Python 3.14 (espeak data missing); use VoiceStudio instead.
+- **Frame zero must not be empty:** the player shows the first frame as the poster. Do not fade the first scene in from opacity 0. Keep titles and images from overlapping (check a snapshot of frame zero).
+- Render with `--quality draft --fps 24`: teaser 0.25 MB, voicemail 0.8 MB, 47 s reveal 1.9 MB, well under budget.

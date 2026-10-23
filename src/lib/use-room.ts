@@ -44,6 +44,7 @@ export function useRoom(code: string) {
   const [reading, setReading_] = useState<Map<string, number[]>>(() => new Map());
   const chan = useRef<RealtimeChannel | null>(null);
   const mine = useRef<Presence>({ agent: 0, itemId: null });
+  const refetch = useRef<() => void>(() => {});
 
   useEffect(() => {
     let live = true;
@@ -61,6 +62,7 @@ export function useRoom(code: string) {
         return null;
       });
 
+    refetch.current = () => void refresh();
     void refresh().then(async (first) => {
       if (!live || !first) return;
       client = createClient();
@@ -114,7 +116,10 @@ export function useRoom(code: string) {
     void chan.current?.track(mine.current);
   }, []);
 
-  return { view, error, online, reading, setReading };
+  /** Pull the room now. The sender of a change calls this itself rather than wait for its own doorbell. */
+  const refresh = useCallback(() => refetch.current(), []);
+
+  return { view, error, online, reading, setReading, refresh };
 }
 
 /** Keeps the screen awake while mounted. The game waits forever for picks, so phones must not sleep. */

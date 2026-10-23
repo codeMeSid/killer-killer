@@ -16,12 +16,14 @@ export function AccusePanel({
   c,
   guessesLeft,
   onClose,
+  onSent,
   initial,
 }: {
   code: string;
   c: CaseFile;
   guessesLeft: number;
   onClose: () => void;
+  onSent?: () => void;
   initial?: Partial<Draft>;
 }) {
   const [d, setD] = useState<Draft>({ who: [], nobody: false, motive: "", method: "", ...initial });
@@ -47,7 +49,10 @@ export function AccusePanel({
     setError(null);
     sfx.clack();
     const res = await postJson<{ correct: boolean }>(`/api/rooms/${code}/guesses`, { who: d.who, nobody: d.nobody, motive: d.motive, method: d.method });
-    if (res.success) onClose(); // the doorbell brings the verdict to every device
+    if (res.success) {
+      onSent?.(); // sender refetches itself; the doorbell brings the verdict to the other devices
+      onClose();
+    }
     else {
       setError(res.errorMessage);
       setBusy(false);

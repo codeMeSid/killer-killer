@@ -478,6 +478,7 @@
     }
   ],
   "media": {
-    "cover": "cover.svg"
+    "cover": "cover.svg",
+    "teaser": "teaser.mp4"
   }
 }

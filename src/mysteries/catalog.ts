@@ -24,7 +24,7 @@ export const ART: Record<string, () => Promise<{ default: FigureDefine }>> = {
 };
 
 /** Teaser file per slug under public/cases/<slug>/ (silent loop for the picker card). Register by hand; must equal case.json media.teaser. */
-export const TEASERS: Record<string, string> = {};
+export const TEASERS: Record<string, string> = { "ansel-corbin-night-train-5s": "teaser.mp4" };
 
 /** Cover SVG per slug under public/cases/<slug>/ (card art). Register by hand; must equal case.json media.cover. */
 export const COVERS: Record<string, string> = { "hollis-brandt-lighthouse-4s": "cover.svg", "ansel-corbin-night-train-5s": "cover.svg" };

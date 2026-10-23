@@ -1,0 +1,7 @@
+{
+  "engine": "VoiceStudio 1.29.0 generate_speech (instruct voices, steps 24)",
+  "narrator": "middle-aged, low pitch, british accent",
+  "suspects": [],
+  "clips": { "e3": "middle-aged, moderate pitch, american accent" },
+  "note": "clone_voice needs a reference recording, so voices are instruct-designed per clip; captions timed from the script (transcribe was unavailable)."
+}
