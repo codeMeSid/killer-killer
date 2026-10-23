@@ -90,3 +90,4 @@
 - 2026-10-23 — Accuse screen → interrogation board (suspect portrait cards, SLIP strips, sticky slip, confirm + stamp sfx); `PORTRAITS` keyed by suspect index — user chose board + model-drawn portraits + confirm ceremony.
 - 2026-10-23 — Presence re-read on every `state` doorbell (`use-room.ts`) — guest once stuck on "one agent online" after a late presence_diff; 3 fresh rooms did not repro, so hardening not proven root cause.
 - 2026-10-23 — Palette blue #2472C8→#3B8EEA, red #CD3131→#E5484D (AA 4.5:1 on obsidian); decision log moved to docs/DECISIONS.md, no longer imported; vtt <track> dropped (burned-in captions) — user: 'do whatever saves cost and makes best app'.
+- 2026-10-23 — brag-output/ (promo video build) gitignored — user: pick best; skill brag-slim used from ~/.claude/skills.
