@@ -253,40 +253,21 @@ export async function submitGuess(rawCode: string, userId: string, raw: unknown)
   const correct = judge(solution, guess);
   const n = room.guesses_used + 1;
   const db = adminClient();
-  const { data: claimed, error } = await db
-    .from("rooms")
-    .update({ guesses_used: n })
-    .eq("id", room.id)
-    .eq("status", "playing")
-    .eq("guesses_used", n - 1)
-    .select(ROOM_COLS);
+  const seconds = Math.round((Date.now() - Date.parse(room.started_at)) / 1000);
+  const { data: claimed, error } = await db.rpc("submit_guess", {
+    p_room: room.id,
+    p_n: n,
+    p_who: guess.who,
+    p_motive: guess.motive,
+    p_method: guess.method,
+    p_correct: correct,
+    p_team: room.team,
+    p_case_slug: room.case_slug,
+    p_seconds: seconds,
+    p_score: score(c.difficulty, n as 1 | 2, seconds),
+  });
   if (error) throw error;
-  if (!claimed?.length) throw new ApiError("Already answered", 409);
-
-  const { error: gErr } = await db.from("guesses").insert({ room_id: room.id, n, ...guess, correct });
-  if (gErr) throw gErr;
-
-  const ended = correct || n === 2;
-  if (ended) {
-    const endedAt = new Date();
-    const { error: uErr } = await db
-      .from("rooms")
-      .update({ status: correct ? "solved" : "defeated", ended_at: endedAt.toISOString() })
-      .eq("id", room.id);
-    if (uErr) throw uErr;
-    if (correct) {
-      const seconds = Math.round((endedAt.getTime() - Date.parse(room.started_at)) / 1000);
-      const { error: rErr } = await db.from("results").insert({
-        room_id: room.id,
-        case_slug: room.case_slug,
-        team: room.team,
-        guesses: n,
-        seconds,
-        score: score(c.difficulty, n as 1 | 2, seconds),
-      });
-      if (rErr) throw rErr;
-    }
-  }
+  if (!claimed) throw new ApiError("Already answered", 409);
   await ring(room.code);
   return { correct, guessesUsed: n };
 }
