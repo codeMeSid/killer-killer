@@ -1,3 +1,4 @@
+import { unstable_rethrow } from "next/navigation";
 import { NextResponse } from "next/server";
 import { ApiError } from "./api-error.ts";
 
@@ -30,6 +31,8 @@ export async function handle<T>(fn: () => Promise<T>) {
   try {
     return ok(await fn());
   } catch (error) {
+    // Next signals dynamic bail-out by throwing; let it through or the route logs a fake 500 at build.
+    unstable_rethrow(error);
     if (error instanceof ApiError) return fail(error.message, error.status);
     console.error(error);
     return fail("Something went wrong in the dark. Try again.", 500);
