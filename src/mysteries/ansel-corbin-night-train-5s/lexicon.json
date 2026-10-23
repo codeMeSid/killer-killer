@@ -1,0 +1,17 @@
+{
+  "schema": "mm-lexicon/1",
+  "card": "A door opened over the viaduct at night.",
+  "desk": "The compartment table",
+  "accuse": "Name who opened the door",
+  "wrong": "Wrong passenger. The train rolls on.",
+  "solved": "The train stops. Your answer holds.",
+  "defeated": "Lorne at dawn. The case rolls on without you.",
+  "loaders": [
+    "Checking the timetable",
+    "Counting the carriages",
+    "Listening to the wheels"
+  ],
+  "full": "Every berth is taken.",
+  "no_room": "No train runs under that code.",
+  "gone": "That case has left the line."
+}

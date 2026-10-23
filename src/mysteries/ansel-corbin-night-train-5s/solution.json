@@ -1,0 +1,82 @@
+{
+  "schema": "mm-case-solution/1",
+  "killers": [
+    2
+  ],
+  "motive": "m4",
+  "method": "h3",
+  "story": [
+    "Ivo Sandre countersigned brake certificates for carriage four after the Dunmore depot flooded. He sold the stamp's work for cash and never inspected a pad.",
+    "Ansel Corbin found the forgery. At ten to midnight he left a voicemail saying he would name the signer at Lorne, and he warned Ivo the board would hear of it.",
+    "At Gram, Ivo carried Dr. Pell's bag and took a strip of somnex. He leaned in at the pantry hatch while Tilda fetched honey and crushed tablets into Ansel's toddy.",
+    "At a quarter past two, with the train on Harrow Viaduct, Ivo walked the drowsy auditor to the car four to five door, opened it with his own card, and pushed. A cuff button tore loose in the struggle.",
+    "Ivo relocked the door and returned to the van. Calla, Pell and Tilda heard only the wind in cabin seven."
+  ],
+  "deductions": [
+    {
+      "claim": "Only Ivo's card, C-01, opened the outer door at 02:14, and his missing cuff button matches the one beside the slipper.",
+      "part": "who",
+      "items": [
+        "t1",
+        "d2",
+        "e1",
+        "st1"
+      ]
+    },
+    {
+      "claim": "Ansel was about to name the signer of forged brake certificates, initialled I. S.",
+      "part": "why",
+      "items": [
+        "e3",
+        "d1",
+        "r3",
+        "d4"
+      ]
+    },
+    {
+      "claim": "Ansel was sedated with the doctor's stolen tablets in his toddy, then walked out of the outer door on the viaduct.",
+      "part": "how",
+      "items": [
+        "r2",
+        "e2",
+        "d3",
+        "st1",
+        "t1"
+      ]
+    }
+  ],
+  "herrings": [
+    {
+      "suspect": 0,
+      "ruled_out_by": [
+        "t1",
+        "t2",
+        "st4"
+      ]
+    },
+    {
+      "suspect": 1,
+      "ruled_out_by": [
+        "d3",
+        "t2",
+        "st4"
+      ]
+    },
+    {
+      "suspect": 3,
+      "ruled_out_by": [
+        "t1",
+        "t2",
+        "st4"
+      ]
+    },
+    {
+      "suspect": 4,
+      "ruled_out_by": [
+        "d2",
+        "mp1",
+        "x1"
+      ]
+    }
+  ]
+}

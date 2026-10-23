@@ -1,0 +1,483 @@
+{
+  "schema": "mm-case-file/1",
+  "slug": "ansel-corbin-night-train-5s",
+  "title": "Harrow Viaduct",
+  "difficulty": "medium",
+  "rating": "PG-13",
+  "setting": "A night sleeper from Gram to Lorne, crossing a viaduct at two in the morning",
+  "tone": "cold, clipped, rattling steel",
+  "victim": {
+    "name": "Ansel Corbin",
+    "summary": "Railway auditor, missing from cabin five and found below Harrow Viaduct."
+  },
+  "brief": "Ansel Corbin boarded the Meridian Night Sleeper at Gram. At dawn his cabin was empty and the bed untouched. A track crew found him below Harrow Viaduct. Five people were awake or within reach of car four that night.",
+  "suspects": [
+    {
+      "name": "Tilda Reeve",
+      "role": "Car attendant",
+      "relation": "Served Ansel's car all night",
+      "alibi": "Says she tended cabins and answered bells until dawn.",
+      "note": "Tired, quick to blame herself."
+    },
+    {
+      "name": "Dr. Osric Pell",
+      "role": "Passenger, physician",
+      "relation": "Sat across from Ansel at dinner",
+      "alibi": "Says he was in his own cabin until a call for help.",
+      "note": "Soft voice, stiff manner."
+    },
+    {
+      "name": "Ivo Sandre",
+      "role": "Conductor",
+      "relation": "Ran the train and held the crew keys",
+      "alibi": "Says he stamped manifests alone in the guard van.",
+      "note": "Polite, never rattled."
+    },
+    {
+      "name": "Calla Wren",
+      "role": "Passenger, parts supplier",
+      "relation": "Sold brake parts to the line Ansel audited",
+      "alibi": "Says she lay in cabin seven with a migraine.",
+      "note": "Sharp, sleeps badly."
+    },
+    {
+      "name": "Bram Okafor",
+      "role": "Passenger, retired engineer",
+      "relation": "Argued with Ansel over a sacked friend",
+      "alibi": "Says he sat up in cabin three with his bad hip.",
+      "note": "Gruff, walks with a cane."
+    }
+  ],
+  "folders": [
+    {
+      "id": "f1",
+      "kind": "suspects",
+      "title": "Suspects",
+      "items": [
+        {
+          "id": "su1",
+          "title": "Who was aboard",
+          "kind": "note",
+          "body": "Crew on duty: Ivo Sandre (conductor), Tilda Reeve (car attendant), one dining steward asleep off duty. Passengers in cars three to five: Dr. Osric Pell, Calla Wren, Bram Okafor, and Ansel Corbin in cabin five. Sleeping cars were locked to the dining car and van after eleven."
+        }
+      ]
+    },
+    {
+      "id": "f2",
+      "kind": "statements",
+      "title": "Statements",
+      "items": [
+        {
+          "id": "st1",
+          "title": "Tilda Reeve",
+          "kind": "statement",
+          "speaker": "Tilda Reeve",
+          "lines": [
+            {
+              "q": "What did you do for Mr. Corbin that night?",
+              "a": "He rang at a quarter to one for a milk toddy. I made it in the pantry and set it on the hatch at half past one."
+            },
+            {
+              "q": "Why on the hatch?",
+              "a": "I had no honey left. I went up to the dining car for a jar. The conductor leaned in at the hatch to talk while I fetched it. I was gone five minutes."
+            },
+            {
+              "q": "Did you notice anything about the crew that morning?",
+              "a": "Mr. Sandre's coat had lost a brass button at the cuff. He said it caught on a latch. I did not think about it again."
+            },
+            {
+              "q": "Where were you at a quarter past two?",
+              "a": "Cabin seven. Miss Wren rang with a migraine and the doctor was already there. I stayed with them until twenty-five past."
+            }
+          ]
+        },
+        {
+          "id": "st2",
+          "title": "Dr. Osric Pell",
+          "kind": "statement",
+          "speaker": "Dr. Osric Pell",
+          "lines": [
+            {
+              "q": "Did you see Mr. Corbin after dinner?",
+              "a": "No. We spoke over soup. He said he had a long night of paperwork."
+            },
+            {
+              "q": "Your sleeping tablets were reported missing. When did you notice?",
+              "a": "Before we left Gram. At the platform I turned and found my case open. I told the station master at ten to ten."
+            },
+            {
+              "q": "Who handled your bag?",
+              "a": "I bought a paper while the conductor carried it up to my car. Then I counted my strips."
+            },
+            {
+              "q": "Where were you at a quarter past two?",
+              "a": "In cabin seven. Miss Wren sent for me. I stayed at her bedside."
+            }
+          ]
+        },
+        {
+          "id": "st3",
+          "title": "Ivo Sandre",
+          "kind": "statement",
+          "speaker": "Ivo Sandre",
+          "lines": [
+            {
+              "q": "Where were you between half past one and three?",
+              "a": "In the guard van, stamping manifests. Alone. It is dull work and I do it every night."
+            },
+            {
+              "q": "Who holds the crew door cards?",
+              "a": "Three cards. Mine, the attendant's, and a spare sealed in the van safe. Mine stays on my belt."
+            },
+            {
+              "q": "Did you see anyone near car four?",
+              "a": "Mr. Okafor, earlier. He was pacing the corridor with his cane, angry about Corbin. I sent him back to his cabin."
+            },
+            {
+              "q": "The attendant says you lost a button.",
+              "a": "A latch caught my cuff. It happens on old stock."
+            }
+          ]
+        },
+        {
+          "id": "st4",
+          "title": "Calla Wren",
+          "kind": "statement",
+          "speaker": "Calla Wren",
+          "lines": [
+            {
+              "q": "How did you know Mr. Corbin?",
+              "a": "My firm sells brake parts to the line. He audited our invoices. We were not friends."
+            },
+            {
+              "q": "Where were you at a quarter past two?",
+              "a": "Cabin seven, flat on my back with a migraine. The doctor came, then the attendant with water."
+            },
+            {
+              "q": "Did you hear anything?",
+              "a": "A gust of cold air, a banging. It went on for a minute. I thought a window was open."
+            },
+            {
+              "q": "Did either of them leave?",
+              "a": "Neither. The doctor held my wrist. The attendant left a little after twenty past two."
+            }
+          ]
+        },
+        {
+          "id": "st5",
+          "title": "Bram Okafor",
+          "kind": "statement",
+          "speaker": "Bram Okafor",
+          "lines": [
+            {
+              "q": "What was your quarrel with Mr. Corbin?",
+              "a": "He wrote a report that got my friend sacked. I told him so at dinner. I said nothing more."
+            },
+            {
+              "q": "Where were you at a quarter past two?",
+              "a": "Cabin three. My hip was bad. I sat up with the light on."
+            },
+            {
+              "q": "Could you reach car four's far door?",
+              "a": "I could walk to the car four corridor. The outer door needs a crew card. I have never held one."
+            },
+            {
+              "q": "Did you give Mr. Corbin a drink?",
+              "a": "I bought him a brandy at dinner. He left it. That was all."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "f3",
+      "kind": "reports",
+      "title": "Reports",
+      "items": [
+        {
+          "id": "r1",
+          "title": "Track crew report, Harrow Viaduct",
+          "kind": "report",
+          "sections": [
+            {
+              "heading": "Found",
+              "body": "At first light, a man lay on the embankment below the central pier. A single leather slipper lay on the ballast beside him."
+            },
+            {
+              "heading": "Scene",
+              "body": "No tracks other than the crew's. Nothing on the rails above. The viaduct rail is intact."
+            },
+            {
+              "heading": "Note",
+              "body": "The outer door between cars four and five was latched when the train reached Lorne."
+            }
+          ]
+        },
+        {
+          "id": "r2",
+          "title": "Lorne station surgeon, post-mortem",
+          "kind": "report",
+          "sections": [
+            {
+              "heading": "Cause",
+              "body": "Injuries consistent with a fall from a moving train at speed."
+            },
+            {
+              "heading": "Bloods",
+              "body": "Heavy sedative present: somnex, a prescription sleeping agent. No sign of struggle on the hands or arms."
+            },
+            {
+              "heading": "Stomach",
+              "body": "Milk and a trace of honey. He had taken the sedative within an hour of death."
+            }
+          ]
+        },
+        {
+          "id": "r3",
+          "title": "Brake inspection log, carriage four",
+          "kind": "report",
+          "sections": [
+            {
+              "heading": "Pads",
+              "body": "Front pads measured below the legal limit at the last depot stop. Re-measure ordered."
+            },
+            {
+              "heading": "Certificate",
+              "body": "Brake certificate 4417 shows the Dunmore depot stamp. Dunmore depot closed that month for flooding."
+            },
+            {
+              "heading": "Countersign",
+              "body": "Countersigned in ink by the conductor on duty. Initials: I. S."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "f4",
+      "kind": "evidence",
+      "title": "Evidence",
+      "items": [
+        {
+          "id": "e1",
+          "title": "Vestibule floor, cars four and five",
+          "kind": "photo",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 640 360\" fill=\"none\">\n<rect width=\"640\" height=\"360\" fill=\"#0B1215\"/>\n<rect x=\"60\" y=\"30\" width=\"520\" height=\"230\" stroke=\"#E5E5E5\" stroke-width=\"4\"/>\n<rect x=\"240\" y=\"50\" width=\"160\" height=\"210\" stroke=\"#2472C8\" stroke-width=\"3\"/>\n<path d=\"M320 50V260\" stroke=\"#2472C8\" stroke-width=\"3\"/>\n<path d=\"M255 70H305M335 70H385\" stroke=\"#2472C8\" stroke-width=\"3\"/>\n<path d=\"M60 260H580L620 330H20Z\" stroke=\"#E5E5E5\" stroke-width=\"3\"/>\n<path d=\"M120 290H520M80 310H560\" stroke=\"#2472C8\" stroke-width=\"2\"/>\n<path d=\"M120 120H215M110 150H215M125 180H215\" stroke=\"#E5E5E5\" stroke-width=\"2\" stroke-dasharray=\"14 10\"/>\n<path d=\"M430 120H530M420 150H540M435 180H525\" stroke=\"#E5E5E5\" stroke-width=\"2\" stroke-dasharray=\"14 10\"/>\n<path d=\"M170 285C170 270 210 265 245 272C262 276 262 292 244 296C210 302 170 300 170 285Z\" fill=\"#0B1215\" stroke=\"#E5E5E5\" stroke-width=\"4\"/>\n<path d=\"M175 282C200 280 225 282 248 285\" stroke=\"#2472C8\" stroke-width=\"3\"/>\n<circle cx=\"356\" cy=\"292\" r=\"12\" fill=\"#D97757\" stroke=\"#E5E5E5\" stroke-width=\"3\"/>\n<circle cx=\"356\" cy=\"292\" r=\"5\" stroke=\"#0B1215\" stroke-width=\"3\"/>\n<path d=\"M395 284L420 300M395 300L420 284\" stroke=\"#CD3131\" stroke-width=\"3\"/>\n<rect x=\"1\" y=\"1\" width=\"638\" height=\"358\" stroke=\"#2472C8\" stroke-width=\"2\"/>\n</svg>",
+          "caption": "The vestibule between cars four and five. A single slipper lies on the floor. Beside it a small brass button with a stamped crest. The outer door frame shows scuffs."
+        },
+        {
+          "id": "e2",
+          "title": "Cabin five table",
+          "kind": "photo",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 640 360\" fill=\"none\">\n<rect width=\"640\" height=\"360\" fill=\"#0B1215\"/>\n<path d=\"M40 250H600\" stroke=\"#E5E5E5\" stroke-width=\"4\"/>\n<path d=\"M70 250V340M570 250V340\" stroke=\"#E5E5E5\" stroke-width=\"4\"/>\n<path d=\"M60 40H220V200H60Z\" stroke=\"#2472C8\" stroke-width=\"3\"/>\n<path d=\"M60 120H220\" stroke=\"#2472C8\" stroke-width=\"2\"/>\n<path d=\"M200 190C200 232 316 232 316 190L306 150H210Z\" fill=\"#0B1215\" stroke=\"#E5E5E5\" stroke-width=\"4\"/>\n<path d=\"M205 168H312\" stroke=\"#E5E5E5\" stroke-width=\"3\"/>\n<path d=\"M214 175C240 190 270 182 306 176\" stroke=\"#2472C8\" stroke-width=\"3\"/>\n<path d=\"M316 168C348 160 348 200 312 196\" stroke=\"#E5E5E5\" stroke-width=\"4\"/>\n<path d=\"M170 236H350\" stroke=\"#E5E5E5\" stroke-width=\"4\"/>\n<circle cx=\"390\" cy=\"236\" r=\"4\" fill=\"#E5E5E5\"/><circle cx=\"406\" cy=\"240\" r=\"3\" fill=\"#E5E5E5\"/><circle cx=\"380\" cy=\"244\" r=\"3\" fill=\"#E5E5E5\"/><circle cx=\"420\" cy=\"234\" r=\"2\" fill=\"#E5E5E5\"/><circle cx=\"398\" cy=\"228\" r=\"2\" fill=\"#E5E5E5\"/>\n<path d=\"M440 210L540 190L552 232L452 252Z\" fill=\"#0B1215\" stroke=\"#D97757\" stroke-width=\"3\"/>\n<path d=\"M464 226C478 214 490 238 504 224C516 214 522 230 530 218\" stroke=\"#D97757\" stroke-width=\"2\"/>\n<path d=\"M482 200L488 242\" stroke=\"#D97757\" stroke-width=\"2\" stroke-dasharray=\"6 5\"/>\n<path d=\"M500 90L540 90M520 70V110\" stroke=\"#2472C8\" stroke-width=\"3\"/>\n<rect x=\"1\" y=\"1\" width=\"638\" height=\"358\" stroke=\"#2472C8\" stroke-width=\"2\"/>\n</svg>",
+          "caption": "Cabin five. A cup with a milk skin and a ring of honey. White crumbs on the saucer. A torn foil strip lies by a folded paper."
+        },
+        {
+          "id": "e3",
+          "title": "Voicemail, 23:50",
+          "kind": "video",
+          "src": "e3.mp4",
+          "captions": "e3.vtt"
+        }
+      ]
+    },
+    {
+      "id": "f5",
+      "kind": "documents",
+      "title": "Documents",
+      "items": [
+        {
+          "id": "d1",
+          "title": "Ansel's audit notebook, torn page",
+          "kind": "note",
+          "body": "Carriage four. Four certificates, one stamp, same smudge on every pad. Dunmore stamp dated the month the depot flooded. Someone signs these on the train and the depot never sees them. Tell nobody before Lorne. Name the signer to the board."
+        },
+        {
+          "id": "d2",
+          "title": "Crew card roster",
+          "kind": "note",
+          "body": "C-01 issued to I. Sandre, conductor. A-02 issued to T. Reeve, car attendant. S-03 spare, sealed in the guard van safe. Cards open cabin doors on their own car and the outer doors between cars. Passengers hold cabin keys only."
+        },
+        {
+          "id": "d3",
+          "title": "Incident slip, Gram station",
+          "kind": "note",
+          "body": "21:50. Dr. O. Pell reports his sleeping tablets missing from a case left open on the platform. Station master noted: eight strips of somnex, taken between the cab rank and car five."
+        },
+        {
+          "id": "d4",
+          "title": "Copy of brake certificate 4417",
+          "kind": "note",
+          "body": "Brake certificate 4417, carriage four. Dunmore depot stamp, smudged at the lower edge. Countersigned in ink, initials I. S. Date line left blank."
+        }
+      ]
+    },
+    {
+      "id": "f6",
+      "kind": "timeline",
+      "title": "Timeline",
+      "items": [
+        {
+          "id": "t1",
+          "title": "Door controller log",
+          "kind": "log",
+          "rows": [
+            {
+              "at": "22:31",
+              "text": "Car four to five outer door locked automatically."
+            },
+            {
+              "at": "23:00",
+              "text": "Sleeping cars locked to passengers. Crew cards only."
+            },
+            {
+              "at": "01:41",
+              "text": "Card A-02 opens cabin five door, closes after ninety seconds."
+            },
+            {
+              "at": "02:12",
+              "text": "Card A-02 opens cabin seven door."
+            },
+            {
+              "at": "02:14",
+              "text": "Car four to five outer door unlocked by card C-01. Held open thirty-eight seconds."
+            },
+            {
+              "at": "02:15",
+              "text": "Outer door relocked."
+            },
+            {
+              "at": "02:26",
+              "text": "Card A-02 closes cabin seven door."
+            },
+            {
+              "at": "05:58",
+              "text": "Spare card S-03 safe seal checked, unbroken."
+            }
+          ]
+        },
+        {
+          "id": "t2",
+          "title": "Night timeline",
+          "kind": "log",
+          "rows": [
+            {
+              "at": "22:30",
+              "text": "Train leaves Gram."
+            },
+            {
+              "at": "23:10",
+              "text": "Quarrel in the dining car between A. Corbin and B. Okafor, steward notes."
+            },
+            {
+              "at": "23:50",
+              "text": "Ansel leaves a voicemail for head office."
+            },
+            {
+              "at": "00:45",
+              "text": "Cabin five rings for a milk toddy."
+            },
+            {
+              "at": "01:30",
+              "text": "Toddy set on the pantry hatch. Attendant leaves for honey."
+            },
+            {
+              "at": "01:41",
+              "text": "Toddy delivered to cabin five."
+            },
+            {
+              "at": "02:08",
+              "text": "Cabin seven rings. Doctor arrives."
+            },
+            {
+              "at": "02:14",
+              "text": "Train enters Harrow Viaduct."
+            },
+            {
+              "at": "02:25",
+              "text": "Attendant leaves cabin seven."
+            },
+            {
+              "at": "06:00",
+              "text": "Wake call. Cabin five found empty."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "f7",
+      "kind": "map",
+      "title": "Map",
+      "items": [
+        {
+          "id": "mp1",
+          "title": "Train plan",
+          "kind": "map",
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 640 360\" fill=\"none\">\n<rect width=\"640\" height=\"360\" fill=\"#0B1215\"/>\n<path d=\"M20 180H620\" stroke=\"#2472C8\" stroke-width=\"2\" stroke-dasharray=\"4 8\"/>\n<rect x=\"30\" y=\"120\" width=\"86\" height=\"120\" stroke=\"#E5E5E5\" stroke-width=\"3\"/>\n<rect x=\"124\" y=\"120\" width=\"86\" height=\"120\" stroke=\"#E5E5E5\" stroke-width=\"3\"/>\n<rect x=\"218\" y=\"120\" width=\"86\" height=\"120\" stroke=\"#E5E5E5\" stroke-width=\"3\"/>\n<rect x=\"312\" y=\"120\" width=\"86\" height=\"120\" stroke=\"#E5E5E5\" stroke-width=\"3\"/>\n<rect x=\"406\" y=\"120\" width=\"86\" height=\"120\" stroke=\"#E5E5E5\" stroke-width=\"3\"/>\n<rect x=\"500\" y=\"120\" width=\"86\" height=\"120\" stroke=\"#E5E5E5\" stroke-width=\"3\"/>\n<path d=\"M116 180H124M210 180H218M304 180H312M398 180H406M492 180H500\" stroke=\"#D97757\" stroke-width=\"4\"/>\n<path d=\"M398 150V210\" stroke=\"#CD3131\" stroke-width=\"5\"/>\n<text x=\"73\" y=\"112\" fill=\"#E5E5E5\" font-family=\"monospace\" font-size=\"14\" text-anchor=\"middle\">VAN</text>\n<text x=\"167\" y=\"112\" fill=\"#E5E5E5\" font-family=\"monospace\" font-size=\"14\" text-anchor=\"middle\">DINE</text>\n<text x=\"261\" y=\"112\" fill=\"#E5E5E5\" font-family=\"monospace\" font-size=\"14\" text-anchor=\"middle\">CAR 3</text>\n<text x=\"355\" y=\"112\" fill=\"#E5E5E5\" font-family=\"monospace\" font-size=\"14\" text-anchor=\"middle\">CAR 4</text>\n<text x=\"449\" y=\"112\" fill=\"#E5E5E5\" font-family=\"monospace\" font-size=\"14\" text-anchor=\"middle\">CAR 5</text>\n<text x=\"543\" y=\"112\" fill=\"#E5E5E5\" font-family=\"monospace\" font-size=\"14\" text-anchor=\"middle\">CAR 6</text>\n<text x=\"73\" y=\"184\" fill=\"#2472C8\" font-family=\"monospace\" font-size=\"13\" text-anchor=\"middle\">crew</text>\n<text x=\"167\" y=\"184\" fill=\"#2472C8\" font-family=\"monospace\" font-size=\"13\" text-anchor=\"middle\">pantry</text>\n<text x=\"261\" y=\"156\" fill=\"#E5E5E5\" font-family=\"monospace\" font-size=\"13\" text-anchor=\"middle\">cabins 1-4</text>\n<text x=\"355\" y=\"156\" fill=\"#E5E5E5\" font-family=\"monospace\" font-size=\"13\" text-anchor=\"middle\">cabins 5-6</text>\n<text x=\"449\" y=\"156\" fill=\"#E5E5E5\" font-family=\"monospace\" font-size=\"13\" text-anchor=\"middle\">cabins 7-8</text>\n<text x=\"543\" y=\"156\" fill=\"#2472C8\" font-family=\"monospace\" font-size=\"13\" text-anchor=\"middle\">luggage</text>\n<text x=\"261\" y=\"214\" fill=\"#D97757\" font-family=\"monospace\" font-size=\"13\" text-anchor=\"middle\">3</text>\n<text x=\"355\" y=\"214\" fill=\"#D97757\" font-family=\"monospace\" font-size=\"13\" text-anchor=\"middle\">5</text>\n<text x=\"449\" y=\"214\" fill=\"#D97757\" font-family=\"monospace\" font-size=\"13\" text-anchor=\"middle\">7</text>\n<text x=\"398\" y=\"262\" fill=\"#CD3131\" font-family=\"monospace\" font-size=\"13\" text-anchor=\"middle\">outer door</text>\n<path d=\"M20 290H620M20 308H620\" stroke=\"#2472C8\" stroke-width=\"2\"/>\n<rect x=\"1\" y=\"1\" width=\"638\" height=\"358\" stroke=\"#2472C8\" stroke-width=\"2\"/>\n</svg>",
+          "caption": "Guard van, dining car, then cars three to six. The only link between car four and car five is the red outer door."
+        }
+      ]
+    },
+    {
+      "id": "f8",
+      "kind": "extras",
+      "title": "Extras",
+      "items": [
+        {
+          "id": "x1",
+          "title": "Dining car receipt",
+          "kind": "note",
+          "body": "23:05. One brandy, signed to cabin five, ordered by B. Okafor. Untouched when cleared at 23:40. Steward's note: heated words between the two men, no blows."
+        }
+      ]
+    }
+  ],
+  "motives": [
+    {
+      "id": "m1",
+      "text": "Revenge for a friend sacked after an earlier audit"
+    },
+    {
+      "id": "m2",
+      "text": "A debt Ansel was about to call in"
+    },
+    {
+      "id": "m3",
+      "text": "Ansel was blocking the sale of the line"
+    },
+    {
+      "id": "m4",
+      "text": "Ansel was about to expose forged brake certificates the killer signed"
+    },
+    {
+      "id": "m5",
+      "text": "Ansel had seen a stolen cargo loaded at night"
+    }
+  ],
+  "methods": [
+    {
+      "id": "h1",
+      "text": "Pushed through the window of his own cabin"
+    },
+    {
+      "id": "h2",
+      "text": "Struck on the head in his cabin and thrown from the train"
+    },
+    {
+      "id": "h3",
+      "text": "Sedated in his nightcap, walked to the outer door and pushed out on the viaduct"
+    },
+    {
+      "id": "h4",
+      "text": "Poisoned with heart tablets and dropped later"
+    },
+    {
+      "id": "h5",
+      "text": "Thrown from the outer door by an emergency brake jolt"
+    }
+  ],
+  "media": {
+    "cover": "cover.svg"
+  }
+}
