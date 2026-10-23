@@ -5,8 +5,8 @@ import { useEffect, useState } from "react";
 import { sfx } from "@/lib/sfx";
 
 const OPTIONS = [
-  { value: "start", label: "Start Mystery", href: "/start" },
-  { value: "join", label: "Join Mystery", href: "/join" },
+  { value: "start", label: "Start Case", href: "/start" },
+  { value: "join", label: "Join Case", href: "/join" },
 ] as const;
 
 /**
@@ -25,6 +25,7 @@ export function ModeMenu() {
     };
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Enter") {
+        if (e.target instanceof HTMLButtonElement || e.target instanceof HTMLAnchorElement) return;
         e.preventDefault();
         open(selected);
         return;

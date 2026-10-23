@@ -1,16 +1,10 @@
 import Link from "next/link";
 import { Machine } from "@/components/machine";
-import { PhaseBar } from "@/components/phase-bar";
-import { WaitingDots } from "@/components/waiting-dots";
 
-/**
- * Shown while a game screen fetches its first view, or when the room can't be reached. The story
- * isn't known yet, so this is the set itself, untuned: a square of snow and "Tuning in".
- */
+/** Shown while the desk fetches its first view, or when the case can't be reached. */
 export function RoomLoading({ error }: { error: string | null }) {
   return (
-    <Machine kind="tv">
-      <PhaseBar ink={error ? "red" : "white"} />
+    <Machine kind="computer">
       <div className="flex flex-1 flex-col justify-center gap-6 px-4 sm:px-8">
         {error ? (
           <>
@@ -22,13 +16,9 @@ export function RoomLoading({ error }: { error: string | null }) {
             </Link>
           </>
         ) : (
-          <>
-            <div aria-hidden className="snow aspect-[5/4] w-40 opacity-40 motion-safe:animate-hum sm:w-56" />
-            <p className="font-pixel text-statement text-white">
-              Tuning in
-              <WaitingDots />
-            </p>
-          </>
+          <p className="font-pixel text-statement text-white">
+            Opening the file<span className="motion-safe:animate-blink">_</span>
+          </p>
         )}
       </div>
     </Machine>

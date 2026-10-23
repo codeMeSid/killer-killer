@@ -1,8 +1,8 @@
 import { handle } from "@/lib/api";
 import { currentUserId } from "@/lib/auth";
-import { viewFor } from "@/lib/rooms";
+import { roomView } from "@/lib/rooms";
 
-/** The caller's role-scoped view of the room: host or player, never anyone else's secrets. */
+/** The same case file on every device. The solution stays out until the case is closed. */
 export async function GET(_req: Request, ctx: RouteContext<"/api/rooms/[code]">) {
-  return handle(async () => viewFor((await ctx.params).code, await currentUserId()));
+  return handle(async () => roomView((await ctx.params).code, await currentUserId()));
 }

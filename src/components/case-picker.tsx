@@ -1,102 +1,113 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState, type FormEvent } from "react";
+import { FillButton } from "@/components/fill-button";
 import { StoryArt } from "@/components/story-art";
 import { sfx } from "@/lib/sfx";
-import type { MysteryCard } from "@/mysteries";
-import { fill, lexiconFor } from "@/mysteries/catalog";
-import { capitalize, DIFFICULTY_INK, inWords, postJson } from "@/lib/use-room";
+import { capitalize, DIFFICULTY_INK, postJson } from "@/lib/use-room";
+import { ART, CATALOG, LEXICON } from "@/mysteries/catalog";
 
 /**
- * "Pick a case." over a row of cartridges, one per story, each carrying the story's own Hairline
- * figure (it loops on its own). ←/→/↑/↓ anywhere moves the selection, Enter opens it; clicking a
- * cartridge opens it directly (same grammar as the home menu).
+ * "Pick a case." A row of cartridges (one per case, each with its Hairline figure while selected),
+ * then the team name. Submitting creates the room; this device becomes the host and agent one.
  */
-export function CasePicker({ cards }: { cards: MysteryCard[] }) {
+export function CasePicker() {
   const router = useRouter();
   const [selected, setSelected] = useState(0);
-  const [opening, setOpening] = useState<string | null>(null);
+  const [team, setTeam] = useState("");
+  const [opening, setOpening] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const card = CATALOG[selected];
+  const ready = !!card && team.trim().length > 0 && !opening;
 
-  const open = useCallback(
-    async (slug: string) => {
-      if (opening) return;
-      setOpening(slug);
+  // Hidden routes stay mounted (<Activity>); wipe on hide so Back starts fresh.
+  useEffect(
+    () => () => {
+      setTeam("");
+      setOpening(false);
       setError(null);
-      sfx.clack();
-      const res = await postJson<{ code: string }>("/api/rooms", { mystery: slug });
-      if (res.success && res.payload) router.push(`/lobby/${res.payload.code}`);
-      else {
-        setError(res.errorMessage);
-        setOpening(null);
-      }
     },
-    [opening, router],
+    [],
   );
 
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        void open(cards[selected].slug);
-        return;
-      }
-      const step = e.key === "ArrowRight" || e.key === "ArrowDown" ? 1 : e.key === "ArrowLeft" || e.key === "ArrowUp" ? -1 : 0;
-      if (!step) return;
-      e.preventDefault();
-      sfx.blip();
-      setSelected((i) => (i + step + cards.length) % cards.length);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [cards, selected, open]);
+  const onSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!ready) return;
+    setOpening(true);
+    setError(null);
+    sfx.clack();
+    const res = await postJson<{ code: string }>("/api/rooms", { slug: card.slug, team: team.trim() });
+    if (res.success && res.payload) router.push(`/case/${res.payload.code}`);
+    else {
+      setError(res.errorMessage);
+      setOpening(false);
+    }
+  };
 
   return (
-    <div className="relative flex flex-1 flex-col gap-10 px-4 pt-8 pb-8 sm:px-8 lg:pt-12">
+    <form onSubmit={onSubmit} className="flex flex-1 flex-col gap-10 px-4 pt-8 pb-8 sm:px-8 lg:pt-12">
       <h1 className="font-pixel text-display text-white motion-safe:animate-print">Pick a case.</h1>
 
-      <ul className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-        {cards.map((card, i) => {
-          const active = i === selected;
-          const words = lexiconFor(card.slug);
-          return (
-            <li key={card.slug} className={`flex motion-safe:animate-rise ${i ? "motion-safe:[animation-delay:300ms]" : ""}`}>
-              <button
-                type="button"
-                onMouseEnter={() => setSelected(i)}
-                onFocus={() => setSelected(i)}
-                onClick={() => {
-                  setSelected(i);
-                  void open(card.slug);
-                }}
-                aria-label={`${card.title}, ${card.difficulty}, ${card.playerCount} players`}
-                className={`pixel-border flex w-[calc(100%-6px)] flex-col self-stretch text-left transition-[box-shadow,transform] focus-visible:outline-none ${
-                  active ? "pb-orange -translate-y-1" : "pb-dim"
-                }`}
-              >
-                <StoryArt slug={card.slug} variant="card" play={active} className="border-b border-blue/30" />
-                <span className="flex flex-1 flex-col gap-3 p-5">
-                  <span className={`min-h-[2lh] font-pixel text-ui ${active ? "text-orange" : "text-white"}`}>{card.title}</span>
-                  <span className="min-h-[2lh] text-body text-white">{fill(words.hook, { victim: card.victim })}</span>
-                  <span className="text-body">
-                    <span className={DIFFICULTY_INK[card.difficulty] ?? "text-white"}>{capitalize(card.difficulty)}</span>
-                    <span className="text-white"> · {capitalize(inWords(card.playerCount))} players</span>
+      {CATALOG.length === 0 ? (
+        <p className="text-body text-white">No case files on the shelf yet.</p>
+      ) : (
+        <ul className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {CATALOG.map((c, i) => {
+            const active = i === selected;
+            return (
+              <li key={c.slug} className="flex motion-safe:animate-rise">
+                <button
+                  type="button"
+                  onClick={() => {
+                    sfx.blip();
+                    setSelected(i);
+                  }}
+                  aria-pressed={active}
+                  aria-label={`${c.title}, ${c.difficulty}`}
+                  className={`pixel-border flex w-[calc(100%-6px)] flex-col self-stretch text-left transition-[box-shadow,transform] focus-visible:outline-none ${
+                    active ? "pb-orange -translate-y-1" : "pb-dim"
+                  }`}
+                >
+                  {ART[c.slug] && <StoryArt slug={c.slug} variant="card" play={active} className="border-b border-blue/30" />}
+                  <span className="flex flex-1 flex-col gap-3 p-5">
+                    <span className={`font-pixel text-ui ${active ? "text-orange" : "text-white"}`}>{c.title}</span>
+                    <span className="text-body text-white">{LEXICON[c.slug]?.card ?? c.setting}</span>
+                    <span className={`text-body ${DIFFICULTY_INK[c.difficulty] ?? "text-white"}`}>{capitalize(c.difficulty)}</span>
                   </span>
-                  {opening === card.slug && <span className="font-pixel text-body text-orange">Loading the cartridge…</span>}
-                </span>
-              </button>
-            </li>
-          );
-        })}
-      </ul>
-
-      <p className="mt-auto max-w-xl text-body text-blue">Pick a case on this screen. Your friends join it from their phones.</p>
-      {error && (
-        <p role="alert" className="text-body text-red motion-safe:animate-glitch">
-          {error}
-        </p>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
       )}
-    </div>
+
+      <label className="flex w-full max-w-lg flex-col gap-2 text-orange">
+        <span className="font-pixel text-ui">
+          <span aria-hidden>&gt; </span>Team name
+        </span>
+        <input
+          value={team}
+          onChange={(e) => setTeam(e.target.value)}
+          maxLength={24}
+          autoComplete="off"
+          placeholder="who is on the case?"
+          className="w-full border-b border-orange/40 bg-background py-2 text-body text-orange caret-orange outline-none transition-colors [caret-shape:block] placeholder:text-orange/60 focus:border-orange"
+        />
+      </label>
+
+      <div className="flex w-full max-w-lg flex-col gap-3">
+        <FillButton type="submit" disabled={!ready}>
+          {opening ? "Opening the file…" : !card ? "No case to open" : !team.trim() ? "Name your team" : "Start Case"}
+        </FillButton>
+        {error && (
+          <p role="alert" className="text-body text-red motion-safe:animate-glitch">
+            {error}
+          </p>
+        )}
+      </div>
+
+      <p className="mt-auto max-w-xl text-body text-blue">Everyone reads the same file. Your friends join with the code.</p>
+    </form>
   );
 }

@@ -1,20 +1,13 @@
 "use client";
 
 import type { RealtimeChannel } from "@supabase/supabase-js";
-import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { ApiResponse } from "@/lib/api";
-import type { HostView, PlayerView } from "@/lib/engine/view";
+import type { RoomView } from "@/lib/rooms";
 import { createClient } from "@/lib/supabase/client";
 
-export type RoomView = HostView | PlayerView;
-
-/** Where this viewer belongs right now. Every game screen redirects here when it disagrees. */
-export function pathFor(view: RoomView): string {
-  if (view.status === "lobby") return `/lobby/${view.code}`;
-  if (view.status === "ended" && view.phase === "finale") return `/end/${view.code}`;
-  return view.role === "host" ? `/mystery/${view.code}` : `/story/${view.code}`;
-}
+export type { RoomView };
 
 export async function postJson<T>(url: string, body: unknown = {}): Promise<ApiResponse<T>> {
   try {
@@ -36,20 +29,25 @@ async function fetchView(code: string): Promise<{ view: RoomView } | { error: { 
   }
 }
 
+type Presence = { agent: number; itemId: string | null };
+
 /**
- * Live room state for a screen. Supabase Realtime only rings a doorbell; the view itself is always
- * fetched from the server, so a reconnect or refresh simply refetches. Presence marks who is connected.
+ * Live room state. Supabase Realtime only rings a doorbell; the view is always fetched from the
+ * server, so a reconnect or refresh simply refetches. Presence (key = agent) carries who is online
+ * and which item each agent is reading; none of it touches the database.
  */
 export function useRoom(code: string) {
   const router = useRouter();
-  const pathname = usePathname();
   const [view, setView] = useState<RoomView | null>(null);
   const [error, setError] = useState<{ message: string; code: number } | null>(null);
-  const [online, setOnline] = useState<Set<string>>(() => new Set());
+  const [online, setOnline] = useState<Set<number>>(() => new Set());
+  const [reading, setReading_] = useState<Map<string, number[]>>(() => new Map());
+  const chan = useRef<RealtimeChannel | null>(null);
+  const mine = useRef<Presence>({ agent: 0, itemId: null });
 
   useEffect(() => {
     let live = true;
-    let channel: { supabase: ReturnType<typeof createClient>; ch: RealtimeChannel } | null = null;
+    let client: ReturnType<typeof createClient> | null = null;
     // State is only ever set in these promise callbacks, never synchronously in the effect.
     const refresh = () =>
       fetchView(code).then((res) => {
@@ -65,47 +63,58 @@ export function useRoom(code: string) {
 
     void refresh().then(async (first) => {
       if (!live || !first) return;
-      const supabase = createClient();
+      client = createClient();
       // Private channel: Realtime checks room membership (RLS on realtime.messages) with this JWT.
-      await supabase.realtime.setAuth();
+      await client.realtime.setAuth();
       if (!live) return;
-      const me = first.role === "player" ? first.you.id : "host";
-      const ch = supabase.channel(`room:${code}`, { config: { private: true, presence: { key: me } } });
-      channel = { supabase, ch };
-      ch.on("broadcast", { event: "state" }, () => void refresh())
-        .on("presence", { event: "sync" }, () => {
-          if (live) setOnline(new Set(Object.keys(ch.presenceState())));
-        })
-        .subscribe((status) => {
-          if (status !== "SUBSCRIBED") return;
-          void ch.track({ at: Date.now() });
-          // Missed pings while offline are caught up on every (re)subscribe.
-          void refresh();
-        });
+      mine.current = { agent: first.me, itemId: mine.current.itemId };
+      const ch = client.channel(`room:${code}`, { config: { private: true, presence: { key: String(first.me) } } });
+      chan.current = ch;
+      ch.on("broadcast", { event: "state" }, () => void refresh()).on("presence", { event: "sync" }, () => {
+        if (!live) return;
+        const on = new Set<number>();
+        const map = new Map<string, number[]>();
+        for (const [key, metas] of Object.entries(ch.presenceState<Presence>())) {
+          const agent = Number(key);
+          on.add(agent);
+          const itemId = metas[metas.length - 1]?.itemId;
+          if (itemId) map.set(itemId, [...(map.get(itemId) ?? []), agent].sort((a, b) => a - b));
+        }
+        setOnline(on);
+        setReading_(map);
+      });
+      ch.subscribe((status) => {
+        if (status !== "SUBSCRIBED") return;
+        void ch.track(mine.current);
+        // Missed pings while offline are caught up on every (re)subscribe.
+        void refresh();
+      });
     });
 
     return () => {
       live = false;
-      if (channel) void channel.supabase.removeChannel(channel.ch);
+      if (client && chan.current) void client.removeChannel(chan.current);
+      chan.current = null;
       // Next keeps hidden routes mounted in <Activity>; wipe so the next visit starts clean.
       setView(null);
       setError(null);
+      setOnline(new Set());
+      setReading_(new Map());
     };
   }, [code]);
 
-  // Follow the room: lobby → game → ending, per role.
-  useEffect(() => {
-    if (!view) return;
-    const target = pathFor(view);
-    if (target !== pathname) router.replace(target);
-  }, [view, pathname, router]);
-
-  // A phone with no seat in this room belongs on the join screen.
+  // A device with no seat in this room belongs on the join screen.
   useEffect(() => {
     if (error && (error.code === 401 || error.code === 403)) router.replace(`/join?code=${code}`);
   }, [error, code, router]);
 
-  return { view, error, online };
+  /** Tell the team which item this agent has open (null = none). */
+  const setReading = useCallback((itemId: string | null) => {
+    mine.current = { ...mine.current, itemId };
+    void chan.current?.track(mine.current);
+  }, []);
+
+  return { view, error, online, reading, setReading };
 }
 
 /** Keeps the screen awake while mounted. The game waits forever for picks, so phones must not sleep. */

@@ -1,33 +1,49 @@
 import "server-only";
 import { ApiError } from "@/lib/api";
 import { adminClient } from "@/lib/supabase/admin";
-import { optionsFor, resolveRound, resolveVote, startGame, validatePick, validateVote } from "@/lib/engine/engine";
-import type { GameState, Pick, Slot } from "@/lib/engine/types";
-import { hostView, playerView, type HostView, type PlayerView, type RoomPhase, type RoomStatus, type ViewInput } from "@/lib/engine/view";
-import { fill, lexiconFor } from "@/mysteries/catalog";
-import { getMystery, type Mystery } from "@/mysteries";
+import { judge, validateGuess } from "@/lib/case/judge";
+import { score } from "@/lib/case/score";
+import { lexiconFor } from "@/mysteries/catalog";
+import { getCase, getSolution } from "@/mysteries";
+import type { CaseFile, Solution } from "@/mysteries/types";
 
-// The server-authoritative game loop. Every mutation: authorize by user id → conditional update
-// (so racing requests can't double-apply) → ring the Realtime doorbell. Clients then refetch their view.
+// Co-op case file. Every mutation: authorize by user id → conditional write (racing requests can't
+// double-apply) → ring the Realtime doorbell. Clients then refetch their view.
 
+type RoomStatus = "playing" | "solved" | "defeated";
 type RoomRow = {
   id: string;
   code: string;
-  mystery_slug: string;
+  case_slug: string;
+  team: string;
   host_id: string;
   status: RoomStatus;
-  phase: RoomPhase;
-  round: number;
-  state: GameState | null;
+  guesses_used: 0 | 1 | 2;
+  started_at: string;
+  ended_at: string | null;
 };
-type PlayerRow = { id: string; user_id: string; name: string; seat: number };
-type PickRow = { player_id: string; option_id: string; pushed: boolean; target_player_id: string | null };
-type VoteRow = { player_id: string; suspect_index: number };
+const ROOM_COLS = "id, code, case_slug, team, host_id, status, guesses_used, started_at, ended_at";
 
-const CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // no 0/O/1/I: read off a TV across a room
+export type RoomView = {
+  code: string;
+  slug: string;
+  team: string;
+  isHost: boolean;
+  me: number;
+  agents: number[];
+  pins: { itemId: string; agent: number }[];
+  status: RoomStatus;
+  guessesUsed: 0 | 1 | 2;
+  lastWrong: boolean;
+  startedAt: string;
+  endedAt: string | null;
+  case: CaseFile;
+  ending: null | { solution: Solution; seconds: number; caseRank: number | null; globalRank: number | null };
+};
+
+const CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // no 0/O/1/I: read off a screen across a room
 const UNIQUE_VIOLATION = "23505";
-
-const rng = () => crypto.getRandomValues(new Uint32Array(1))[0] / 2 ** 32;
+const MAX_AGENTS = 8;
 
 function newCode(): string {
   const bytes = crypto.getRandomValues(new Uint8Array(8));
@@ -36,54 +52,33 @@ function newCode(): string {
 
 export function normalizeCode(raw: string): string {
   const code = raw.toUpperCase();
-  if (!/^[A-Z0-9]{8}$/.test(code)) throw new ApiError("No mystery with that code.", 404);
+  if (!/^[A-Z0-9]{8}$/.test(code)) throw new ApiError("No case with that code.", 404);
   return code;
 }
 
-function mysteryOf(room: RoomRow): Mystery {
-  const m = getMystery(room.mystery_slug);
-  if (!m) throw new ApiError("That case file is gone.", 404); // a story removed from the repo
-  return m;
+function caseOf(room: RoomRow): CaseFile {
+  const c = getCase(room.case_slug);
+  if (!c) throw new ApiError("That case file is gone.", 404); // removed from the repo
+  return c;
 }
 
-async function load(code: string): Promise<{ room: RoomRow; players: PlayerRow[] }> {
-  const db = adminClient();
-  const { data: room, error } = await db
-    .from("rooms")
-    .select("id, code, mystery_slug, host_id, status, phase, round, state")
-    .eq("code", code)
-    .maybeSingle<RoomRow>();
+async function load(code: string): Promise<RoomRow> {
+  const { data, error } = await adminClient().from("rooms").select(ROOM_COLS).eq("code", code).maybeSingle<RoomRow>();
   if (error) throw error;
-  if (!room) throw new ApiError("No mystery with that code.", 404);
-  const { data: players, error: pErr } = await db
-    .from("players")
-    .select("id, user_id, name, seat")
-    .eq("room_id", room.id)
-    .order("seat")
-    .returns<PlayerRow[]>();
-  if (pErr) throw pErr;
-  return { room, players: players ?? [] };
+  if (!data) throw new ApiError("No case with that code.", 404);
+  return data;
 }
 
-async function roundPicks(room: RoomRow): Promise<PickRow[]> {
+async function agentOf(room: RoomRow, userId: string): Promise<number> {
   const { data, error } = await adminClient()
-    .from("picks")
-    .select("player_id, option_id, pushed, target_player_id")
+    .from("members")
+    .select("agent")
     .eq("room_id", room.id)
-    .eq("round", room.round)
-    .returns<PickRow[]>();
+    .eq("user_id", userId)
+    .maybeSingle<{ agent: number }>();
   if (error) throw error;
-  return data ?? [];
-}
-
-async function roomVotes(room: RoomRow): Promise<VoteRow[]> {
-  const { data, error } = await adminClient()
-    .from("votes")
-    .select("player_id, suspect_index")
-    .eq("room_id", room.id)
-    .returns<VoteRow[]>();
-  if (error) throw error;
-  return data ?? [];
+  if (!data) throw new ApiError("You're not on this case.", 403);
+  return data.agent;
 }
 
 /**
@@ -103,232 +98,221 @@ async function ring(code: string) {
   }
 }
 
-function requireHost(room: RoomRow, userId: string) {
-  if (room.host_id !== userId) throw new ApiError("Only the host screen can do that.", 403);
-}
-
-// ---------------------------------------------------------------- reads
-
-export async function preview(rawCode: string) {
-  const { room, players } = await load(normalizeCode(rawCode));
-  const { tree } = mysteryOf(room);
-  return {
-    title: tree.meta.title,
-    difficulty: tree.meta.difficulty,
-    playerCount: tree.meta.player_count,
-    seatsLeft: Math.max(0, tree.meta.player_count - players.length),
-    status: room.status,
-    slug: room.mystery_slug,
-  };
-}
-
-export async function viewFor(rawCode: string, userId: string | null): Promise<HostView | PlayerView> {
-  if (!userId) throw new ApiError("You're not in this mystery.", 401);
-  const { room, players } = await load(normalizeCode(rawCode));
-  const { tree } = mysteryOf(room);
-  const voting = room.status === "playing" && room.phase === "voting";
-  const picks = room.status === "playing" && !voting ? await roundPicks(room) : [];
-  const votes = voting ? await roomVotes(room) : [];
-  const input: ViewInput = {
-    tree,
-    slug: room.mystery_slug,
-    code: room.code,
-    status: room.status,
-    phase: room.phase,
-    state: room.state,
-    roster: players.map((p) => ({ id: p.id, name: p.name })),
-    locked: new Set((voting ? votes : picks).map((p) => p.player_id)),
-  };
-  if (room.host_id === userId) return hostView(input);
-  const me = players.find((p) => p.user_id === userId);
-  if (!me) throw new ApiError("You're not in this mystery.", 403);
-  const mine = picks.find((p) => p.player_id === me.id);
-  const slot = mine && room.state ? optionsFor(tree, room.state, me.id).find((o) => o.id === mine.option_id)?.slot : undefined;
-  const myVote = votes.find((v) => v.player_id === me.id)?.suspect_index ?? null;
-  return playerView(input, { id: me.id, name: me.name }, slot ? { slot } : null, myVote);
-}
-
-// ---------------------------------------------------------------- mutations
-
-export async function createRoom(userId: string, slug: string): Promise<{ code: string }> {
-  if (!getMystery(slug)) throw new ApiError("That case file doesn't exist.", 404);
+export async function createRoom(userId: string, slug: string, rawTeam: unknown): Promise<{ code: string }> {
+  if (!getCase(slug)) throw new ApiError("That case file doesn't exist.", 404);
+  const team = typeof rawTeam === "string" ? rawTeam.trim().replace(/\s+/g, " ") : "";
+  if (!team || team.length > 24) throw new ApiError("Name your team, 24 characters at most.", 400);
+  const db = adminClient();
   for (let attempt = 0; attempt < 5; attempt++) {
     const code = newCode();
-    const { error } = await adminClient().from("rooms").insert({ code, mystery_slug: slug, host_id: userId });
-    if (!error) return { code };
-    if (error.code !== UNIQUE_VIOLATION) throw error;
+    const { data, error } = await db
+      .from("rooms")
+      .insert({ code, case_slug: slug, team, host_id: userId })
+      .select("id")
+      .single<{ id: string }>();
+    if (error) {
+      if (error.code === UNIQUE_VIOLATION) continue;
+      throw error;
+    }
+    const { error: mErr } = await db.from("members").insert({ room_id: data.id, user_id: userId, agent: 1 });
+    if (mErr) throw mErr;
+    return { code };
   }
   throw new Error("Could not find a free room code");
 }
 
-export async function joinRoom(rawCode: string, userId: string, rawName: string): Promise<{ code: string }> {
-  const name = rawName.trim().replace(/\s+/g, " ");
-  if (!name || name.length > 24) throw new ApiError("Give yourself a name, 24 characters at most.", 400);
-  const { room, players } = await load(normalizeCode(rawCode));
+export async function preview(rawCode: string) {
+  const room = await load(normalizeCode(rawCode));
+  const c = caseOf(room);
+  return { title: c.title, difficulty: c.difficulty, team: room.team, status: room.status, slug: room.case_slug };
+}
+
+/** Idempotent: a rejoin keeps its agent number. Next free number, up to eight. */
+export async function joinRoom(rawCode: string, userId: string): Promise<{ code: string }> {
+  const room = await load(normalizeCode(rawCode));
+  caseOf(room);
   const db = adminClient();
-
-  const existing = players.find((p) => p.user_id === userId);
-  if (existing) return { code: room.code }; // rejoin: same seat, same name
-  if (room.host_id === userId) throw new ApiError("This screen is hosting. Join from your phone.", 409);
-  const words = lexiconFor(room.mystery_slug).join;
-  if (room.status !== "lobby") throw new ApiError(words.started, 409);
-  const capacity = mysteryOf(room).tree.meta.player_count;
-  if (players.length >= capacity) throw new ApiError(words.full, 409);
-  if (players.some((p) => p.name.toLowerCase() === name.toLowerCase())) {
-    throw new ApiError(words.nameTaken, 409);
-  }
-
-  const taken = new Set(players.map((p) => p.seat));
-  const seat = Array.from({ length: capacity }, (_, i) => i + 1).find((s) => !taken.has(s))!;
-  const { error } = await db.from("players").insert({ room_id: room.id, user_id: userId, name, seat });
-  if (error?.code === UNIQUE_VIOLATION) throw new ApiError("Someone took that place or name a moment ago. Try again.", 409);
+  const { data: rows, error } = await db
+    .from("members")
+    .select("user_id, agent")
+    .eq("room_id", room.id)
+    .returns<{ user_id: string; agent: number }[]>();
   if (error) throw error;
+  const members = rows ?? [];
+  if (members.some((m) => m.user_id === userId)) return { code: room.code };
+  if (room.status !== "playing") throw new ApiError("That case is closed.", 409);
+  if (members.length >= MAX_AGENTS) throw new ApiError(lexiconFor(room.case_slug).full, 409);
+
+  const taken = new Set(members.map((m) => m.agent));
+  const agent = Array.from({ length: MAX_AGENTS }, (_, i) => i + 1).find((a) => !taken.has(a))!;
+  const { error: iErr } = await db.from("members").insert({ room_id: room.id, user_id: userId, agent });
+  if (iErr?.code === UNIQUE_VIOLATION) throw new ApiError("Someone took that seat a moment ago. Try again.", 409);
+  if (iErr) throw iErr;
   await ring(room.code);
   return { code: room.code };
 }
 
-export async function startRoom(rawCode: string, userId: string) {
-  const { room, players } = await load(normalizeCode(rawCode));
-  requireHost(room, userId);
-  if (room.status !== "lobby") return { code: room.code };
-  const { tree } = mysteryOf(room);
-  const missing = tree.meta.player_count - players.length;
-  if (missing > 0) throw new ApiError(`${fill(lexiconFor(room.mystery_slug).lobby.waiting, { n: missing })}.`, 409);
-
-  const state = startGame(tree, players.map((p) => ({ id: p.id, name: p.name })), rng);
-  const { error } = await adminClient()
-    .from("rooms")
-    .update({ status: "playing", phase: "narrating", round: state.round, state })
-    .eq("id", room.id)
-    .eq("status", "lobby");
+async function rankOf(column: "caseBoard" | "globalBoard", r: { room_id: string; case_slug: string; guesses: number; seconds: number; score: number }) {
+  const db = adminClient();
+  // Case board: fewer guesses, then faster. Global board: higher score. Rank = 1 + rows strictly ahead.
+  const q =
+    column === "caseBoard"
+      ? db
+          .from("results")
+          .select("room_id", { count: "exact", head: true })
+          .eq("case_slug", r.case_slug)
+          .or(`guesses.lt.${r.guesses},and(guesses.eq.${r.guesses},seconds.lt.${r.seconds})`)
+      : db.from("results").select("room_id", { count: "exact", head: true }).gt("score", r.score);
+  const { count, error } = await q;
   if (error) throw error;
-  await ring(room.code);
-  return { code: room.code };
+  return (count ?? 0) + 1;
 }
 
-/** Narration finished: open the round for choices, the vote (after round 10), or (story over) the ending. */
-export async function advance(rawCode: string, userId: string) {
-  const { room } = await load(normalizeCode(rawCode));
-  requireHost(room, userId);
-  if (room.phase !== "narrating") return { phase: room.phase }; // a double call is harmless
-  const phase: RoomPhase = room.status === "ended" ? "finale" : room.state?.voting ? "voting" : "choosing";
-  const { error } = await adminClient()
-    .from("rooms")
-    .update({ phase })
-    .eq("id", room.id)
-    .eq("phase", "narrating")
-    .eq("round", room.round);
-  if (error) throw error;
-  await ring(room.code);
-  return { phase };
-}
+export async function roomView(rawCode: string, userId: string | null): Promise<RoomView> {
+  if (!userId) throw new ApiError("You're not on this case.", 401);
+  const room = await load(normalizeCode(rawCode));
+  const me = await agentOf(room, userId);
+  const c = caseOf(room);
+  const db = adminClient();
+  const [{ data: members, error: mErr }, { data: pins, error: pErr }, { data: guesses, error: gErr }] = await Promise.all([
+    db.from("members").select("agent").eq("room_id", room.id).order("agent").returns<{ agent: number }[]>(),
+    db.from("pins").select("item_id, agent").eq("room_id", room.id).order("created_at").returns<{ item_id: string; agent: number }[]>(),
+    db.from("guesses").select("n, correct").eq("room_id", room.id).returns<{ n: number; correct: boolean }[]>(),
+  ]);
+  if (mErr || pErr || gErr) throw mErr ?? pErr ?? gErr;
 
-export async function lockIn(
-  rawCode: string,
-  userId: string,
-  body: { slot: Slot; pushed: boolean; targetId: string | null },
-) {
-  const { room, players } = await load(normalizeCode(rawCode));
-  const me = players.find((p) => p.user_id === userId);
-  if (!me) throw new ApiError("You're not in this mystery.", 403);
-  if (room.status !== "playing" || room.phase !== "choosing" || !room.state) {
-    throw new ApiError("Not yet. Eyes on the screen.", 409);
+  let ending: RoomView["ending"] = null;
+  if (room.status !== "playing") {
+    const solution = getSolution(room.case_slug);
+    if (!solution) throw new ApiError("That case file is gone.", 404);
+    const seconds = Math.round((Date.parse(room.ended_at ?? room.started_at) - Date.parse(room.started_at)) / 1000);
+    let caseRank: number | null = null;
+    let globalRank: number | null = null;
+    if (room.status === "solved") {
+      const { data: r, error } = await db
+        .from("results")
+        .select("room_id, case_slug, guesses, seconds, score")
+        .eq("room_id", room.id)
+        .maybeSingle<{ room_id: string; case_slug: string; guesses: number; seconds: number; score: number }>();
+      if (error) throw error;
+      if (r) [caseRank, globalRank] = await Promise.all([rankOf("caseBoard", r), rankOf("globalBoard", r)]);
+    }
+    ending = { solution, seconds, caseRank, globalRank };
   }
-  const { tree } = mysteryOf(room);
-  const problem = validatePick(tree, room.state, { playerId: me.id, ...body });
-  if (problem) throw new ApiError(problem, 400);
-  const option = optionsFor(tree, room.state, me.id).find((o) => o.slot === body.slot)!;
 
-  const { error } = await adminClient().from("picks").insert({
-    room_id: room.id,
-    round: room.round,
-    player_id: me.id,
-    option_id: option.id,
-    pushed: body.pushed,
-    target_player_id: option.sabotage?.scope === "player" ? body.targetId : null,
-  });
-  if (error?.code === UNIQUE_VIOLATION) throw new ApiError("You've already locked in.", 409);
-  if (error) throw error;
-
-  await ring(room.code);
-  await resolveIfComplete(room);
-  return { locked: true };
+  return {
+    code: room.code,
+    slug: room.case_slug,
+    team: room.team,
+    isHost: room.host_id === userId,
+    me,
+    agents: (members ?? []).map((m) => m.agent),
+    pins: (pins ?? []).map((p) => ({ itemId: p.item_id, agent: p.agent })),
+    status: room.status,
+    guessesUsed: room.guesses_used,
+    lastWrong: room.status === "playing" && (guesses ?? []).some((g) => !g.correct),
+    startedAt: room.started_at,
+    endedAt: room.ended_at,
+    case: c,
+    ending,
+  };
 }
 
-/** When every alive player has locked in, exactly one request claims the round and resolves it. */
-async function resolveIfComplete(room: RoomRow) {
-  const state = room.state!;
-  const picks = await roundPicks(room);
-  const alive = state.players.filter((p) => p.alive).length;
-  if (picks.length < alive) return;
+/** Pin an item for the team; pinning a pinned item un-pins it. */
+export async function togglePin(rawCode: string, userId: string, itemId: unknown) {
+  const room = await load(normalizeCode(rawCode));
+  const agent = await agentOf(room, userId);
+  const c = caseOf(room);
+  if (typeof itemId !== "string" || !c.folders.some((f) => f.items.some((i) => i.id === itemId))) {
+    throw new ApiError("That isn't in the file", 400);
+  }
+  const db = adminClient();
+  const { data: removed, error } = await db
+    .from("pins")
+    .delete()
+    .eq("room_id", room.id)
+    .eq("item_id", itemId)
+    .select("item_id");
+  if (error) throw error;
+  if (!removed?.length) {
+    const { error: iErr } = await db.from("pins").insert({ room_id: room.id, item_id: itemId, agent });
+    if (iErr && iErr.code !== UNIQUE_VIOLATION) throw iErr; // a racing pin already did the job
+  }
+  await ring(room.code);
+  return { pinned: !removed?.length };
+}
 
+/** Host only. One request wins each guess slot by conditional update; the loser gets 409. */
+export async function submitGuess(rawCode: string, userId: string, raw: unknown) {
+  const room = await load(normalizeCode(rawCode));
+  await agentOf(room, userId);
+  if (room.host_id !== userId) throw new ApiError("Only the host can make the accusation.", 403);
+  const c = caseOf(room);
+  const solution = getSolution(room.case_slug);
+  if (!solution) throw new ApiError("That case file is gone.", 404);
+  if (room.status !== "playing") throw new ApiError("That case is closed.", 409);
+
+  const guess = validateGuess(c, raw);
+  const correct = judge(solution, guess);
+  const n = room.guesses_used + 1;
   const db = adminClient();
   const { data: claimed, error } = await db
     .from("rooms")
-    .update({ phase: "resolving" })
+    .update({ guesses_used: n })
     .eq("id", room.id)
-    .eq("round", room.round)
-    .eq("phase", "choosing")
-    .select("id");
+    .eq("status", "playing")
+    .eq("guesses_used", n - 1)
+    .select(ROOM_COLS);
   if (error) throw error;
-  if (!claimed?.length) return; // another request won the race
+  if (!claimed?.length) throw new ApiError("Already answered", 409);
 
-  try {
-    const { tree } = mysteryOf(room);
-    const next = resolveRound(
-      tree,
-      state,
-      picks.map<Pick>((p) => ({ playerId: p.player_id, optionId: p.option_id, pushed: p.pushed, targetId: p.target_player_id })),
-      rng,
-    );
-    const { error: saveErr } = await db
+  const { error: gErr } = await db.from("guesses").insert({ room_id: room.id, n, ...guess, correct });
+  if (gErr) throw gErr;
+
+  const ended = correct || n === 2;
+  if (ended) {
+    const endedAt = new Date();
+    const { error: uErr } = await db
       .from("rooms")
-      .update({ state: next, round: next.round, phase: "narrating", status: next.ending ? "ended" : "playing" })
-      .eq("id", room.id)
-      .eq("phase", "resolving");
-    if (saveErr) throw saveErr;
-  } catch (e) {
-    await db.from("rooms").update({ phase: "choosing" }).eq("id", room.id).eq("phase", "resolving");
-    throw e;
+      .update({ status: correct ? "solved" : "defeated", ended_at: endedAt.toISOString() })
+      .eq("id", room.id);
+    if (uErr) throw uErr;
+    if (correct) {
+      const seconds = Math.round((endedAt.getTime() - Date.parse(room.started_at)) / 1000);
+      const { error: rErr } = await db.from("results").insert({
+        room_id: room.id,
+        case_slug: room.case_slug,
+        team: room.team,
+        guesses: n,
+        seconds,
+        score: score(c.difficulty, n as 1 | 2, seconds),
+      });
+      if (rErr) throw rErr;
+    }
   }
   await ring(room.code);
+  return { correct, guessesUsed: n };
 }
 
-export async function castVote(rawCode: string, userId: string, body: { index: number }) {
-  const { room, players } = await load(normalizeCode(rawCode));
-  const me = players.find((p) => p.user_id === userId);
-  if (!me) throw new ApiError("You're not in this mystery.", 403);
-  if (room.status !== "playing" || room.phase !== "voting" || !room.state) {
-    throw new ApiError("The vote isn't open.", 409);
-  }
-  const { tree } = mysteryOf(room);
-  const problem = validateVote(tree, room.state, me.id, body.index);
-  if (problem) throw new ApiError(problem, 400);
+type Row = { team: string; case_slug: string; guesses: number; seconds: number; score: number };
 
-  const { error } = await adminClient().from("votes").insert({ room_id: room.id, player_id: me.id, suspect_index: body.index });
-  if (error?.code === UNIQUE_VIOLATION) throw new ApiError("You've already voted.", 409);
-  if (error) throw error;
-
-  await ring(room.code);
-  await countIfComplete(room);
-  return { voted: true };
-}
-
-/** When every living player has voted, exactly one request claims the count and ends the story. */
-async function countIfComplete(room: RoomRow) {
-  const state = room.state!;
-  const votes = await roomVotes(room);
-  const living = state.players.filter((p) => p.alive);
-  if (!living.every((p) => votes.some((v) => v.player_id === p.id))) return;
-
-  const { tree } = mysteryOf(room);
-  const next = resolveVote(tree, state, Object.fromEntries(votes.map((v) => [v.player_id, v.suspect_index])));
-  const { data: claimed, error } = await adminClient()
-    .from("rooms")
-    .update({ state: next, status: "ended", phase: "finale" })
-    .eq("id", room.id)
-    .eq("phase", "voting")
-    .select("id");
-  if (error) throw error;
-  if (claimed?.length) await ring(room.code); // another request may have counted first
+/** Top 20 for one case (fewest guesses, then fastest) and overall (highest score). */
+export async function leaderboard(slug: string | null) {
+  const db = adminClient();
+  const cols = "team, case_slug, guesses, seconds, score";
+  const globalQ = db.from("results").select(cols).order("score", { ascending: false }).limit(20).returns<Row[]>();
+  const caseQ = slug
+    ? db
+        .from("results")
+        .select(cols)
+        .eq("case_slug", slug)
+        .order("guesses")
+        .order("seconds")
+        .limit(20)
+        .returns<Row[]>()
+    : null;
+  const [g, c] = await Promise.all([globalQ, caseQ]);
+  if (g.error) throw g.error;
+  if (c?.error) throw c.error;
+  return { caseBoard: c?.data ?? [], globalBoard: g.data ?? [] };
 }

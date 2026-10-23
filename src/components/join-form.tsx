@@ -6,32 +6,27 @@ import { Fragment, useEffect, useRef, useState, type FormEvent, type KeyboardEve
 import type { ApiResponse } from "@/lib/api";
 import { sfx } from "@/lib/sfx";
 import { capitalize, postJson } from "@/lib/use-room";
-import { fill, LEXICON } from "@/mysteries/catalog";
 
 const LENGTH = 8;
 
-type Preview = { title: string; difficulty: string; playerCount: number; seatsLeft: number; status: string; slug: string };
+type Preview = { title: string; difficulty: string; team: string; status: string; slug: string };
 
-/** What the code found, as one line under the boxes, in the story's own words. Null `ok` = still looking. */
-function describe(p: ApiResponse<Preview> | null): { text: string; ok: boolean | null; joining?: string } {
+/** What the code found, as one line under the boxes. Null `ok` = still looking. */
+function describe(p: ApiResponse<Preview> | null): { text: string; ok: boolean | null } {
   if (!p) return { text: "Searching…", ok: null };
-  if (!p.success || !p.payload) return { text: p.errorMessage || "No mystery with that code.", ok: false };
-  const { title, difficulty, seatsLeft, status, slug } = p.payload;
-  const words = LEXICON[slug]?.join;
-  if (status !== "lobby") return { text: words?.started ?? "That game has started.", ok: false };
-  if (seatsLeft === 0) return { text: words?.full ?? "Every place is taken.", ok: false };
-  const left = fill(words?.left ?? "Places left: {n}", { n: seatsLeft });
-  return { text: `${title} · ${capitalize(difficulty)} · ${left}`, ok: true, joining: words?.joining };
+  if (!p.success || !p.payload) return { text: p.errorMessage || "No case with that code.", ok: false };
+  const { title, difficulty, team, status } = p.payload;
+  if (status !== "playing") return { text: "That case is closed.", ok: false };
+  return { text: `${title} · ${capitalize(difficulty)} · Team ${team}`, ok: true };
 }
 
 /**
- * 8-character alphanumeric join code in GitHub-style OTP boxes (XXXX–XXXX), then a name.
+ * 8-character alphanumeric join code in GitHub-style OTP boxes (XXXX–XXXX). No name: devices become Agents.
  * Typing advances, Backspace goes back, paste fills. Stored uppercase. A full code is looked up
- * at once, so a wrong code is caught before the name is typed.
+ * at once, so a wrong code is caught before joining.
  */
 export function JoinForm({ initialCode = "" }: { initialCode?: string }) {
   const [digits, setDigits] = useState<string[]>(() => Array.from({ length: LENGTH }, (_, i) => initialCode[i] ?? ""));
-  const [name, setName] = useState("");
   const [preview, setPreview] = useState<{ code: string; res: ApiResponse<Preview> } | null>(null);
   const [joining, setJoining] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -58,7 +53,6 @@ export function JoinForm({ initialCode = "" }: { initialCode?: string }) {
   useEffect(
     () => () => {
       setDigits(Array.from({ length: LENGTH }, (_, i) => initialCode[i] ?? ""));
-      setName("");
       setError(null);
       setJoining(false);
     },
@@ -98,17 +92,17 @@ export function JoinForm({ initialCode = "" }: { initialCode?: string }) {
   };
 
   const found = complete ? describe(preview?.code === code ? preview.res : null) : null;
-  const ready = found?.ok === true && name.trim().length > 0 && !joining;
+  const ready = found?.ok === true && !joining;
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!ready) return;
     setJoining(true);
     setError(null);
-    const res = await postJson<{ code: string }>(`/api/rooms/${code}/players`, { name: name.trim() });
+    const res = await postJson<{ code: string }>(`/api/rooms/${code}/members`);
     if (res.success && res.payload) {
       sfx.clack();
-      router.push(`/lobby/${res.payload.code}`);
+      router.push(`/case/${res.payload.code}`);
     } else {
       setError(res.errorMessage);
       setJoining(false);
@@ -161,23 +155,9 @@ export function JoinForm({ initialCode = "" }: { initialCode?: string }) {
         </p>
       </fieldset>
 
-      <label className="flex w-full flex-col gap-2">
-        <span className="font-pixel text-ui">
-          <span aria-hidden>&gt; </span>Name
-        </span>
-        <input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          maxLength={24}
-          autoComplete="off"
-          placeholder="who are you?"
-          className="w-full border-b border-orange/40 bg-background py-2 text-body text-orange caret-orange outline-none transition-colors [caret-shape:block] placeholder:text-orange/60 focus:border-orange"
-        />
-      </label>
-
       <div className="flex flex-col gap-3">
         <FillButton type="submit" disabled={!ready}>
-          {joining ? (found?.joining ?? "Joining…") : "Join Mystery"}
+          {joining ? "Joining…" : found?.ok === false ? "Check the code" : "Join Case"}
         </FillButton>
         {error && (
           <p role="alert" className="text-body text-red motion-safe:animate-glitch">

@@ -12,7 +12,7 @@ export default function Home() {
             <KillerTitle animated />
             <ModeMenu />
             <p className="mt-auto pb-8 text-center text-body text-blue motion-safe:animate-rise motion-safe:[animation-delay:900ms]">
-              One screen tells the story. Every phone keeps a secret.
+              Open the file. Read everything. Name who, why and how.
             </p>
           </div>
         </BootScreen>

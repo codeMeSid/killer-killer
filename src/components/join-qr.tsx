@@ -12,7 +12,7 @@ export function JoinQr({ url, className = "" }: { url: string; className?: strin
     <svg
       data-ui
       role="img"
-      aria-label="QR code to join this mystery"
+      aria-label="QR code to join this case"
       viewBox={`0 0 ${size} ${size}`}
       shapeRendering="crispEdges"
       className={`block aspect-square ${className}`}
