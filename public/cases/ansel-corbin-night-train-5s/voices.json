@@ -1,7 +1,13 @@
 {
-  "engine": "VoiceStudio 1.29.0 generate_speech (instruct voices, steps 24)",
+  "engine": "VoiceStudio 1.29.0 generate_speech, instruct voices (steps 24)",
   "narrator": "middle-aged, low pitch, british accent",
-  "suspects": [],
-  "clips": { "e3": "middle-aged, moderate pitch, american accent" },
-  "note": "clone_voice needs a reference recording, so voices are instruct-designed per clip; captions timed from the script (transcribe was unavailable)."
+  "clips": { "e3": "middle-aged, moderate pitch, british accent" },
+  "suspects": [
+    { "index": 0, "name": "Tilda Reeve", "voice": "young adult, high pitch, british accent" },
+    { "index": 1, "name": "Dr. Osric Pell", "voice": "elderly, low pitch, british accent" },
+    { "index": 2, "name": "Ivo Sandre", "voice": "middle-aged, high pitch, american accent" },
+    { "index": 3, "name": "Calla Wren", "voice": "young adult, moderate pitch, american accent" },
+    { "index": 4, "name": "Bram Okafor", "voice": "elderly, low pitch, american accent" }
+  ],
+  "note": "Each voice was checked by transcribing it with whisper (small.en) and comparing to the script: 0.95 or better. Captions are timed from whisper word timestamps."
 }

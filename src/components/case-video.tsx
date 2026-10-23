@@ -2,13 +2,13 @@
 
 import { useSyncExternalStore } from "react";
 
-/** A case video served from public/cases/<slug>/. Click to play, captions on by default; never autoplays with sound. */
+/** A case video served from public/cases/<slug>/. Click to play; never autoplays with sound. Captions are burned into every clip, so the .vtt track is off by default (default doubled them on screen); it stays selectable for assistive tech. */
 export function CaseVideo({ slug, src, poster, captions }: { slug: string; src: string; poster?: string; captions: string }) {
   const base = `/cases/${slug}/`;
   return (
     <video controls playsInline preload="metadata" poster={poster && base + poster} className="w-full border border-blue/40 bg-background">
       <source src={base + src} type="video/mp4" />
-      <track default kind="captions" srcLang="en" label="English" src={base + captions} />
+      <track kind="captions" srcLang="en" label="English" src={base + captions} />
     </video>
   );
 }
