@@ -22,7 +22,7 @@ export const LEXICON: Record<string, Lexicon> = { "hollis-brandt-lighthouse-4s":
 export const TEASERS: Record<string, string> = { "ansel-corbin-night-train-5s": "teaser.mp4" };
 
 /** Cover image (p5.brush .webp; legacy .svg) per slug under public/cases/<slug>/ (card art). Register by hand; must equal case.json media.cover. */
-export const COVERS: Record<string, string> = { "hollis-brandt-lighthouse-4s": "cover.webp", "ansel-corbin-night-train-5s": "cover.svg" };
+export const COVERS: Record<string, string> = { "hollis-brandt-lighthouse-4s": "cover.webp", "ansel-corbin-night-train-5s": "cover.webp" };
 
 /** Suspect portrait URL per slug, keyed by suspect index (case.json order) as string. None = monogram tile. */
 export const PORTRAITS: Record<string, Record<string, string>> = {

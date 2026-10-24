@@ -15,8 +15,8 @@ Project memory + decision log. Rules in `CLAUDE.md`; this file = state + history
 - **Env / Supabase**: project `killer-killer` (ref `clymvaueusidcxaqezjz`, ap-south-1, org `sid`), linked via CLI. `.env.local` has URL, publishable, secret (fetched w/ `--reveal`), DB password. Migrations `20261015000000_game`, `20261015010000_realtime_rooms`, `20261016000000_vote`, `20261022000000_case_file` all **applied** (2026-10-23). Anonymous sign-ins ON (300/h/IP).
 - **Contrast**: blue `#3B8EEA` (5.6:1) + red `#E5484D` (4.8:1) pass WCAG AA on obsidian (lifted 2026-10-23).
 - **Statusline**: `~/.claude/statusline.mjs`, global (outside repo) (Kickbacks ad wrapper removed 2026-10-23). Live `rate_limits`/`context_window` fields unconfirmed.
-- **Art/trailer**: p5.brush pipeline `scripts/art/` (README there); lighthouse cover + nine portraits painted (.webp); night-train cover still legacy `cover.svg`. Trailer in `trailer/` (`node trailer/render.mjs`), Opus-made, kept as is.
-- **Open**: re-run live playthrough after deploy (presence fix, Present wait, pin latency ~3-6s, win path, reveal video unverified); paint night-train cover; check portraits in accuse panel.
+- **Art/trailer**: p5.brush pipeline `scripts/art/` (README there); lighthouse cover + nine portraits painted (.webp); night-train cover painted too (soft, blue-heavy). Trailer in `trailer/` (`node trailer/render.mjs`), Opus-made, kept as is.
+- **Open**: re-run live playthrough after deploy (presence fix, Present wait, pin latency ~3-6s, win path, reveal video unverified); check real portraits in accuse panel.
 
 
 ## Decision log
