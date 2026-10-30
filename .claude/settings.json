@@ -1,6 +1,0 @@
-{
-  "enabledPlugins": {
-    "claude-mem@thedotmack": true,
-    "hyperframes@claude-plugins-official": true
-  }
-}
